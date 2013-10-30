@@ -19,3 +19,14 @@ class ItemLabel(models.Model):
         ItemID = models.ForeignKey(InventoryItem)
         CategoryID = models.ForeignKey(Category)
 
+class AltID(models.Model):
+    pass
+
+class BrandID(models.Model):
+    pass
+
+class ModelID(models.Model):
+    pass
+
+class StorageLocationID(models.Model):
+    pass
