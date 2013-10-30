@@ -1,0 +1,41 @@
+{% load staticfiles %}
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static "css/jquery.jOrgChart.css" %}"/>
+    </head>
+    <body>
+        <script type="text/javascript" src="{% static "js/jquery-1.10.2.js" %}"></script>
+        <script type="text/javascript" src="{% static "js/jquery.jOrgChart.js" %}"></script>
+        <script type="text/javascript" src="{% static "js/jquery-ui-1.10.3.custom.js" %}"></script>
+        <script type="text/javascript">
+            jQuery(document).ready(function() {
+                $("#org").jOrgChart({
+                    dragAndDrop: true
+                });
+            });
+        </script>
+    <ul id="org" style="display:none">
+<li>
+  Food
+  <ul>
+    <li>Beer</li>
+    <li>Vegetables
+      <ul>
+        <li>Pumpkin</li>
+        <li><a href="http://tquila.com" target="_blank">Aubergine</a></li>
+      </ul>
+    </li>
+    <li>Bread</li>
+    <li>Chocolate
+      <ul>
+        <li>Topdeck</li>
+        <li>Reese's Cups</li>
+      </ul>
+    </li>
+  </ul>
+</li>
+</ul>
+    </body>
+</html>
