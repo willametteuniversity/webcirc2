@@ -1,14 +1,14 @@
 from django.db import models
 
-class Category(models.Model)
+class Category(models.Model):
 	Name = CharField()
 	ParentID = ForeignKey(Category)
 
-class ItemLabel(models.Model)
+class ItemLabel(models.Model):
 	ItemID = ForeignKey(InventoryItem)
 	CategoryID = ForeignKey(Category)
 
-class InventoryItem(models.Model)
+class InventoryItem(models.Model):
 	AltID = ForeignKey()
 	BrandID = ForeignKey()
 	ModelID = ForeignKey()
@@ -18,39 +18,40 @@ class InventoryItem(models.Model)
 	Description = CharField()
 	Notes = CharField()
 
-class InventoryWidget(models.Model)
+class InventoryWidget(models.Model):
 	
 class Brand(models.Model)
 	Name = CharField()
 
-class ItemModel(models.Model)
+class ItemModel(models.Model):
 	Description = CharField()
 
-class Building(models.Model)
+class Building(models.Model):
 	Name = CharField()
 
-class Location(models.Model()
+class Location(models.Model():
 	BuildingID = ForeignKey(Building)
 	RoomNumber = CharField()
 	Description = CharField()
 
-class Status(models.Model)
+class Status(models.Model):
 	Description = CharField()
 
-class User(models.Model)
+class User(models.Model):
 	Username = CharField()
 
-class Restriction(models.Model)
+class Restriction(models.Model):
 	Description = CharField()
 
-class ItemRestrictions(models.Model)
+class ItemRestrictions(models.Model):
 	ItemID(InventoryItem)
 
-class ItemHistory(models.Model)
+class ItemHistory(models.Model):
 	UserID = ForeignKey(User)
 	ItemID = ForeignKey(InventoryItem)
 	ChangeDesc = CharField()
 	ChangeDateTime = CharField()
+
 class Category(models.Model):
         Name = models.CharField(max_length=255)
         ParentID = models.ForeignKey('self')
