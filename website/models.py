@@ -1,56 +1,53 @@
 from django.db import models
 
-class Category(models.Model):
-	Name = CharField()
-	ParentID = ForeignKey(Category)
-
 class ItemLabel(models.Model):
-	ItemID = ForeignKey(InventoryItem)
-	CategoryID = ForeignKey(Category)
+	ItemID = ForeignKey('InventoryItem')
+	CategoryID = ForeignKey('Category')
 
 class InventoryItem(models.Model):
-	AltID = ForeignKey()
-	BrandID = ForeignKey()
-	ModelID = ForeignKey()
-	StorageLocation_ID = ForeignKey()
-	ParentID = ForeignKey(InventoryItem)
-	CategoryID = ForeignKey(Category)
-	Description = CharField()
-	Notes = CharField()
+	AltID = models.ForeignKey()
+	BrandID = models.ForeignKey()
+	ModelID = models.ForeignKey()
+	StorageLocation_ID = models.ForeignKey()
+	ParentID = ForeignKey('InventoryItem')
+	CategoryID = ForeignKey('Category')
+	Description = models.CharField()
+	Notes = models.CharField()
 
 class InventoryWidget(models.Model):
+	pass
 	
-class Brand(models.Model)
-	Name = CharField()
+class Brand(models.Model):
+	Name = models.CharField()
 
 class ItemModel(models.Model):
-	Description = CharField()
+	Description = models.CharField()
 
 class Building(models.Model):
-	Name = CharField()
+	Name = models.CharField()
 
-class Location(models.Model():
+class Location(models.Model):
 	BuildingID = ForeignKey(Building)
-	RoomNumber = CharField()
-	Description = CharField()
+	RoomNumber = models.CharField()
+	Description = models.CharField()
 
 class Status(models.Model):
-	Description = CharField()
+	Description = models.CharField()
 
 class User(models.Model):
-	Username = CharField()
+	Username = models.CharField()
 
 class Restriction(models.Model):
-	Description = CharField()
+	Description = models.CharField()
 
 class ItemRestrictions(models.Model):
 	ItemID(InventoryItem)
 
 class ItemHistory(models.Model):
 	UserID = ForeignKey(User)
-	ItemID = ForeignKey(InventoryItem)
-	ChangeDesc = CharField()
-	ChangeDateTime = CharField()
+	ItemID = ForeignKey('InventoryItem')
+	ChangeDesc = models.CharField()
+	ChangeDateTime = models.CharField()
 
 class Category(models.Model):
         Name = models.CharField(max_length=255)
@@ -63,13 +60,13 @@ class InventoryItem(models.Model):
         # TODO: We don't have this defined yet
         StorageLocationID = models.ForeignKey('StorageLocationID')
         ParentID = models.ForeignKey('self')
-        CategoryID = models.ForeignKey(Category)
+        CategoryID = models.ForeignKey('Category')
         Description = models.CharField(max_length=500)
         Notes = models.CharField(max_length=1000)
 
 class ItemLabel(models.Model):
-        ItemID = models.ForeignKey(InventoryItem)
-        CategoryID = models.ForeignKey(Category)
+        ItemID = models.ForeignKey('InventoryItem')
+        CategoryID = models.ForeignKey('Category')
 
 class AltID(models.Model):
     pass
