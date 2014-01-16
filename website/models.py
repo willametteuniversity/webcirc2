@@ -1,53 +1,59 @@
 from django.db import models
 
 class ItemLabel(models.Model):
-	ItemID = ForeignKey('InventoryItem')
-	CategoryID = ForeignKey('Category')
+	ItemID = models.ForeignKey('InventoryItem')
+	CategoryID = models.ForeignKey('Category')
 
 class InventoryItem(models.Model):
-	AltID = models.ForeignKey()
-	BrandID = models.ForeignKey()
-	ModelID = models.ForeignKey()
-	StorageLocation_ID = models.ForeignKey()
-	ParentID = ForeignKey('InventoryItem')
-	CategoryID = ForeignKey('Category')
-	Description = models.CharField()
-	Notes = models.CharField()
+	AltID = models.ForeignKey('AlternateID')
+	BrandID = models.ForeignKey('BrandID')
+	ModelID = models.ForeignKey('ModelID')
+	StorageLocation_ID = models.ForeignKey('StorageLocation')
+	ParentID = models.ForeignKey('InventoryItem')
+	CategoryID = models.ForeignKey('Category')
+	Description = models.CharField(max_length=500)
+	Notes = models.CharField(max_length=500)
 
 class InventoryWidget(models.Model):
 	pass
 	
 class Brand(models.Model):
-	Name = models.CharField()
+	Name = models.CharField(max_length=500)
 
 class ItemModel(models.Model):
-	Description = models.CharField()
+	Description = models.CharField(max_length=500)
 
 class Building(models.Model):
-	Name = models.CharField()
+	Name = models.CharField(max_length=500)
 
 class Location(models.Model):
-	BuildingID = ForeignKey(Building)
-	RoomNumber = models.CharField()
-	Description = models.CharField()
+	BuildingID = models.ForeignKey('Building')
+	RoomNumber = models.CharField(max_length=500)
+	Description = models.CharField(max_length=500)
+
+class StorageLocation(models.Model):
+	pass
+
+class AlternateID(models.Model):
+	pass
 
 class Status(models.Model):
-	Description = models.CharField()
+	Description = models.CharField(max_length=500)
 
 class User(models.Model):
-	Username = models.CharField()
+	Username = models.CharField(max_length=500)
 
 class Restriction(models.Model):
-	Description = models.CharField()
+	Description = models.CharField(max_length=500)
 
 class ItemRestrictions(models.Model):
-	ItemID(InventoryItem)
+	ItemID = models.ForeignKey('InventoryItem')
 
 class ItemHistory(models.Model):
-	UserID = ForeignKey(User)
-	ItemID = ForeignKey('InventoryItem')
-	ChangeDesc = models.CharField()
-	ChangeDateTime = models.CharField()
+	UserID = models.ForeignKey('User')
+	ItemID = models.ForeignKey('InventoryItem')
+	ChangeDesc = models.CharField(max_length=500)
+	ChangeDateTime = models.CharField(max_length=500)
 
 class Category(models.Model):
         Name = models.CharField(max_length=255)
