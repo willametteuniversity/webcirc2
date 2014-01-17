@@ -1,10 +1,45 @@
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    margin: 0;
+    background-image: url('/static/images/blackfelt.png');
+}
+
+
+.panel {
+    border-color: black;
+    background: #2f384f; /* Old browsers */
+    background: -moz-radial-gradient(center, ellipse cover, #2f384f 0%, #242b3c 100%); /* FF3.6+ */
+    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#2f384f), color-stop(100%,#242b3c)); /* Chrome,Safari4+ */
+    background: -webkit-radial-gradient(center, ellipse cover, #2f384f 0%,#242b3c 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-radial-gradient(center, ellipse cover, #2f384f 0%,#242b3c 100%); /* Opera 12+ */
+    background: -ms-radial-gradient(center, ellipse cover, #2f384f 0%,#242b3c 100%); /* IE10+ */
+    background: radial-gradient(ellipse at center, #2f384f 0%,#242b3c 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2f384f', endColorstr='#242b3c',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    box-shadow: 2px 2px #000000;
+}
+
+.panel > h3 {
+    color: #dddddd;
+}
+
+label {
+    color: #cccccc;
+}
+
+#mainblock {
+    margin-top: 100px;
+}
+
 #signInOrRegisterText {
-    color: white;
+    color: #cccccc;
     margin-left: 5px;
     margin-right: 5px;
 }
 
 #registrationFormDiv {
+    padding-top: 10px;
     margin-top: 150px;
 }
-
