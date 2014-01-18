@@ -2,7 +2,7 @@
 This file contains tests that test the logging in functionality.
 '''
 
-from website.views import login
+from website.views import *
 from django.core.urlresolvers import resolve
 from django.test import TestCase
 from django.test.client import Client
@@ -53,3 +53,31 @@ class LoginTests(TestCase):
         c = Client()
         response = c.post(u'/login/', {u'username': u'testuser', u'password': u'testpassword1'})
         self.assertIn(u'failed', response.content)
+
+    def test_login_fails_with_no_username(self):
+        '''
+        This attempts to login without giving a username.
+        '''
+        c = Client()
+        response = c.post(u'/login/', {u'password': u'testpassword1'})
+        self.assertIn(u'failed', response.content)
+
+    def test_login_fails_with_no_password(self):
+        '''
+        This attempts to login without giving a password.
+        '''
+        c = Client()
+        response = c.post(u'/login/', {u'username': u'testuser'})
+        self.assertIn(u'failed', response.content)
+
+    def check_navbar_visible_after_login(self):
+        '''
+        This checks that the user can see the navbar options after they have logged in.
+        '''
+        request = HttpRequest()
+        response = index(request)
+        self.assertIn(u'New', response)
+        self.assertIn(u'Daily', response)
+        self.assertIn(u'Monthly', response)
+        self.assertIn(u'Overdue Stuff', response)
+        self.assertIn(u'Admin Tools', response)

@@ -22,7 +22,8 @@ def registerNewUser(request):
 
     if request.GET:
         # Is there any reason we would be doing GET to this URL?
-        pass
+        # TODO: Refactor this to use the 501 redirection and create a 501 page
+        return HttpResponse(u'Not Implemented')
     elif request.POST:
         # This means we need to register a new user
         # First let's make sure we got all of the needed information.
@@ -64,7 +65,7 @@ def registerNewUser(request):
 
         # Let's make sure a user with that username doesn't already exist, using a
         # case-insensitive search
-        u = User.objects.filter(username__iexact = request.POST[u'username']).count()
+        u = User.objects.filter(username__iexact=request.POST[u'username']).count()
         if u > 0:
             # We know one already exists with that username, so send back an error
             responseData = {}
@@ -73,7 +74,7 @@ def registerNewUser(request):
             return HttpResponse(json.dumps(responseData), content_type=u'application/json')
 
         # Now let's check for users with the same e-mail address
-        u = User.objects.filter(email__iexact = request.POST[u'email']).count()
+        u = User.objects.filter(email__iexact=request.POST[u'email']).count()
         if u > 0:
             # We know one already exists with that username, so send back an error
             responseData = {}
@@ -99,9 +100,10 @@ def login(request):
     This function handles the logging in of a user, and the submission of the login form from
     the main page.
     '''
-    # First let's check if there is a username and password present in the request
+    # Set up the response data dict
     responseData = {}
 
+    # First let's check if there is a username and password present in the request
     # Make sure username was included
     if u'username' not in request.POST:
         responseData[u'result'] = u'failed'

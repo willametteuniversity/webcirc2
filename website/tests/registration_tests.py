@@ -104,8 +104,7 @@ class RegistrationFormTests(TestCase):
         e-mail, namely from the test above. It should fail and provide an error message.
         '''
         c = Client()
-
-        response = c.post(u'/registerNewUser/', {u'username': u'testuser',\
+        response = c.post(u'/registerNewUser/', {u'username': u'testuser1',\
                                                u'email': u'testuser@nothing.com',\
                                                u'password': u'testpassword',\
                                                u'confirmPassword': u'testpassword'})
@@ -206,3 +205,13 @@ class RegistrationFormTests(TestCase):
                                                u'password': u'testpassword'})
 
         self.assertIn(u'failed', response.content)
+
+    def test_registration_get_returns_501(self):
+        '''
+        This tests that making a GET request to /registerNewUser/ returns a proper 501 page/status
+        '''
+        c = Client()
+        response = c.get(u'/registerNewUser/', {u'username': u'testuser',\
+                                               u'email': u'testuser@nothing.com',\
+                                               u'password': u'testpassword'})
+        self.assertEqual(501, response.status_code)
