@@ -1,12 +1,14 @@
 import json
 import re
 
-# Create your views here.
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.shortcuts import render
+
+# Auth imports
 from django.contrib.auth.models import User
-from forms.register import RegistrationForm
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as django_login
 
 def index(request):
     template = loader.get_template(u'webcirc2.html')
@@ -91,3 +93,38 @@ def registerNewUser(request):
         # This means we need to display the register new user form
         # Let's load the form up
         return render(request, u'forms/register.html', {})
+
+def login(request):
+    '''
+    This function handles the logging in of a user, and the submission of the login form from
+    the main page.
+    '''
+    # First let's check if there is a username and password present in the request
+    responseData = {}
+
+    # Make sure username was included
+    if u'username' not in request.POST:
+        responseData[u'result'] = u'failed'
+        responseData[u'reason'] = u'Username not specified.'
+        return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+
+    # Make sure a password was included
+    if u'password' not in request.POST:
+        responseData[u'result'] = u'failed'
+        responseData[u'reason'] = u'Password not specified.'
+        return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+
+    # Now let's try to log them in
+    u = authenticate(username=request.POST['username'], password=request.POST['password'])
+
+    # If it is none, login returned a user which means they logged in successfully
+    if u is not None:
+        # TODO: Check here for is_active?
+        django_login(request, u)
+        responseData[u'result'] = u'succeeded'
+        return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+    # If we get here, authentication failed.
+    else:
+        responseData[u'result'] = u'failed'
+        responseData[u'reason'] = u'Invalid username or password.'
+        return HttpResponse(json.dumps(responseData), content_type=u'application/json')
