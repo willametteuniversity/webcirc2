@@ -11,7 +11,12 @@ from django.http import HttpRequest
 from website.models import *
 from django.contrib.auth.models import User
 
+
 class LoginTests(TestCase):
+    '''
+    This calls a few functions in a specific order so that we
+    can test various login functions.
+    '''
     def test_login_user(self):
         self.login_succeeds()
         self.login_fails_with_nonexistant_user()

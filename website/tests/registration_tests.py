@@ -19,12 +19,21 @@ from website.views import *
 from website.models import *
 from django.contrib.auth.models import User
 
+
 class RegistrationFormTests(TestCase):
     def test_register_new_user_url_resolves_to_new_user_view(self):
+        '''
+        This tests that the register new user URL resolves to the proper
+        function.
+        '''
         found = resolve(u'/registerNewUser/')
         self.assertEqual(found.func, registerNewUser)
 
     def test_register_button_returns_correct_form(self):
+        '''
+        This tests that the register button returns a form containing
+        at least the proper form inputs.
+        '''
         request = HttpRequest()
         response = registerNewUser(request)
         # Making sure the form title is there, and that it at least has all
@@ -53,10 +62,10 @@ class RegistrationFormTests(TestCase):
         '''
         c = Client()
 
-        response = c.post(u'/registerNewUser/', {u'username': u'testuser',\
-                                               u'email': u'testuser@nothing.com',\
-                                               u'password': u'testpassword',\
-                                               u'confirmPassword': u'testpassword'})
+        response = c.post(u'/registerNewUser/', {u'username': u'testuser',
+                                                 u'email': u'testuser@nothing.com',
+                                                 u'password': u'testpassword',
+                                                 u'confirmPassword': u'testpassword'})
 
         # Let's make sure it created the User in the database...
         testUser = User.objects.get(username=u'testuser')
@@ -76,10 +85,10 @@ class RegistrationFormTests(TestCase):
         '''
         c = Client()
 
-        response = c.post(u'/registerNewUser/', {u'username': u'testuser',\
-                                               u'email': u'testuser@nothing.com',\
-                                               u'password': u'testpassword',\
-                                               u'confirmPassword': u'testpassword'})
+        response = c.post(u'/registerNewUser/', {u'username': u'testuser',
+                                                 u'email': u'testuser@nothing.com',
+                                                 u'password': u'testpassword',
+                                                 u'confirmPassword': u'testpassword'})
 
         self.assertIn(u'failed', response.content)
 
@@ -91,10 +100,10 @@ class RegistrationFormTests(TestCase):
         '''
         c = Client()
 
-        response = c.post(u'/registerNewUser/', {u'username': u'testUser',\
-                                               u'email': u'testuser@nothing.com',\
-                                               u'password': u'testpassword',\
-                                               u'confirmPassword': u'testpassword'})
+        response = c.post(u'/registerNewUser/', {u'username': u'testUser',
+                                                 u'email': u'testuser@nothing.com',
+                                                 u'password': u'testpassword',
+                                                 u'confirmPassword': u'testpassword'})
 
         self.assertIn(u'failed', response.content)
 
@@ -104,10 +113,10 @@ class RegistrationFormTests(TestCase):
         e-mail, namely from the test above. It should fail and provide an error message.
         '''
         c = Client()
-        response = c.post(u'/registerNewUser/', {u'username': u'testuser1',\
-                                               u'email': u'testuser@nothing.com',\
-                                               u'password': u'testpassword',\
-                                               u'confirmPassword': u'testpassword'})
+        response = c.post(u'/registerNewUser/', {u'username': u'testuser1',
+                                                 u'email': u'testuser@nothing.com',
+                                                 u'password': u'testpassword',
+                                                 u'confirmPassword': u'testpassword'})
 
         self.assertIn(u'failed', response.content)
 
@@ -117,10 +126,10 @@ class RegistrationFormTests(TestCase):
         do not match.
         '''
         c = Client()
-        response = c.post(u'/registerNewUser/', {u'username': u'testuser',\
-                                               u'email': u'testuser@nothing.com',\
-                                               u'password': u'testpassword',\
-                                               u'confirmPassword': u'testpassword1'})
+        response = c.post(u'/registerNewUser/', {u'username': u'testuser',
+                                                 u'email': u'testuser@nothing.com',
+                                                 u'password': u'testpassword',
+                                                 u'confirmPassword': u'testpassword1'})
 
         self.assertIn(u'failed', response.content)
 
@@ -129,10 +138,10 @@ class RegistrationFormTests(TestCase):
         This attempts to test what happens when the user tries to register a username that is too long.abspath
         '''
         c = Client()
-        response = c.post(u'/registerNewUser/', {u'username': u'thisisaverylongusernamethatshouldnotbeallowed',\
-                                               u'email': u'thisisaverylongusernamethatshouldnotbeallowed@nothing.com',\
-                                               u'password': u'testpassword',\
-                                               u'confirmPassword': u'testpassword'})
+        response = c.post(u'/registerNewUser/', {u'username': u'thisisaverylongusernamethatshouldnotbeallowed',
+                                                 u'email': u'thisisaverylongusernamethatshouldnotbeallowed@nothing.com',
+                                                 u'password': u'testpassword',
+                                                 u'confirmPassword': u'testpassword'})
 
         self.assertIn(u'failed', response.content)
 
@@ -146,63 +155,75 @@ class RegistrationFormTests(TestCase):
         # 2. Username contains non-alphanumeric characters
         c = Client()
 
-        response = c.post(u'/registerNewUser/', {u'username': u'testuser!',\
-                                               u'email': u'testuser!@nothing.com',\
-                                               u'password': u'testpassword',\
-                                               u'confirmPassword': u'testpassword'})
+        response = c.post(u'/registerNewUser/', {u'username': u'testuser!',
+                                                 u'email': u'testuser!@nothing.com',
+                                                 u'password': u'testpassword',
+                                                 u'confirmPassword': u'testpassword'})
 
         self.assertIn(u'failed', response.content)
 
-        response = c.post(u'/registerNewUser/', {u'username': u'testuser@',\
-                                               u'email': u'testuser@@nothing.com',\
-                                               u'password': u'testpassword',\
-                                               u'confirmPassword': u'testpassword'})
+        response = c.post(u'/registerNewUser/', {u'username': u'testuser@',
+                                                 u'email': u'testuser@@nothing.com',
+                                                 u'password': u'testpassword',
+                                                 u'confirmPassword': u'testpassword'})
 
         self.assertIn(u'failed', response.content)
 
-        response = c.post(u'/registerNewUser/', {u'username': u'testuser$',\
-                                               u'email': u'testuser$@nothing.com',\
-                                               u'password': u'testpassword',\
-                                               u'confirmPassword': u'testpassword'})
+        response = c.post(u'/registerNewUser/', {u'username': u'testuser$',
+                                                 u'email': u'testuser$@nothing.com',
+                                                 u'password': u'testpassword',
+                                                 u'confirmPassword': u'testpassword'})
 
         self.assertIn(u'failed', response.content)
 
-        response = c.post(u'/registerNewUser/', {u'username': u'test user',\
-                                               u'email': u'test user@nothing.com',\
-                                               u'password': u'testpassword',\
-                                               u'confirmPassword': u'testpassword'})
+        response = c.post(u'/registerNewUser/', {u'username': u'test user',
+                                                 u'email': u'test user@nothing.com',
+                                                 u'password': u'testpassword',
+                                                 u'confirmPassword': u'testpassword'})
 
         self.assertIn(u'failed', response.content)
 
     def test_registration_without_username_fails(self):
+        '''
+        This attempts to register without a username.
+        '''
         c = Client()
-        response = c.post(u'/registerNewUser/', {u'email': u'testuser@nothing.com',\
-                                               u'password': u'testpassword',\
-                                               u'confirmPassword': u'testpassword'})
+        response = c.post(u'/registerNewUser/', {u'email': u'testuser@nothing.com',
+                                                 u'password': u'testpassword',
+                                                 u'confirmPassword': u'testpassword'})
 
         self.assertIn(u'failed', response.content)
 
     def test_registration_without_email_fails(self):
+        '''
+        This attempts to register without an e-mail.
+        '''
         c = Client()
-        response = c.post(u'/registerNewUser/', {u'username': u'testuser',\
-                                               u'password': u'testpassword',\
-                                               u'confirmPassword': u'testpassword'})
+        response = c.post(u'/registerNewUser/', {u'username': u'testuser',
+                                                 u'password': u'testpassword',
+                                                 u'confirmPassword': u'testpassword'})
 
         self.assertIn(u'failed', response.content)
 
     def test_registration_without_password_fails(self):
+        '''
+        This tests registration without sending a password
+        '''
         c = Client()
-        response = c.post(u'/registerNewUser/', {u'username': u'testuser',\
-                                               u'email': u'testuser@nothing.com',\
-                                               u'confirmPassword': u'testpassword'})
+        response = c.post(u'/registerNewUser/', {u'username': u'testuser',
+                                                 u'email': u'testuser@nothing.com',
+                                                 u'confirmPassword': u'testpassword'})
 
         self.assertIn(u'failed', response.content)
 
     def test_registration_without_confirm_password_fails(self):
+        '''
+        This tests registration without sending a password confirmation.
+        '''
         c = Client()
-        response = c.post(u'/registerNewUser/', {u'username': u'testuser',\
-                                               u'email': u'testuser@nothing.com',\
-                                               u'password': u'testpassword'})
+        response = c.post(u'/registerNewUser/', {u'username': u'testuser',
+                                                 u'email': u'testuser@nothing.com',
+                                                 u'password': u'testpassword'})
 
         self.assertIn(u'failed', response.content)
 
@@ -211,7 +232,7 @@ class RegistrationFormTests(TestCase):
         This tests that making a GET request to /registerNewUser/ returns a proper 501 page/status
         '''
         c = Client()
-        response = c.get(u'/registerNewUser/', {u'username': u'testuser',\
-                                               u'email': u'testuser@nothing.com',\
-                                               u'password': u'testpassword'})
+        response = c.get(u'/registerNewUser/', {u'username': u'testuser',
+                                                u'email': u'testuser@nothing.com',
+                                                u'password': u'testpassword'})
         self.assertEqual(501, response.status_code)

@@ -48,7 +48,6 @@ class HomePageTest(TestCase):
         '''
         This test ensures that none of the navbar is shown if the user is not logged in.
         '''
-
         request = HttpRequest()
         response = index(request)
         self.assertNotIn(u'New', response)
