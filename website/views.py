@@ -10,10 +10,15 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
 
+
 def index(request):
+    '''
+    This function handles returning the index page. First page the user visits.
+    '''
     template = loader.get_template(u'webcirc2.html')
     context = RequestContext(request, {})
     return HttpResponse(template.render(context))
+
 
 def registerNewUser(request):
     '''
@@ -83,7 +88,7 @@ def registerNewUser(request):
             return HttpResponse(json.dumps(responseData), content_type=u'application/json')
 
         # If we are here, we know the user does not exist, so let's make them
-        newUser = User.objects.create_user(request.POST[u'username'], request.POST[u'email'],\
+        newUser = User.objects.create_user(request.POST[u'username'], request.POST[u'email'],
                                            request.POST[u'password'])
         newUser.save()
         responseData = {}
@@ -94,6 +99,7 @@ def registerNewUser(request):
         # This means we need to display the register new user form
         # Let's load the form up
         return render(request, u'forms/register.html', {})
+
 
 def login(request):
     '''
