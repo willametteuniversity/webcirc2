@@ -19,7 +19,6 @@ def index(request):
     context = RequestContext(request, {})
     return HttpResponse(template.render(context))
 
-
 def registerNewUser(request):
     '''
     This function handles requests relating to registering a new user

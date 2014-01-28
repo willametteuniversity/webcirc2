@@ -1,0 +1,5 @@
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
+from website.models import Collection
+from website.serializers import CollectionSerializer
+col = Collection(CollectionName='Test Collection', CollectionDescription='This is a test collection')
