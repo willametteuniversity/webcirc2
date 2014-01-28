@@ -2,8 +2,7 @@ from django.db import models
 
 
 class Label(models.Model):
-    LabelID = models.IntegerField()
-    LabelID.primary_key = True
+    LabelID = models.AutoField(primary_key=True)
     LabelName = models.CharField(max_length=500)
     ParentCategory = models.ForeignKey('Label')
 
@@ -14,8 +13,7 @@ class ItemLabel(models.Model):
 
 
 class LabelNotes(models.Model):
-    LabelNoteID = models.IntegerField()
-    LabelNoteID.primary_key = True
+    LabelNoteID = models.AutoField(primary_key=True)
     LabelID = models.ForeignKey('Label')
     LabelNote = models.CharField(max_length=500)
 
@@ -31,20 +29,17 @@ class ItemImage(models.Model):
 
 
 class Image(models.Model):
-    ImageID = models.IntegerField()
-    ImageID.primary_key = True
+    ImageID = models.AutoField(primary_key=True)
 #Image
 
 
 class Status(models.Model):
-    StatusID = models.IntegerField()
-    StatusID.primary_key = True
+    StatusID = models.AutoField(primary_key=True)
     StatusDescription = models.CharField(max_length=500)
 
 
 class InventoryItem(models.Model):
-    ItemID = models.IntegerField()
-    ItemID.primary_key = True
+    ItemID = models.AutoField(primary_key=True)
     AlternateID = models.ForeignKey('InventoryWidget')
     BrandID = models.ForeignKey('ItemBrand')
     ModelID = models.ForeignKey('ItemModel')
@@ -59,41 +54,35 @@ class InventoryItem(models.Model):
 
 
 class InventoryWidget(models.Model):
-    InventoryID = models.IntegerField()
-    InventoryID.primary_key = True
+    InventoryID = models.AutoField(primary_key=True)
 #RECORD
 
 
 class ItemBrand(models.Model):
-    BrandID = models.IntegerField()
-    BrandID.primary_key = True
+    BrandID = models.AutoField(primary_key=True)
     BrandName = models.CharField(max_length=500)
 
 
 class ItemModel(models.Model):
-    ModelID = models.IntegerField()
-    ModelID.primary_key = True
+    ModelID = models.AutoField(primary_key=True)
     ModelDesignation = models.CharField(max_length=500)
 
 
 class Location(models.Model):
-    LocationID = models.IntegerField()
-    LocationID.primary_key = True
+    LocationID = models.AutoField(primary_key=True)
     BuildingID = models.ForeignKey('Building')
     RoomNumber = models.CharField(max_length=500)
     LocationDescription = models.CharField(max_length=500)
 
 
 class Building(models.Model):
-    BuildingID = models.IntegerField()
-    BuildingID.primary_key = True
+    BuildingID = models.AutoField(primary_key=True)
     BuildingCode = models.IntegerField() #Alternate Key
     BuildingName = models.CharField(max_length=500)
 
 
 class Restriction(models.Model):
-    RestrictionID = models.IntegerField()
-    RestrictionID.primary_key = True
+    RestrictionID = models.AutoField(primary_key=True)
     RestrictionDescription = models.CharField(max_length=500)
 
 
@@ -103,8 +92,7 @@ class ItemRestriction(models.Model):
 
 
 class User(models.Model):
-    UserID = models.IntegerField()
-    UserID.primary_key = True
+    UserID = models.AutoField(primary_key=True)
     UserInstitutionalID = models.ForeignKey('InstitutionalUser')
     Username = models.IntegerField() #Alternate Foreign Key
     UserAltPhone = models.CharField(max_length=500)
@@ -133,8 +121,7 @@ class ActionItem(models.Model):
 
 
 class ActionType(models.Model):
-    ActionTypeID = models.IntegerField()
-    ActionTypeID.primary_key = True
+    ActionTypeID = models.AutoField(primary_key=True)
     ActionTypeName = models.CharField(max_length=500)
 
 
@@ -144,8 +131,7 @@ class ReservationAction(models.Model):
 
 
 class Action(models.Model):
-    ActionID = models.IntegerField()
-    ActionID.primary_key = True
+    ActionID = models.AutoField(primary_key=True)
     # TODO: What should this go to?
     #AssignedOperatorID = models.ForeignKey()
     ActionTypeID = models.ForeignKey('ActionType')
@@ -158,8 +144,7 @@ class Action(models.Model):
 
 
 class InstitutionalUser(models.Model):
-    InstitutionalID = models.IntegerField()
-    InstitutionalID.primary_key = True
+    InstitutionalID = models.AutoField(primary_key=True)
     Username = models.IntegerField() #Alternate Key
     UserPhone = models.CharField(max_length=500)
     UserEmail = models.CharField(max_length=500)
@@ -169,15 +154,13 @@ class InstitutionalUser(models.Model):
 
 
 class InstitutionalDepartment(models.Model):
-    DepartmentID = models.IntegerField()
-    DepartmentID.primary_key = True
+    DepartmentID = models.AutoField(primary_key=True)
     DepartmentAbbreviation = models.IntegerField() #Alternate Key
     DepartmentName = models.CharField(max_length=500)
 
 
 class Reservation(models.Model):
-    ReservationID = models.IntegerField()
-    ReservationID.primary_key = True
+    ReservationID = models.AutoField(primary_key=True)
     CustomerID = models.ForeignKey('User')
     CustomerPhone = models.CharField(max_length=500)
     CustomerEmail = models.CharField(max_length=500)
@@ -188,7 +171,6 @@ class Reservation(models.Model):
 
 
 class Collection(models.Model):
-    CollectionID = models.IntegerField()
-    CollectionID.primary_key = True
+    CollectionID = models.AutoField(primary_key=True)
     CollectionName = models.CharField(max_length=500)
     CollectionDescription = models.CharField(max_length=500)

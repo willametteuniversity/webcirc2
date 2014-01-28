@@ -4,6 +4,7 @@ import re
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
 # Auth imports
 from django.contrib.auth.models import User
@@ -13,6 +14,9 @@ from django.contrib.auth import login as django_login
 # Django REST Framework imports
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 # Our application improts
 from website.models import *
@@ -143,8 +147,9 @@ def login(request):
         responseData[u'reason'] = u'Invalid username or password.'
         return HttpResponse(json.dumps(responseData), content_type=u'application/json')
 
-
-def collectionDetail(request, pk):
+@csrf_exempt
+@api_view(['GET', 'PUT', 'DELETE'])
+def collectionDetail(request, pk, format=None):
     '''
     Retrieve, update or delete a Collection.
     '''
@@ -155,7 +160,7 @@ def collectionDetail(request, pk):
         collection = Collection.objects.get(CollectionID=pk)
     except Collection.DoesNotExist:
         # If we didn't find it, return a HTTP code of 404
-        return HttpResponse(status=404)
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
     # Again we check for the method and do a different
     # thing depending on which method the client used.
@@ -164,74 +169,65 @@ def collectionDetail(request, pk):
         # and send back the particular Collection they
         # requested.
         serializer = CollectionSerializer(collection)
-        return JSONResponse(serializer.data)
+        return Response(serializer.data)
     elif request.method == 'PUT':
         # If they used PUT, they want to change an already
         # existing collection. So, we deserialize the JSON
         # data the client sent, check if it is valid, and if
         # it is, save it to the DB and send back a success
         # HTTP code.
-        data = JSONParser().parse(request)
-        serializer = CollectionSerializer(collection, data=data)
+        serializer = CollectionSerializer(collection, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
-            return JSONResponse(serializer.data)
+            return Response(serializer.data)
         # If the JSON they sent was not valid, send back
         # the errors from the serializer, and a HTTP status
         # code
-        return JSONResponse(serializer.errors, status=400)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         # If they used DELETE, they want to delete the Collection
         # that they sent the PK for.
         collection.delete()
-        return HttpResponse(status=204)
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
- def collectionList(request):
-	'''
-	Lists all Collections
-	'''
-	# This checks if the method of a request is GET. Remember that
-	# when you want to retrieve data from the server, you use
-	# GET. When you just visit a website, that's a GET, for
-	# example. You can always check the "method" attribute of
-	# a request object in Django to get the type of request.
-	if request.method == 'GET':
-		# Here we retrieve all of our Collection instances.
-		collections = Collection.objects.all()
-		# Here we instantiate our CollectionSerializer. Note that
-		# we feed it many=True, so that it knows we are giving it
-		# more than one. all() returns a QuerySet object, not just
-		# a single instance.
-		serializer = CollectionSerializer(collections, many=True)
-		# And here we return the serializer's data as JSON. See
-		# the JSONResponse function in views.py.
-		return JSONResponse(serializer.data)
-	# If the method is POST...remember, we use POST for creating
-	# things on the server.
-	elif request.method == 'POST':
-		# We'll use the JSONParser to extract the data from the
-		# request.
-		data = JSONParser().parse(request)
-		# Create a serializer. Note that we are giving
-		# it the data, in JSON format.
-		serializer = CollectionSerializer(data=data)
-		# We check if they sent us a valid Collection
-		# object.
-		if serializer.is_valid():
-			# If so, save it to the DB
-			serializer.save()
-			# Return the object they just sent, along with
-			# an appropriate HTTP status code.
-			return JSONResponse(serializer.data, status=201)
-		# If it WASN'T a valid Collection they sent us, return
-		# an HTTP error code.
-		return JSONResponse(serializer.errors, status=400)
-
-class JSONResponse(HttpResponse):
-    """
-    An HttpResponse that renders its content into JSON.
-    """
-    def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data)
-        kwargs['content_type'] = 'application/json'
-        super(JSONResponse, self).__init__(content, **kwargs)
+@csrf_exempt
+@api_view(['GET', 'POST'])
+def collectionList(request, format=None):
+    '''
+    Lists all Collections
+    '''
+    # This checks if the method of a request is GET. Remember that
+    # when you want to retrieve data from the server, you use
+    # GET. When you just visit a website, that's a GET, for
+    # example. You can always check the "method" attribute of
+    # a request object in Django to get the type of request.
+    if request.method == 'GET':
+        # Here we retrieve all of our Collection instances.
+        collections = Collection.objects.all()
+        # Here we instantiate our CollectionSerializer. Note that
+        # we feed it many=True, so that it knows we are giving it
+        # more than one. all() returns a QuerySet object, not just
+        # a single instance.
+        serializer = CollectionSerializer(collections, many=True)
+        # And here we return the serializer's data as JSON. See
+        # the JSONResponse function in views.py.
+        return Response(serializer.data)
+    # If the method is POST...remember, we use POST for creating
+    # things on the server.
+    elif request.method == 'POST':
+        # Create a serializer. Note that we are giving
+        # it the data, in JSON format.
+        serializer = CollectionSerializer(data=request.DATA)
+        print serializer.data
+        print serializer.errors
+        # We check if they sent us a valid Collection
+        # object.
+        if serializer.is_valid():
+            # If so, save it to the DB
+            serializer.save()
+            # Return the object they just sent, along with
+            # an appropriate HTTP status code.
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # If it WASN'T a valid Collection they sent us, return
+        # an HTTP error code.
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
