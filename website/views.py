@@ -18,9 +18,10 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-# Our application improts
+# Our application imports
 from website.models import *
 from website.serializers import *
+
 
 def index(request):
     '''
@@ -30,6 +31,7 @@ def index(request):
     context = RequestContext(request, {})
     return HttpResponse(template.render(context))
 
+
 def registerNewUser(request):
     '''
     This function handles requests relating to registering a new user
@@ -38,7 +40,7 @@ def registerNewUser(request):
     if request.GET:
         # Is there any reason we would be doing GET to this URL?
         # TODO: Refactor this to use the 501 redirection and create a 501 page
-        return HttpResponse(u'Not Implemented')
+        return HttpResponse(status=501)
     elif request.POST:
         # This means we need to register a new user
         # First let's make sure we got all of the needed information.
@@ -147,6 +149,7 @@ def login(request):
         responseData[u'reason'] = u'Invalid username or password.'
         return HttpResponse(json.dumps(responseData), content_type=u'application/json')
 
+
 @csrf_exempt
 @api_view(['GET', 'PUT', 'DELETE'])
 def collectionDetail(request, pk, format=None):
@@ -189,6 +192,7 @@ def collectionDetail(request, pk, format=None):
         # that they sent the PK for.
         collection.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
 
 @csrf_exempt
 @api_view(['GET', 'POST'])

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Label(models.Model):
@@ -30,7 +31,6 @@ class ItemImage(models.Model):
 
 class Image(models.Model):
     ImageID = models.AutoField(primary_key=True)
-#Image
 
 
 class Status(models.Model):
@@ -50,12 +50,10 @@ class InventoryItem(models.Model):
     StatusID = models.ForeignKey('Status')
     StorageLocation = models.ForeignKey('Location')
     CollectionID = models.ForeignKey('Collection')
-#RECORD
 
 
 class InventoryWidget(models.Model):
     InventoryID = models.AutoField(primary_key=True)
-#RECORD
 
 
 class ItemBrand(models.Model):
@@ -77,7 +75,8 @@ class Location(models.Model):
 
 class Building(models.Model):
     BuildingID = models.AutoField(primary_key=True)
-    BuildingCode = models.IntegerField() #Alternate Key
+    BuildingCode = models.IntegerField()
+    # Alternate Key
     BuildingName = models.CharField(max_length=500)
 
 
@@ -91,25 +90,15 @@ class ItemRestriction(models.Model):
     ItemID = models.ForeignKey('InventoryItem')
 
 
-class User(models.Model):
-    UserID = models.AutoField(primary_key=True)
-    UserInstitutionalID = models.ForeignKey('InstitutionalUser')
-    Username = models.IntegerField() #Alternate Foreign Key
-    UserAltPhone = models.CharField(max_length=500)
-    UserAltEmail = models.CharField(max_length=500)
-    #UserStatus = models.ForeignKey()
-    UserNote = models.CharField(max_length=500)
-
-
 class ItemHistory(models.Model):
-    OperatorID = models.ForeignKey('User')
+    OperatorID = models.ForeignKey(User)
     ItemID = models.ForeignKey('InventoryItem')
     ChangeDescription = models.CharField(max_length=500)
     ChangeDateTime = models.CharField(max_length=500)
 
 
 class ReservationHistory(models.Model):
-    OperatorID = models.ForeignKey('User')
+    OperatorID = models.ForeignKey(User)
     ReservationID = models.ForeignKey('Reservation')
     ChangeDescription = models.CharField(max_length=500)
     ChangeDateTime = models.CharField(max_length=500)
@@ -133,7 +122,7 @@ class ReservationAction(models.Model):
 class Action(models.Model):
     ActionID = models.AutoField(primary_key=True)
     # TODO: What should this go to?
-    #AssignedOperatorID = models.ForeignKey()
+    # AssignedOperatorID = models.ForeignKey()
     ActionTypeID = models.ForeignKey('ActionType')
     StartTime = models.CharField(max_length=500)
     EndTime = models.CharField(max_length=500)
@@ -145,7 +134,7 @@ class Action(models.Model):
 
 class InstitutionalUser(models.Model):
     InstitutionalID = models.AutoField(primary_key=True)
-    Username = models.IntegerField() #Alternate Key
+    Username = models.IntegerField()
     UserPhone = models.CharField(max_length=500)
     UserEmail = models.CharField(max_length=500)
     UserDept = models.ForeignKey('InstitutionalDepartment')
@@ -155,13 +144,13 @@ class InstitutionalUser(models.Model):
 
 class InstitutionalDepartment(models.Model):
     DepartmentID = models.AutoField(primary_key=True)
-    DepartmentAbbreviation = models.IntegerField() #Alternate Key
+    DepartmentAbbreviation = models.IntegerField()
     DepartmentName = models.CharField(max_length=500)
 
 
 class Reservation(models.Model):
     ReservationID = models.AutoField(primary_key=True)
-    CustomerID = models.ForeignKey('User')
+    CustomerID = models.ForeignKey(User)
     CustomerPhone = models.CharField(max_length=500)
     CustomerEmail = models.CharField(max_length=500)
     CustomerDept = models.CharField(max_length=500)
