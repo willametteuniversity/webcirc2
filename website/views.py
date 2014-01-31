@@ -235,3 +235,86 @@ def collectionList(request, format=None):
         # If it WASN'T a valid Collection they sent us, return
         # an HTTP error code.
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@csrf_exempt
+@api_view(['GET', 'POST'])
+def LabelList(request, format=None):
+    '''
+    Lists all Labels
+    '''
+    # This checks if the method of a request is GET. Remember that
+    # when you want to retrieve data from the server, you use
+    # GET. When you just visit a website, that's a GET, for
+    # example. You can always check the "method" attribute of
+    # a request object in Django to get the type of request.
+    if request.method == 'GET':
+        # Here we retrieve all of our Collection instances.
+        Labels = Label.objects.all()
+        # Here we instantiate our CollectionSerializer. Note that
+        # we feed it many=True, so that it knows we are giving it
+        # more than one. all() returns a QuerySet object, not just
+        # a single instance.
+        serializer = CollectionSerializer(collections, many=True)
+        # And here we return the serializer's data as JSON. See
+        # the JSONResponse function in views.py.
+        return Response(serializer.data)
+    # If the method is POST...remember, we use POST for creating
+    # things on the server.
+    elif request.method == 'POST':
+        # Create a serializer. Note that we are giving
+        # it the data, in JSON format.
+        serializer = LabelSerializer(data=request.DATA)
+        # We check if they sent us a valid Collection
+        # object.
+        if serializer.is_valid():
+            # If so, save it to the DB
+            serializer.save()
+            # Return the object they just sent, along with
+            # an appropriate HTTP status code.
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # If it WASN'T a valid Collection they sent us, return
+        # an HTTP error code.
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+@csrf_exempt
+@api_view(['GET', 'PUT', 'DELETE'])
+def LabelDetail(request, pk, format=None):
+    '''
+    Retrieve, update or delete a Label.
+    '''
+    # We will use try/except. If Django cannot find an object
+    # with the primary key we give it using get(), it throws
+    # an error.
+    try:
+        Label = Label.objects.get(LabelID=pk)
+    except Label.DoesNotExist:
+        # If we didn't find it, return a HTTP code of 404
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    # Again we check for the method and do a different
+    # thing depending on which method the client used.
+    if request.method == 'GET':
+        # If they used GET, we want to retrieve, serialize
+        # and send back the particular Collection they
+        # requested.
+        serializer = LabelSerializer(collection)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        # If they used PUT, they want to change an already
+        # existing collection. So, we deserialize the JSON
+        # data the client sent, check if it is valid, and if
+        # it is, save it to the DB and send back a success
+        # HTTP code.
+        serializer = LabelSerializer(label, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        # If the JSON they sent was not valid, send back
+        # the errors from the serializer, and a HTTP status
+        # code
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        # If they used DELETE, they want to delete the Collection
+        # that they sent the PK for.
+        label.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
