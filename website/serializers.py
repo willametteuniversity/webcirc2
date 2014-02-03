@@ -7,7 +7,22 @@ class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collection
 
-
 class LabelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Label
+	class Meta:
+		model = Label
+
+class LabelNotesSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = LabelNotes
+		
+class ImageSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Image
+		
+class StatusSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Status
+
+class InventoryItemSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = InventoryItem
