@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class Label(models.Model):
     LabelID = models.AutoField(primary_key=True)
     LabelName = models.CharField(max_length=500)
-    ParentCategory = models.ForeignKey('Label')
+    ParentCategory = models.ForeignKey('Label', null=True, blank=True)
 
 
 class ItemLabel(models.Model):

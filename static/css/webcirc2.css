@@ -19,10 +19,21 @@ body {
     background: radial-gradient(ellipse at center, #2f384f 0%,#242b3c 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2f384f', endColorstr='#242b3c',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
     box-shadow: 2px 2px #000000;
+
 }
 
-.panel > h3 {
-    color: #dddddd;
+.panel {
+
+}
+
+.panel {
+    padding: 0px;
+    color: #cccccc;
+}
+
+.panel-heading {
+    background-color: #0F1A33;
+    border-color: #292E3B;
 }
 
 label {
@@ -43,3 +54,23 @@ label {
     padding-top: 10px;
     margin-top: 150px;
 }
+/* These are rules for the label management page */
+#labelListBox {
+    width: 100%
+}
+
+.lblMgmtBtn, .catMgmtBtn {
+    margin-bottom: 15px;
+    border-color: #3a3a3a;
+}
+
+#addLabelBtn, #addCategoryBtn {
+    margin-left: 15px;
+    background-color: #7ae95f;
+}
+
+#delLabelBtn, #delCategoryBtn {
+    background-color: #e4181c;
+}
+
+/* End label management page styles */

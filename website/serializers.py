@@ -7,6 +7,7 @@ class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collection
 
+
 class LabelSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Label
+    class Meta:
+        model = Label

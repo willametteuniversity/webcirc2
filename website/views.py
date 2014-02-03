@@ -113,6 +113,7 @@ def registerNewUser(request):
         return render(request, u'forms/register.html', {})
 
 
+@csrf_exempt
 def login(request):
     '''
     This function handles the logging in of a user, and the submission of the login form from
@@ -149,6 +150,12 @@ def login(request):
         responseData[u'reason'] = u'Invalid username or password.'
         return HttpResponse(json.dumps(responseData), content_type=u'application/json')
 
+
+def labelAndCategoryMgmt(request):
+    '''
+    This function returns the label and category management HTML
+    '''
+    return render(request, u'label_category_mgmt.html', {})
 
 @csrf_exempt
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -222,8 +229,6 @@ def collectionList(request, format=None):
         # Create a serializer. Note that we are giving
         # it the data, in JSON format.
         serializer = CollectionSerializer(data=request.DATA)
-        print serializer.data
-        print serializer.errors
         # We check if they sent us a valid Collection
         # object.
         if serializer.is_valid():
@@ -235,3 +240,45 @@ def collectionList(request, format=None):
         # If it WASN'T a valid Collection they sent us, return
         # an HTTP error code.
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@csrf_exempt
+@api_view(['GET', 'POST'])
+def labelList(request, format=None):
+    '''
+    Lists all Labels
+    '''
+    if request.method == 'GET':
+        labels = Label.objects.all()
+        serializer = LabelSerializer(labels, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = LabelSerializer(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@csrf_exempt
+@api_view(['GET', 'PUT', 'DELETE'])
+def labelDetail(request, pk, format=None):
+    '''
+    Retrieve, update or delete a Label.
+    '''
+    try:
+        label = Label.objects.get(LabelID=pk)
+    except Label.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        serializer = LabelSerializer(label)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = LabelSerializer(label, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        # If they used DELETE, they want to delete the Collection
+        # that they sent the PK for.
+        label.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)

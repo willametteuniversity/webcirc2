@@ -15,6 +15,7 @@
   <body>
     <script src="{% static "scripts/jquery-1.10.2.js" %}"></script>
     <script src="{% static "scripts/bootstrap.js" %}"></script>
+    <script src="{% static "steal/steal.js" %}"></script>
     <script src="{% static "scripts/webcirc2.js" %}"></script>
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
@@ -27,22 +28,27 @@
           <a class="navbar-brand" href="#">WebCirc 2</a>
         </div>
         <div class="navbar-collapse collapse">
-        {%  if user.isauthenticated %}
+        {%  if user.is_authenticated %}
             <ul class="nav navbar-nav">
                 <li><a href="#">New</a></li>
                 <li><a href="#">Daily</a></li>
                 <li><a href="#">Monthly</a></li>
                 <li><a href="#">Overdue Stuff</a></li>
+                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" id="labelAndCategoryMgmtLink">Label and Category Management</a></li>
+                    </ul>
+                </li>
             </ul>
         {% else %}
-          <form class="navbar-form navbar-right">
+          <form class="navbar-form navbar-right" id="signInForm">
             <div class="form-group">
-              <input type="text" placeholder="Email" class="form-control">
+              <input name="username" type="text" placeholder="Email" class="form-control">
             </div>
             <div class="form-group">
-              <input type="password" placeholder="Password" class="form-control">
+              <input name="password" type="password" placeholder="Password" class="form-control">
             </div>
-            <button type="submit" class="btn btn-success">Sign in</button> <span id="signInOrRegisterText">or</span> <button id="registerBtn" type="button" class="btn btn-info">Register</button>
+            <button type="submit" class="btn btn-success" id="signInBtn">Sign in</button> <span id="signInOrRegisterText">or</span> <button id="registerBtn" type="button" class="btn btn-info">Register</button>
 
           </form>
         {% endif %}

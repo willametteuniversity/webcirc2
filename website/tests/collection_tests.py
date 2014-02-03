@@ -98,3 +98,4 @@ class CollectionAPITests(TestCase):
 
         # Let's check the status code
         self.assertEqual(204, response.status_code)
+
