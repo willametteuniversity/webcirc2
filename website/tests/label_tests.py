@@ -94,7 +94,11 @@ class LabelAPITests(TestCase):
         '''
         This tries to create a new label with some other label as the parent
         '''
-        self.fail(u'Code me!')
+        c = Client()
+        response = c.post(u'/labels/', {u'LabelName':u'Test Label 3', u'ParentCategory':u'2'})
+        newLabel = Label.objects.get(LabelID=3)
+        parentLabel = Label.objects.get(LabelID=2)
+        self.assertEqual(newLabel.ParentCategory.LabelID, parentLabel.LabelID)
 
     def test_can_delete_label(self):
         '''
