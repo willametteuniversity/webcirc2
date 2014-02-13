@@ -1,10 +1,48 @@
 $(document).ready(function() {
-    steal("can/can.js", function() {
+$.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+  console.log("OK");
+});
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    // using jQuery
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+
+    steal("can/can.js", function() {});
+    steal("scripts/models/collection.js", function() {});
+    steal("scripts/models/label.js", function() {
 
     });
-    steal("scripts/models/collection.js", function() {
-    });
-    steal("scripts/models/label.js", function() {
+    steal("scripts/labelAndCategoryMgmt.js", function() {
+        $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+            if ( options.processData
+            && /^application\/json((\+|;).+)?$/i.test( options.contentType )
+            && /^(post|put|delete)$/i.test( options.type )
+            ) {
+                options.data = JSON.stringify( originalOptions.data );
+            }
+            if (!options.crossDomain) {
+                if (csrftoken) {
+                    return jqXHR.setRequestHeader('X-CSRFToken', csrftoken);
+                }
+            }
+        });
     });
 
     $("#registerBtn").on("click", function(event) {

@@ -1,7 +1,20 @@
 var Label = can.Model({
     findAll: 'GET /labels/',
     findOne: 'GET /labels/{id}',
-    create:  'POST /labels/',
-    update:  'PUT /labels/{id}',
-    destroy: 'DELETE /labels/{id}'
+    create:  {
+        type: 'POST',
+        contentType: 'application/json',
+        url: '/labels/'
+    },
+    update:  {
+        type: 'PUT',
+        contentType: 'application/json',
+        url: '/labels/{id}'
+    },
+    destroy: {
+        type: 'DELETE',
+        contentType: 'application/json',
+        url: '/labels/{id}'
+    }
+
 }, {})

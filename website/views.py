@@ -201,7 +201,6 @@ def collectionDetail(request, pk, format=None):
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
-@csrf_exempt
 @api_view(['GET', 'POST'])
 def collectionList(request, format=None):
     '''
@@ -241,7 +240,6 @@ def collectionList(request, format=None):
         # an HTTP error code.
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
 @api_view(['GET', 'POST'])
 def labelList(request, format=None):
     '''
@@ -258,12 +256,12 @@ def labelList(request, format=None):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
 @api_view(['GET', 'PUT', 'DELETE'])
 def labelDetail(request, pk, format=None):
     '''
     Retrieve, update or delete a Label.
     '''
+    print request
     try:
         label = Label.objects.get(LabelID=pk)
     except Label.DoesNotExist:
