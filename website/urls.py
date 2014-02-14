@@ -6,6 +6,8 @@ urlpatterns = patterns('website.views',
                        url(r'^collections/$', 'collectionList'),
                        url(r'^collections/(?P<pk>[0-9]+)$', 'collectionDetail'),
                        url(r'^labels/$', 'labelList'),
-                       url(r'^labels/(?P<pk>[0-9]+)$', 'labelDetail'))
+                       url(r'^labels/(?P<pk>[0-9]+)$', 'labelDetail'),
+                       url(r'^reservations/$', 'reservationList'),
+                       url(r'^reservations/(?P<pk>[0-9]+)$', 'reservationDetail'))
 
 urlpatterns = format_suffix_patterns(urlpatterns)

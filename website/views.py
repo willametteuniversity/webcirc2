@@ -280,3 +280,38 @@ def labelDetail(request, pk, format=None):
         # that they sent the PK for.
         label.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+def reservationList(request, format=None):
+    '''
+    Retrieve a list of all Reservations
+    '''
+    if request.method == 'GET':
+        reservations = Reservation.objects.all()
+        serializer = ReservationSerializer(collections, many=True)
+        if serialiser.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def reservationDetail(request, pk, format=None):
+    '''
+    Retrieve, update or delete a Reservation.
+    '''
+    try:
+        reservation = Reservation.objects.get(ReservationID=pk)
+    except Reservation.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ReservationSerializer(reservation)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = ReservationSerializer(reservation, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        reservation.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)

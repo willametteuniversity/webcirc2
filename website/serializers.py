@@ -30,3 +30,7 @@ class StatusSerializer(serializers.ModelSerializer):
 class InventoryItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = InventoryItem
+
+class ReservationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reservation
