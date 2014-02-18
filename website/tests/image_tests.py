@@ -15,10 +15,10 @@ from django.contrib.auth.models import User
 class ImageAPITests(TestCase):
 
     def setUp(self):
-	   inv1 = Image.objects.create()
-	   inv2 = Image.objects.create()
+	   inv1 = Image.objects.create(TestID=1)
+	   inv2 = Image.objects.create(TestID=2)
 
-    def test_can_get_list_of_reservations(self):
+    def test_can_get_list_of_images(self):
         c = Client()
         response = c.get(u'/images/')
 
@@ -47,7 +47,7 @@ class ImageAPITests(TestCase):
     def test_can_create_new_image(self):
         c = Client()
         # Make the request to make the image...
-        response = c.post(u'/images/')
+        response = c.post(u'/images/', u'TestID' : u'1')
         # We expect the server to return a proper status code and the item it made. So lets check all of those:
         self.assertEqual(u'Image3')
         self.assertEqual(201, response.status_code)

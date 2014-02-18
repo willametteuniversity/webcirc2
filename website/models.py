@@ -31,6 +31,7 @@ class ItemImage(models.Model):
 
 class Image(models.Model):
     ImageID = models.AutoField(primary_key=True)
+    TestID = models.IntegerField(max_length=500);
 
 
 class Status(models.Model):
