@@ -15,8 +15,12 @@ from django.contrib.auth.models import User
 class LabelNotesAPITests(TestCase):
 
     def setUp(self):
-	   inv1 = LabelNotes.objects.create(LabelNote='LabelNotes1')
-	   inv2 = LabelNotes.objects.create(LabelNote='LabelNotes2')
+	   
+        lbl1 = Label.objects.create(LabelName='Label1', ParentCategory=self.id)
+        lbl2 = Label.objects.create(LabelName='Label2', ParentCategory=self.id)
+
+        lbln1 = LabelNotes.objects.create(LabelNote='LabelNotes1', LabelID=lbl1.LabelID)
+        lbln2 = LabelNotes.objects.create(LabelNote='LabelNotes2', LabelID=lbl2.LabelID)
 
     def test_can_get_list_of_reservations(self):
         c = Client()
