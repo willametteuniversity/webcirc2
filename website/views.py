@@ -287,7 +287,7 @@ def reservationList(request, format=None):
     '''
     if request.method == 'GET':
         reservations = Reservation.objects.all()
-        serializer = ReservationSerializer(collections, many=True)
+        serializer = ReservationSerializer(reservations, many=True)
         if serialiser.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -314,4 +314,140 @@ def reservationDetail(request, pk, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         reservation.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+def labelNoteList(request, format=None):
+    '''
+    Retrieve a list of all Label Notes
+    '''
+    if request.method == 'GET':
+        labelNotes = LabelNotes.objects.all()
+        serializer = LabelNotesSerializer(labelNotes, many=True)
+        if serialiser.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def labelNoteDetail(request, pk, format=None):
+    '''
+    Retrieve, update or delete Label Note.
+    '''
+    try:
+        labelNote = LabelNotes.objects.get(ReservationID=pk)
+    except LabelNotes.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = LabelNotesSerializer(labelNote)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = LabelNotesSerializer(labelNote, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        labelNote.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+def imageList(request, format=None):
+    '''
+    Retrieve a list of all Label Notes
+    '''
+    if request.method == 'GET':
+        images = Image.objects.all()
+        serializer = ImageSerializer(images, many=True)
+        if serialiser.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def imageDetail(request, pk, format=None):
+    '''
+    Retrieve, update or delete Label Note.
+    '''
+    try:
+        image = Image.objects.get(ReservationID=pk)
+    except Image.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ImageSerializer(image)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = ImageSerializer(image, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        image.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+def statusList(request, format=None):
+    '''
+    Retrieve a list of all Label Notes
+    '''
+    if request.method == 'GET':
+        states = Status.objects.all()
+        serializer = StatusSerializer(states, many=True)
+        if serialiser.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def statusDetail(request, pk, format=None):
+    '''
+    Retrieve, update or delete Label Note.
+    '''
+    try:
+        state = Status.objects.get(ReservationID=pk)
+    except Status.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = StatusSerializer(status)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = StatusSerializer(state, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        state.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+def inventoryItemList(request, format=None):
+    '''
+    Retrieve a list of all Label Notes
+    '''
+    if request.method == 'GET':
+        inventoryItems = InventoryItem.objects.all()
+        serializer = InventoryItemSerializer(inventoryItems, many=True)
+        if serialiser.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+def inventoryItemDetail(request, pk, format=None):
+    '''
+    Retrieve, update or delete Inventory Item.
+    '''
+    try:
+        inventoryItem = InventoryItem.objects.get(ReservationID=pk)
+    except InventoryItem.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = InventoryItemSerializer(inventoryItem)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = InventoryItemSerializer(inventoryItem, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        inventoryItem.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)

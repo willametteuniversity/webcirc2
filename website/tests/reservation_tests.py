@@ -18,7 +18,7 @@ class ReservationAPITests(TestCase):
 	   res1 = Reservation.objects.create(EventTitle='Reservation1', CustomerEmail='billybob@test.com')
 	   res2 = Reservation.objects.create(EventTitle='Reservation2', CustomerEmail='jimmyjohn@test.com')
 
-    def test_can_get_list_of_collections(self):
+    def test_can_get_list_of_reservations(self):
         c = Client()
         response = c.get(u'/reservations/')
 
@@ -30,7 +30,7 @@ class ReservationAPITests(TestCase):
 
     def test_reservations_url_resolves_to_reservationDetail(self):
 	   found = resolve(u'/reservations/1')
-	   self.assertEqual(found.func, collectionDetail)
+	   self.assertEqual(found.func, reservationDetail)
 
     def test_can_get_specific_reservation(self):
 	   c = Client()
@@ -42,13 +42,13 @@ class ReservationAPITests(TestCase):
 
     def test_cannot_get_nonexistant_reservation(self):
         c = Client()
-        response = c.get(u'/collections/3')
+        response = c.get(u'/reservations/3')
 
         self.assertEqual(404, response.status_code)
 
     def test_can_create_new_reservation(self):
         c = Client()
-        # Make the request to make the collection...
+        # Make the request to make the reservation...
         response = c.post(u'/reservations/', {u'EventTitle' : u'Reservation3',
                                          u'CustomerEmail' : u'sallysal@test.com'})
         # We expect the server to return a proper status code and the item it made. So lets check all of those:
@@ -62,6 +62,6 @@ class ReservationAPITests(TestCase):
         '''
         c = Client()
         # Make the delete request
-        response = c.delete(u'/collections/2')
+        response = c.delete(u'/reservations/2')
         # Let's check the status code
         self.assertEqual(204, response.status_code)
