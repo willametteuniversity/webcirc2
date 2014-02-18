@@ -8,4 +8,3 @@ from labelNote_tests import *
 from status_tests import *
 from image_tests import *
 from inventoryItem_tests import *
-

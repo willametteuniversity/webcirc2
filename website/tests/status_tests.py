@@ -15,8 +15,8 @@ from django.contrib.auth.models import User
 class StatusAPITests(TestCase):
 
     def setUp(self):
-	   inv1 = Status.objects.create(StatusDescription='Status1')
-	   inv2 = Status.objects.create(StatusDescription='Status2')
+	   stat1 = Status.objects.create(StatusDescription='Status1')
+	   stat2 = Status.objects.create(StatusDescription='Status2')
 
     def test_can_get_list_of_reservations(self):
         c = Client()

@@ -25,7 +25,6 @@ from website.views import *
 from website.models import *
 from django.contrib.auth.models import User
 
-
 class HomePageTest(TestCase):
     def test_root_url_resolves_to_home_page_view(self):
         '''
