@@ -55,8 +55,9 @@ label {
     margin-top: 150px;
 }
 /* These are rules for the label management page */
-#labelListBox {
-    width: 100%
+#labelListBox, #categoryListBox {
+    width: 100%;
+    height: 600px;
 }
 
 .lblMgmtBtn, .catMgmtBtn {
@@ -71,6 +72,10 @@ label {
 
 #delLabelBtn, #delCategoryBtn {
     background-color: #e4181c;
+}
+
+#labelMasterList, #categoryMasterList {
+    height: 700px;
 }
 
 /* End label management page styles */
