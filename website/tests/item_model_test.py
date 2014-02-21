@@ -15,18 +15,57 @@ from website.views import *
 from website.models import *
 from django.contrib.auth.models import User
 
+
 class CollectionAPITest(TestCase):
     def setUp(self):
-        pass
+        ItemModel.objects.create(ModelID=1, ModelDesignation=u'Model type 1')
+        ItemModel.objects.create(ModelID=2, ModelDesignation=u'Model type 2')
+
+    def test_api_url_resolves_correctly(self):
+        found = resolve(u'/models/')
+        self.assertEqual(found.func, itemModelList)
+        found = resolve(u'/models/1')
+        self.assertEqual(found.func, itemModelDetail)
 
     def test_can_view_all_item_models(self):
-        pass
+        client = Client()
+        response = client.get(u'models')
+        self.assertEqual(1, response.data[0][u'ModelID'])
+        self.assertEqual(2, response.data[1][u'ModelID'])
 
     def test_can_add_new_item_model(self):
-        pass
+        client = Client()
+        response = client.post(u'/models/', {u'ModelDesignation': u'Model type 3'})
+        self.assertEqual(3, response.data[u'ModelID'])
+        self.assertEqual(u'Model type 3', response.data[u'ModelDesignation'])
+        self.assertEqual(201, response.status_code)
 
     def test_can_view_item_model_detail(self):
-        pass
-    
+        client = Client()
+        response = client.get(u'models/1')
+        self.assertEqual(1, response.data[u'ModelID'])
+        self.assertEqual(u'Model type 1', response.data[u'ModelDesignation'])
+        response = client.get(u'models/2')
+        self.assertEqual(2, response.data[u'ModelID'])
+        self.assertEqual(u'Model type 2', response.data[u'ModelDesignation'])
+
     def test_can_edit_item_model_detail(self):
-        pass
+        client = Client()
+        client.put(u'/collections/1', {u'ModelDesignation': u'Model type 1, edited'})
+        response = client.get(u'models/1')
+        self.assertEqual(u'Model type 1, edited', response.data[u'ModelDesignation'])
+
+    def test_cant_view_nonexistent_item_model_detail(self):
+        client = Client()
+        response = client.get(u'/collections/3')
+        self.assertEqual(404, response.status_code)
+
+    def test_can_delete_model(self):
+        client = Client()
+        response = client.delete(u'/collections/2')
+        self.assertEqual(204, response.status_code)
+
+    def test_cannot_delete_nonexistent_model(self):
+        client = Client()
+        response = client.delete(u'/collections/3')
+        self.assertEqual(404, response.status_code)
