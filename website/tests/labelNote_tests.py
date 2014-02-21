@@ -16,13 +16,13 @@ class LabelNotesAPITests(TestCase):
 
     def setUp(self):
 	   
-        lbl1 = Label.objects.create(LabelName='Label1', ParentCategory=self.id)
-        lbl2 = Label.objects.create(LabelName='Label2', ParentCategory=self.id)
+        lbl1 = Label.objects.create(LabelName='Label1')
+        lbl2 = Label.objects.create(LabelName='Label2')
 
-        lbln1 = LabelNotes.objects.create(LabelNote='LabelNotes1', LabelID=lbl1.LabelID)
-        lbln2 = LabelNotes.objects.create(LabelNote='LabelNotes2', LabelID=lbl2.LabelID)
+        lbln1 = LabelNotes.objects.create(LabelNote='LabelNotes1', LabelID=lbl1)
+        lbln2 = LabelNotes.objects.create(LabelNote='LabelNotes2', LabelID=lbl2)
 
-    def test_can_get_list_of_reservations(self):
+    def test_can_get_list_of_labelNotes(self):
         c = Client()
         response = c.get(u'/labelNotes/')
 
@@ -30,7 +30,7 @@ class LabelNotesAPITests(TestCase):
     	self.assertEqual(u'LabelNotes2', response.data[1]['LabelNote'])
 
         found = resolve(u'/labelNotes/')
-        serlf.assertEqual(found.func, labelNoteList)
+        self.assertEqual(found.func, labelNoteList)
 
     def test_labelNotes_url_resolves_to_labelNoteDetail(self):
 	   found = resolve(u'/labelNotes/1')

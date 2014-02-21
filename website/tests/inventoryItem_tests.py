@@ -15,10 +15,34 @@ from django.contrib.auth.models import User
 class InventoryItemAPITests(TestCase):
 
     def setUp(self):
-	   inv1 = InventoryItem.objects.create(Description='InventoryItem1', Notes='Note1')
-	   inv2 = InventoryItem.objects.create(Description='InventoryItem2', Notes='Note2')
 
-    def test_can_get_list_of_reservations(self):
+        invw1 = InventoryWidget.objects.create();
+        invw2 = InventoryWidget.objects.create();
+
+        brand1 = ItemBrand.objects.create();
+        brand2 = ItemBrand.objects.create();
+
+        model1 = ItemModel.objects.create();
+        model2 = ItemModel.objects.create();
+
+        label1 = Label.objects.create();
+        label2 = Label.objects.create();
+
+        status1 = Status.objects.create();
+        status2 = Status.objects.create();
+
+        building = Building.objects.create(BuildingCode=1);
+
+        location1 = Location.objects.create(BuildingID=building);
+        location2 = Location.objects.create(BuildingID=building);
+
+        collection1 = Collection.objects.create();
+        collection2 = Collection.objects.create();
+
+        inv1 = InventoryItem.objects.create(Description=u'InventoryItem1', Notes=u'Note1', AlternateID=invw1, BrandID=brand1, ModelID=model1, CategoryID=label1, StatusID=status1, StorageLocation=location1, CollectionID=collection1)
+        inv2 = InventoryItem.objects.create(Description=u'InventoryItem2', Notes=u'Note2', AlternateID=invw2, BrandID=brand2, ModelID=model2, CategoryID=label2, StatusID=status2, StorageLocation=location2, CollectionID=collection2)
+
+    def test_can_get_list_of_inventoryItems(self):
         c = Client()
         response = c.get(u'/inventoryItems/')
 
@@ -26,7 +50,7 @@ class InventoryItemAPITests(TestCase):
     	self.assertEqual(u'InventoryItem2', response.data[1]['Description'])
 
         found = resolve(u'/inventoryItems/')
-        serlf.assertEqual(found.func, inventoryItemList)
+        self.assertEqual(found.func, inventoryItemList)
 
     def test_inventoryItems_url_resolves_to_inventoryItemDetail(self):
 	   found = resolve(u'/inventoryItems/1')
@@ -38,7 +62,7 @@ class InventoryItemAPITests(TestCase):
 
 	   self.assertEqual(u'InventoryItem1', response.data['Description'])
 	   self.assertEqual(u'Note1', response.data['Notes'])
-	   self.assertEqual(1, response.data['InventoryItemID'])
+	   self.assertEqual(1, response.data['ItemID'])
 
     def test_cannot_get_nonexistant_inventoryItem(self):
         c = Client()

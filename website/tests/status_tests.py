@@ -18,7 +18,7 @@ class StatusAPITests(TestCase):
 	   stat1 = Status.objects.create(StatusDescription='Status1')
 	   stat2 = Status.objects.create(StatusDescription='Status2')
 
-    def test_can_get_list_of_reservations(self):
+    def test_can_get_list_of_states(self):
         c = Client()
         response = c.get(u'/states/')
 
@@ -26,11 +26,11 @@ class StatusAPITests(TestCase):
     	self.assertEqual(u'Status2', response.data[1]['StatusDescription'])
 
         found = resolve(u'/states/')
-        serlf.assertEqual(found.func, stateList)
+        self.assertEqual(found.func, statusList)
 
-    def test_states_url_resolves_to_stateDetail(self):
+    def test_states_url_resolves_to_statusDetail(self):
 	   found = resolve(u'/states/1')
-	   self.assertEqual(found.func, stateDetail)
+	   self.assertEqual(found.func, statusDetail)
 
     def test_can_get_specific_state(self):
 	   c = Client()

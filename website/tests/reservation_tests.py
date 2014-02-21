@@ -15,8 +15,13 @@ from django.contrib.auth.models import User
 class ReservationAPITests(TestCase):
 
     def setUp(self):
-	   res1 = Reservation.objects.create(EventTitle='Reservation1', CustomerEmail='billybob@test.com')
-	   res2 = Reservation.objects.create(EventTitle='Reservation2', CustomerEmail='jimmyjohn@test.com')
+       
+        user1 = User.objects.create();
+
+        res1 = Reservation.objects.create(EventTitle='Reservation1', CustomerEmail='billybob@test.com', CustomerID=user1)
+        res2 = Reservation.objects.create(EventTitle='Reservation2', CustomerEmail='jimmyjohn@test.com', CustomerID=user1)
+
+
 
     def test_can_get_list_of_reservations(self):
         c = Client()
@@ -26,7 +31,7 @@ class ReservationAPITests(TestCase):
     	self.assertEqual(u'Reservation2', response.data[1]['EventTitle'])
 
         found = resolve(u'/reservations/')
-        serlf.assertEqual(found.func, reservationList)
+        self.assertEqual(found.func, reservationList)
 
     def test_reservations_url_resolves_to_reservationDetail(self):
 	   found = resolve(u'/reservations/1')
