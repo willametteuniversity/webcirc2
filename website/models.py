@@ -32,7 +32,6 @@ class ItemImage(models.Model):
 class Image(models.Model):
     ImageID = models.AutoField(primary_key=True)
     ImageName = models.CharField(max_length=500)
-    TestID = models.IntegerField(max_length=500);
 
 
 class Status(models.Model):

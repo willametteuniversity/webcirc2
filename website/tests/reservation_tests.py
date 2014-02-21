@@ -18,8 +18,8 @@ class ReservationAPITests(TestCase):
        
         user1 = User.objects.create();
 
-        res1 = Reservation.objects.create(EventTitle='Reservation1', CustomerEmail='billybob@test.com', CustomerID=user1)
-        res2 = Reservation.objects.create(EventTitle='Reservation2', CustomerEmail='jimmyjohn@test.com', CustomerID=user1)
+        res1 = Reservation.objects.create(EventTitle='Reservation1', CustomerEmail='billybob@test.com', CustomerID=user1, CustomerPhone=1, CustomerDept='Test1', ReservationNotes='This is a test')
+        res2 = Reservation.objects.create(EventTitle='Reservation2', CustomerEmail='jimmyjohn@test.com', CustomerID=user1, CustomerPhone=2, CustomerDept='Test2', ReservationNotes='This is a test')
 
 
 
@@ -57,6 +57,7 @@ class ReservationAPITests(TestCase):
         response = c.post(u'/reservations/', {u'EventTitle' : u'Reservation3',
                                          u'CustomerEmail' : u'sallysal@test.com'})
         # We expect the server to return a proper status code and the item it made. So lets check all of those:
+        print response.data
         self.assertEqual(u'Reservation3', response.data[u'EventTitle'])
         self.assertEqual(u'sallysal@test.com', response.data[u'CustomerEmail'])
         self.assertEqual(201, response.status_code)
