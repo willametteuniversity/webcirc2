@@ -51,21 +51,22 @@ class CollectionAPITest(TestCase):
 
     def test_can_edit_item_model_detail(self):
         client = Client()
-        client.put(u'/collections/1', {u'ModelDesignation': u'Model type 1, edited'})
+        response = client.put(u'/models/1', {u'ModelDesignation': u'Model type 1, edited'})
+        self.assertEqual(204, response.status_code)
         response = client.get(u'models/1')
         self.assertEqual(u'Model type 1, edited', response.data[u'ModelDesignation'])
 
     def test_cant_view_nonexistent_item_model_detail(self):
         client = Client()
-        response = client.get(u'/collections/3')
+        response = client.get(u'/models/3')
         self.assertEqual(404, response.status_code)
 
     def test_can_delete_model(self):
         client = Client()
-        response = client.delete(u'/collections/2')
+        response = client.delete(u'/models/2')
         self.assertEqual(204, response.status_code)
 
     def test_cannot_delete_nonexistent_model(self):
         client = Client()
-        response = client.delete(u'/collections/3')
+        response = client.delete(u'/models/3')
         self.assertEqual(404, response.status_code)
