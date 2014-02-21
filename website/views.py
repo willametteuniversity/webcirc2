@@ -246,7 +246,7 @@ def labelList(request, format=None):
     Lists all Labels
     '''
     if request.method == 'GET':
-        labels = Label.objects.all()
+        labels = Label.objects.all().extra(select={'lower_name':'lower(LabelName)'}).order_by('lower_name')
         serializer = LabelSerializer(labels, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
@@ -261,7 +261,6 @@ def labelDetail(request, pk, format=None):
     '''
     Retrieve, update or delete a Label.
     '''
-    print request
     try:
         label = Label.objects.get(LabelID=pk)
     except Label.DoesNotExist:
@@ -287,8 +286,8 @@ def reservationList(request, format=None):
     '''
     if request.method == 'GET':
         reservations = Reservation.objects.all()
-        serializer = ReservationSerializer(collections, many=True)
-        if serialiser.is_valid():
+        serializer = ReservationSerializer(reservations, many=True)
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
