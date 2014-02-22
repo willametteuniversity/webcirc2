@@ -31,6 +31,7 @@ class ItemImage(models.Model):
 
 class Image(models.Model):
     ImageID = models.AutoField(primary_key=True)
+    ImageName = models.CharField(max_length=500)
 
 
 class Status(models.Model):
@@ -46,7 +47,7 @@ class InventoryItem(models.Model):
     Description = models.CharField(max_length=500)
     Notes = models.CharField(max_length=500)
     CategoryID = models.ForeignKey('Label')
-    ParentItem = models.ForeignKey('InventoryItem')
+    ParentItem = models.ForeignKey('InventoryItem', null=True, blank=True)
     StatusID = models.ForeignKey('Status')
     StorageLocation = models.ForeignKey('Location')
     CollectionID = models.ForeignKey('Collection')
