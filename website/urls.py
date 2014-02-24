@@ -18,6 +18,8 @@ urlpatterns = patterns('website.views',
                        url(r'^states/$', 'statusList'),
                        url(r'^states/(?P<pk>[0-9]+)$', 'statusDetail'),
                        url(r'^inventoryItems/$', 'inventoryItemList'),
-                       url(r'^inventoryItems/(?P<pk>[0-9]+)$', 'inventoryItemDetail'),)
+                       url(r'^inventoryItems/(?P<pk>[0-9]+)$', 'inventoryItemDetail'),
+                       url(r'^brands/$', 'itemBrandList'),
+                       url(r'^brands/(?P<pk>[0-9]+)$', 'itemBrandDetail'),)
 
 urlpatterns = format_suffix_patterns(urlpatterns)

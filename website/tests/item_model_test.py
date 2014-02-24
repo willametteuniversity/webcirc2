@@ -14,7 +14,7 @@ from website.views import *
 from website.models import *
 
 
-class CollectionAPITest(TestCase):
+class ItemModelAPITest(TestCase):
     def setUp(self):
         ItemModel.objects.create(ModelID=1, ModelDesignation=u'Model type 1')
         ItemModel.objects.create(ModelID=2, ModelDesignation=u'Model type 2')
