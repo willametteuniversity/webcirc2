@@ -1,4 +1,4 @@
-var Label = can.Model({
+var Label = can.Model.extend({
     findAll: 'GET /labels/',
     findOne: 'GET /labels/{id}',
     create:  {

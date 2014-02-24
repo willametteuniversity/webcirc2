@@ -2,7 +2,6 @@ from django.forms import widgets
 from rest_framework import serializers
 from website.models import *
 
-
 class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collection
@@ -32,7 +31,6 @@ class InventoryItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = InventoryItem
 
-
-class ItemModelSerializer(serializers.ModelSerializer):
+class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ItemModel
+        model = Reservation
