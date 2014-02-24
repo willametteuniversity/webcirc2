@@ -10,10 +10,8 @@ sys.path.insert(0, project_dir)
 from django.core.urlresolvers import resolve
 from django.test import TestCase
 from django.test.client import Client
-from django.http import HttpRequest
 from website.views import *
 from website.models import *
-from django.contrib.auth.models import User
 
 
 class CollectionAPITest(TestCase):
