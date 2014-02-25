@@ -15,8 +15,8 @@ from django.contrib.auth.models import User
 class StatusAPITests(TestCase):
 
     def setUp(self):
-	   stat1 = Status.objects.create(StatusDescription='Status1')
-	   stat2 = Status.objects.create(StatusDescription='Status2')
+        stat1 = Status.objects.create(StatusDescription='Status1')
+        stat2 = Status.objects.create(StatusDescription='Status2')
 
     def test_can_get_list_of_states(self):
         c = Client()
@@ -29,15 +29,15 @@ class StatusAPITests(TestCase):
         self.assertEqual(found.func, statusList)
 
     def test_states_url_resolves_to_statusDetail(self):
-	   found = resolve(u'/states/1')
-	   self.assertEqual(found.func, statusDetail)
+        found = resolve(u'/states/1')
+        self.assertEqual(found.func, statusDetail)
 
     def test_can_get_specific_state(self):
-	   c = Client()
-	   response = c.get(u'/states/1')
+        c = Client()
+        response = c.get(u'/states/1')
 
-	   self.assertEqual(u'Status1', response.data['StatusDescription'])
-	   self.assertEqual(1, response.data['StatusID'])
+        self.assertEqual(u'Status1', response.data['StatusDescription'])
+        self.assertEqual(1, response.data['StatusID'])
 
     def test_cannot_get_nonexistant_state(self):
         c = Client()
@@ -49,6 +49,8 @@ class StatusAPITests(TestCase):
         c = Client()
         # Make the request to make the state...
         response = c.post(u'/states/', {u'StatusDescription' : u'Status3'})
+
+        print response.data
         # We expect the server to return a proper status code and the item it made. So lets check all of those:
         self.assertEqual(u'Status3', response.data[u'StatusDescription'])
         self.assertEqual(201, response.status_code)

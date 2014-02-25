@@ -403,8 +403,8 @@ def statusList(request, format=None):
     Retrieve a list of all Label Notes
     '''
     if request.method == 'GET':
-        states = Status.objects.all()
-        serializer = StatusSerializer(states, many=True)
+        statuses = Status.objects.all()
+        serializer = StatusSerializer(statuses, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = StatusSerializer(data=request.DATA)
@@ -419,7 +419,7 @@ def statusDetail(request, pk, format=None):
     Retrieve, update or delete Label Note.
     '''
     try:
-        state = Status.objects.get(StatusID=pk)
+        status = Status.objects.get(StatusID=pk)
     except Status.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
@@ -427,13 +427,13 @@ def statusDetail(request, pk, format=None):
         serializer = StatusSerializer(status)
         return Response(serializer.data)
     elif request.method == 'PUT':
-        serializer = StatusSerializer(state, data=request.DATA)
+        serializer = StatusSerializer(status, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
-        state.delete()
+        status.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
