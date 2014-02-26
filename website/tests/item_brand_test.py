@@ -56,17 +56,17 @@ class ItemBrandAPITest(TestCase):
         response = client.get(u'/brands/1')
         self.assertEqual(u'Brand 1, edited', response.data[u'BrandName'])
 
-    def test_cant_view_nonexistent_item_model_detail(self):
+    def test_cant_view_nonexistent_brand_detail(self):
         client = Client()
         response = client.get(u'/brands/3')
         self.assertEqual(404, response.status_code)
 
-    def test_can_delete_model(self):
+    def test_can_delete_brand(self):
         client = Client()
         response = client.delete(u'/brands/2')
         self.assertEqual(204, response.status_code)
 
-    def test_cannot_delete_nonexistent_model(self):
+    def test_cannot_delete_nonexistent_brand(self):
         client = Client()
         response = client.delete(u'/brands/3')
         self.assertEqual(404, response.status_code)
