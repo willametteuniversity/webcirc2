@@ -93,7 +93,7 @@ class InventoryItemAPITests(TestCase):
 
         # Make the request to make the inventoryItem...
         response = c.post(u'/inventoryItems/', {u'Description' : u'InventoryItem3',
-                                         u'Notes' : u'Note3', u'AlternateID' : invw3.pk, u'BrandID' : brand3.pk, u'SatusID' : status3,
+                                         u'Notes' : u'Note3', u'AlternateID' : invw3.pk, u'BrandID' : brand3.pk, u'StatusID' : status3.pk,
                                          u'ModelID' : model3.pk, u'CategoryID' : label3.pk,
                                          u'StorageLocation' : location3.pk, u'CollectionID' : collection3.pk})
         # We expect the server to return a proper status code and the item it made. So lets check all of those:

@@ -421,7 +421,7 @@ def statusDetail(request, pk, format=None):
     try:
         status = Status.objects.get(StatusID=pk)
     except Status.DoesNotExist:
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        return HttpResponse(status=404)
 
     if request.method == 'GET':
         serializer = StatusSerializer(status)
@@ -434,7 +434,7 @@ def statusDetail(request, pk, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         status.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        return HttpResponse(status=204)
 
 @api_view(['GET', 'POST'])
 def inventoryItemList(request, format=None):
