@@ -480,7 +480,7 @@ def inventoryItemDetail(request, pk, format=None):
 def itemModelList(request):
     if request.method == 'GET':
         all_models = ItemModel.objects.all()
-        serializer = ItemModelSerializer(all_models)
+        serializer = ItemModelSerializer(all_models, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = ItemModelSerializer(data=request.DATA)
@@ -514,7 +514,7 @@ def itemModelDetail(request, pk):
 def itemBrandList(request):
     if request.method == 'GET':
         all_models = ItemBrand.objects.all()
-        serializer = ItemBrandSerializer(all_models)
+        serializer = ItemBrandSerializer(all_models, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = ItemBrandSerializer(data=request.DATA)

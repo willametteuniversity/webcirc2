@@ -43,15 +43,17 @@ class ItemBrandAPITest(TestCase):
         response = client.get(u'/brands/1')
         self.assertEqual(1, response.data[u'BrandID'])
         self.assertEqual(u'Brand 1', response.data[u'BrandName'])
-        response = client.get(u'brands/2')
+        response = client.get(u'/brands/2')
         self.assertEqual(2, response.data[u'BrandID'])
         self.assertEqual(u'Brand 2', response.data[u'BrandName'])
 
     def test_can_edit_item_brand_detail(self):
         client = Client()
-        response = client.put(u'/brands/1', {u'BrandName': u'Brand 1, edited'})
-        self.assertEqual(204, response.status_code)
-        response = client.get(u'brands/1')
+        response = client.put(u'/brands/1',
+                              data=json.dumps({u'BrandName': u'Brand 1, edited'}),
+                              content_type='application/json')
+        self.assertEqual(200, response.status_code)
+        response = client.get(u'/brands/1')
         self.assertEqual(u'Brand 1, edited', response.data[u'BrandName'])
 
     def test_cant_view_nonexistent_item_model_detail(self):
