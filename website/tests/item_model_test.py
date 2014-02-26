@@ -10,13 +10,11 @@ sys.path.insert(0, project_dir)
 from django.core.urlresolvers import resolve
 from django.test import TestCase
 from django.test.client import Client
-from django.http import HttpRequest
 from website.views import *
 from website.models import *
-from django.contrib.auth.models import User
 
 
-class CollectionAPITest(TestCase):
+class ItemModelAPITest(TestCase):
     def setUp(self):
         ItemModel.objects.create(ModelID=1, ModelDesignation=u'Model type 1')
         ItemModel.objects.create(ModelID=2, ModelDesignation=u'Model type 2')
@@ -29,7 +27,7 @@ class CollectionAPITest(TestCase):
 
     def test_can_view_all_item_models(self):
         client = Client()
-        response = client.get(u'models')
+        response = client.get(u'/models/')
         self.assertEqual(1, response.data[0][u'ModelID'])
         self.assertEqual(2, response.data[1][u'ModelID'])
 
@@ -42,18 +40,20 @@ class CollectionAPITest(TestCase):
 
     def test_can_view_item_model_detail(self):
         client = Client()
-        response = client.get(u'models/1')
+        response = client.get(u'/models/1')
         self.assertEqual(1, response.data[u'ModelID'])
         self.assertEqual(u'Model type 1', response.data[u'ModelDesignation'])
-        response = client.get(u'models/2')
+        response = client.get(u'/models/2')
         self.assertEqual(2, response.data[u'ModelID'])
         self.assertEqual(u'Model type 2', response.data[u'ModelDesignation'])
 
     def test_can_edit_item_model_detail(self):
         client = Client()
-        response = client.put(u'/models/1', {u'ModelDesignation': u'Model type 1, edited'})
-        self.assertEqual(204, response.status_code)
-        response = client.get(u'models/1')
+        response = client.put(u'/models/1',
+                              data=json.dumps({u'ModelDesignation': u'Model type 1, edited'}),
+                              content_type='application/json')
+        self.assertEqual(200, response.status_code)
+        response = client.get(u'/models/1')
         self.assertEqual(u'Model type 1, edited', response.data[u'ModelDesignation'])
 
     def test_cant_view_nonexistent_item_model_detail(self):

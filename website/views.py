@@ -474,12 +474,13 @@ def inventoryItemDetail(request, pk, format=None):
     elif request.method == 'DELETE':
         inventoryItem.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-    
+
+
 @api_view(['GET', 'POST'])
 def itemModelList(request):
     if request.method == 'GET':
         all_models = ItemModel.objects.all()
-        serializer = ItemModelSerializer(all_models)
+        serializer = ItemModelSerializer(all_models, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = ItemModelSerializer(data=request.DATA)
@@ -487,6 +488,7 @@ def itemModelList(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def itemModelDetail(request, pk):
@@ -499,6 +501,74 @@ def itemModelDetail(request, pk):
         return Response(serializer.data)
     elif request.method == 'PUT':
         serializer = ItemModelSerializer(current_model, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        current_model.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET', 'POST'])
+def itemBrandList(request):
+    if request.method == 'GET':
+        all_models = ItemBrand.objects.all()
+        serializer = ItemBrandSerializer(all_models, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = ItemBrandSerializer(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def itemBrandDetail(request, pk):
+    try:
+        current_model = ItemBrand.objects.get(BrandID=pk)
+    except ItemBrand.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        serializer = ItemBrandSerializer(current_model)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = ItemBrandSerializer(current_model, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        current_model.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET', 'POST'])
+def actionTypeList(request):
+    if request.method == 'GET':
+        all_models = ActionType.objects.all()
+        serializer = ActionTypeSerializer(all_models, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = ActionTypeSerializer(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def actionTypeDetail(request, pk):
+    try:
+        current_model = ActionType.objects.get(ActionTypeID=pk)
+    except ActionType.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        serializer = ActionTypeSerializer(current_model)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = ActionTypeSerializer(current_model, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

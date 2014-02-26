@@ -32,10 +32,22 @@ class InventoryItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = InventoryItem
 
+
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
 
+
 class ItemModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = ItemModel
+
+
+class ItemBrandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ItemBrand
+
+
+class ActionTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ActionType
