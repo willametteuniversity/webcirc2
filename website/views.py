@@ -22,6 +22,9 @@ from rest_framework.response import Response
 from website.models import *
 from website.serializers import *
 
+#JSON imports
+import json
+
 
 def index(request):
     '''
@@ -576,3 +579,23 @@ def actionTypeDetail(request, pk):
     elif request.method == 'DELETE':
         current_model.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def categoryHierarchy(request):
+    '''
+    retrive a list of categories in a hierarchy structure
+    '''
+    if request.method == 'GET':
+        root = Label.objects.get(pk=1)
+
+        def get_nodes(node):
+            d = {node.pk : node}
+            children = get_children(node=node)
+            for x in children:
+                d[x.pk] = x
+
+        def get_children(node):
+            return [x for x in Label.objects.all() if str(x.pk).startswith(str(node.pk))]
+
+        tree = get_nodes(node=root)
+        return Response(json.dumps(tree))

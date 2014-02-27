@@ -22,6 +22,7 @@ urlpatterns = patterns('website.views',
                        url(r'^brands/$', 'itemBrandList'),
                        url(r'^brands/(?P<pk>[0-9]+)$', 'itemBrandDetail'),
                        url(r'^actions/$', 'actionTypeList'),
-                       url(r'^actions/(?P<pk>[0-9]+)$', 'actionTypeDetail'),)
+                       url(r'^actions/(?P<pk>[0-9]+)$', 'actionTypeDetail'),
+                       url(r'^categoryHierarchy/', 'categoryHierarchy'))
 
 urlpatterns = format_suffix_patterns(urlpatterns)
