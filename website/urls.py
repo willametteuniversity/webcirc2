@@ -15,9 +15,14 @@ urlpatterns = patterns('website.views',
                        url(r'^labelNotes/(?P<pk>[0-9]+)$', 'labelNoteDetail'),
                        url(r'^images/$', 'imageList'),
                        url(r'^images/(?P<pk>[0-9]+)$', 'imageDetail'),
-                       url(r'^states/$', 'statusList'),
-                       url(r'^states/(?P<pk>[0-9]+)$', 'statusDetail'),
+                       url(r'^statuses/$', 'statusList'),
+                       url(r'^statuses/(?P<pk>[0-9]+)$', 'statusDetail'),
                        url(r'^inventoryItems/$', 'inventoryItemList'),
-                       url(r'^inventoryItems/(?P<pk>[0-9]+)$', 'inventoryItemDetail'),)
+                       url(r'^inventoryItems/(?P<pk>[0-9]+)$', 'inventoryItemDetail'),
+                       url(r'^brands/$', 'itemBrandList'),
+                       url(r'^brands/(?P<pk>[0-9]+)$', 'itemBrandDetail'),
+                       url(r'^actions/$', 'actionTypeList'),
+                       url(r'^actions/(?P<pk>[0-9]+)$', 'actionTypeDetail'),
+                       url(r'^categoryHierarchy/', 'categoryHierarchy'))
 
 urlpatterns = format_suffix_patterns(urlpatterns)
