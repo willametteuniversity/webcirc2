@@ -1,0 +1,78 @@
+[
+    {
+        "model": "website.Label",
+        "pk": 7,
+        "fields": {
+            "LabelName": "RootCategory"
+        }
+    },
+	{
+		"model": "website.Label",
+		"pk": 1,
+		"fields": {
+			"LabelName": "Microphone"
+		}	
+	},
+	{
+		"model": "website.Label",
+		"pk": 2,
+		"fields": {
+			"LabelName": "Adapter",
+            "ParentCategory": 7
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 3,
+		"fields": {
+			"LabelName": "A/V Adapter",
+			"ParentCategory": 2
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 4,
+		"fields": {
+			"LabelName": "3.5mm <-> RCA A/V Adapter",
+			"ParentCategory": 2
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 5,
+		"fields": {
+			"LabelName": "Audio Adapter",
+			"ParentCategory": 2
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 6,
+		"fields": {
+			"LabelName": "1/4in <-> 3.5mm Audio Adapter",
+			"ParentCategory": 5
+		}
+	},
+    {
+        "model": "website.Label",
+        "pk": 7,
+        "fields": {
+            "LabelName": "1/4in"
+        }
+    },
+    {
+        "model": "website.Label",
+        "pk": 8,
+        "fields": {
+            "LabelName": "A/V"
+        }
+    },
+    {
+        "model": "website.Label",
+        "pk": 9,
+        "fields": {
+            "LabelName": "A/V Adapter"
+        }
+    }
+
+]

@@ -22,9 +22,11 @@ $(document).ready(function() {
     var csrftoken = getCookie('csrftoken');
 
     steal("can/can.js", function() {});
+
     steal("scripts/utility.js", function() {});
     steal("scripts/models/collection.js", function() {});
     steal("scripts/models/label.js", function() {});
+    steal("jstree/dist/jstree.min.js", function() {});
     steal("scripts/labelAndCategoryMgmt.js", function() {
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
             /**
@@ -43,10 +45,6 @@ $(document).ready(function() {
                 }
             }
         });
-
-
-
-
     });
 
     $("#registerBtn").on("click", function(event) {
@@ -73,6 +71,7 @@ $(document).ready(function() {
          */
          $("#mainrow").load("/labelAndCategoryMgmt/", function() {
              loadLabels();
+             $("#categoryMasterTree").jstree();
          });
 
     });
