@@ -591,8 +591,11 @@ def categoryHierarchy(request):
         def get_nodes(node):
             d = {node.pk : node}
             children = get_children(node=node)
-            for x in children:
-                d[x.pk] = x
+            if children:
+                for x in children:
+                    d[x.pk] = x
+                    d = dict(d.items() + get_nodes(node=x))
+            return d
 
         def get_children(node):
             return [x for x in Label.objects.all() if str(x.pk).startswith(str(node.pk))]
