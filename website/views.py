@@ -594,11 +594,12 @@ def categoryHierarchy(request):
             if children:
                 for x in children:
                     d[x.pk] = x
-                    d = dict(d.items() + get_nodes(node=x))
+                    print x.pk
+                    d = dict(d.items() + dict(get_nodes(node=x))
             return d
 
         def get_children(node):
-            return [x for x in Label.objects.all() if str(x.pk).startswith(str(node.pk))]
+            return [x for x in Label.objects.all() if (str(x.pk).startswith(str(node.pk))) and (str(x.pk) != str(node.pk))]
 
         tree = get_nodes(node=root)
         return Response(json.dumps(tree))
