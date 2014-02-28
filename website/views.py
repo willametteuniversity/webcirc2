@@ -6,6 +6,9 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
+from django.core import serializers
+from django.utils import simplejson
+
 # Auth imports
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
@@ -595,11 +598,14 @@ def categoryHierarchy(request):
                 for x in children:
                     d[x.pk] = x
                     print x.pk
-                    d = dict(d.items() + dict(get_nodes(node=x))
+                    d = dict(d.items() + get_nodes(node=x).items())
             return d
 
         def get_children(node):
             return [x for x in Label.objects.all() if (str(x.pk).startswith(str(node.pk))) and (str(x.pk) != str(node.pk))]
 
         tree = get_nodes(node=root)
-        return Response(json.dumps(tree))
+
+        #serialized_tree = serializers.serialize('json', Label.objects.all())
+
+        return HttpResponse(simplejson.dumps(tree), content_type = 'application/javascript; charset=utf8')

@@ -1,0 +1,37 @@
+[
+	{
+		"model" : "website.ActionType",
+		"pk" : 1,
+		"fields": {
+			"ActionTypeName" : "Delivery"
+		}
+	},
+	{
+		"model" : "website.ActionType",
+		"pk" : 2,
+		"fields": {
+			"ActionTypeName" : "Pickup"
+		}
+	},
+	{
+		"model" : "website.ActionType",
+		"pk" : 3,
+		"fields": {
+			"ActionTypeName" : "Setup"
+		}
+	},
+	{
+		"model" : "website.ActionType",
+		"pk" : 4,
+		"fields": {
+			"ActionTypeName" : "Teardown"
+		}
+	},
+	{
+		"model" : "website.ActionType",
+		"pk" : 5,
+		"fields": {
+			"ActionTypeName" : "Technical Assistance"
+		}
+	}
+]
