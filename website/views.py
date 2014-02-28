@@ -514,17 +514,12 @@ def categoryHierarchy(request):
     '''
     if request.method == 'GET':
         root = Label.objects.get(pk=1)
-
         def get_nodes(node):
             d = {}
             d['id'] = node.pk
             d['text']=node.LabelName
-
             children = Label.objects.filter(ParentCategory=node.pk)
             d['children'] = [get_nodes(child) for child in children]
             return d
-
-
         tree = get_nodes(node=root)
-        print json.dumps(tree, indent=4)
         return HttpResponse(json.dumps(tree, indent=4), content_type=u'application/json')

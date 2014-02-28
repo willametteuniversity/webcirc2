@@ -75,11 +75,23 @@ $(document).ready(function() {
                  'core' : {
                     'data' : {
                         'url' : '/categoryHierarchy/'
+                     },
+                     'check_callback' : true
 
+                 },
+                 'plugins' : ['dnd']
+             });
+             $("#categoryMasterTree").on("move_node.jstree", function (e, data) {
+                    console.log(data);
+                 $.ajax({
+                     url:'/labels/'+data.node.id,
+                     type: 'PUT',
+                     data: {
+                         ParentCategory:data.parent,
+                         LabelName:data.node.text
                      }
-                 }
-             }
-             );
+                 });
+             });
          });
 
     });
