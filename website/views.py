@@ -506,3 +506,25 @@ def itemModelDetail(request, pk):
     elif request.method == 'DELETE':
         current_model.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def categoryHierarchy(request):
+    '''
+    retrive a list of categories in a hierarchy structure
+    '''
+    if request.method == 'GET':
+        root = Label.objects.get(pk=1)
+
+        def get_nodes(node):
+            d = {}
+            d['id'] = node.pk
+            d['text']=node.LabelName
+
+            children = Label.objects.filter(ParentCategory=node.pk)
+            d['children'] = [get_nodes(child) for child in children]
+            return d
+
+
+        tree = get_nodes(node=root)
+        print json.dumps(tree, indent=4)
+        return HttpResponse(json.dumps(tree, indent=4), content_type=u'application/json')

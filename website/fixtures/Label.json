@@ -1,78 +1,508 @@
 [
     {
         "model": "website.Label",
-        "pk": 7,
+        "pk": 1,
         "fields": {
             "LabelName": "RootCategory"
         }
     },
 	{
 		"model": "website.Label",
-		"pk": 1,
-		"fields": {
-			"LabelName": "Microphone"
-		}	
-	},
-	{
-		"model": "website.Label",
-		"pk": 2,
+		"pk": 12,
 		"fields": {
 			"LabelName": "Adapter",
-            "ParentCategory": 7
+            "ParentCategory": 1
 		}
 	},
 	{
 		"model": "website.Label",
-		"pk": 3,
+		"pk": 121,
 		"fields": {
 			"LabelName": "A/V Adapter",
-			"ParentCategory": 2
+            "ParentCategory": 12
 		}
 	},
 	{
 		"model": "website.Label",
-		"pk": 4,
+		"pk": 1211,
 		"fields": {
 			"LabelName": "3.5mm <-> RCA A/V Adapter",
-			"ParentCategory": 2
+            "ParentCategory": 121
 		}
 	},
 	{
 		"model": "website.Label",
-		"pk": 5,
+		"pk": 122,
 		"fields": {
 			"LabelName": "Audio Adapter",
-			"ParentCategory": 2
+            "ParentCategory": 12
 		}
 	},
 	{
 		"model": "website.Label",
-		"pk": 6,
+		"pk": 1221,
 		"fields": {
-			"LabelName": "1/4in <-> 3.5mm Audio Adapter",
-			"ParentCategory": 5
+			"LabelName": "1/4 inch <-> 3.5mm Audio Adapter",
+            "ParentCategory": 122
 		}
 	},
-    {
-        "model": "website.Label",
-        "pk": 7,
-        "fields": {
-            "LabelName": "1/4in"
-        }
-    },
-    {
-        "model": "website.Label",
-        "pk": 8,
-        "fields": {
-            "LabelName": "A/V"
-        }
-    },
-    {
-        "model": "website.Label",
-        "pk": 9,
-        "fields": {
-            "LabelName": "A/V Adapter"
-        }
-    }
+	{
+		"model": "website.Label",
+		"pk": 1222,
+		"fields": {
+			"LabelName": "1/4 inch <-> Mono RCA Audio Adapter",
+            "ParentCategory": 122
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1223,
+		"fields": {
+			"LabelName": "1/4 inch <-> Stereo RCA Audio Adapter",
+            "ParentCategory": 122
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1224,
+		"fields": {
+			"LabelName": "3.5mm <-> RCA Audio Adapter",
+            "ParentCategory": 122
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1225,
+		"fields": {
+			"LabelName": "Direct Interface Box",
+            "ParentCategory": 122
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1226,
+		"fields": {
+			"LabelName": "XLR Adapter",
+            "ParentCategory": 122
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 12261,
+		"fields": {
+			"LabelName": "Male <-> Male XLR Adapter",
+            "ParentCategory": 1226
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 12262,
+		"fields": {
+			"LabelName": "Female <-> Female XLR Adapter",
+            "ParentCategory": 1226
+		}
+	},
 
+	{
+		"model": "website.Label",
+		"pk": 123,
+		"fields": {
+			"LabelName": "Power Adapter",
+            "ParentCategory": 12
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1231,
+		"fields": {
+			"LabelName": "Laptop Power Adapter",
+            "ParentCategory": 123
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 12311,
+		"fields": {
+			"LabelName": "Macbook Power Adapter",
+            "ParentCategory": 1231
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 12312,
+		"fields": {
+			"LabelName": "Macbook Pro Power Adapter",
+            "ParentCategory": 1231
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 12313,
+		"fields": {
+			"LabelName": "Macbook Air Power Adapter",
+            "ParentCategory": 1231
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 12314,
+		"fields": {
+			"LabelName": "Dell Laptop Power Adapter",
+            "ParentCategory": 1231
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 12315,
+		"fields": {
+			"LabelName": "Lenovo Laptop Power Adapter",
+            "ParentCategory": 1231
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 12316,
+		"fields": {
+			"LabelName": "Gateway Laptop Power Adapter",
+            "ParentCategory": 1231
+		}
+	},
+
+	{
+		"model": "website.Label",
+		"pk": 124,
+		"fields": {
+			"LabelName": "Video Adapter",
+            "ParentCategory": 12
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 124,
+		"fields": {
+			"LabelName": "Video Adapter",
+            "ParentCategory": 12
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1241,
+		"fields": {
+			"LabelName": "Video Adapter",
+            "ParentCategory": 124
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 12411,
+		"fields": {
+			"LabelName": "Mac Video Adapter",
+            "ParentCategory": 1241
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 124111,
+		"fields": {
+			"LabelName": "Mac MiniDisplayPort -> DVI Adapter",
+            "ParentCategory": 12411
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 124112,
+		"fields": {
+			"LabelName": "Mac MiniDisplayPort -> HDMI Adapter",
+            "ParentCategory": 12411
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 124113,
+		"fields": {
+			"LabelName": "Mac MiniDisplayPort -> VGA Adapter",
+            "ParentCategory": 12411
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 124114,
+		"fields": {
+			"LabelName": "MacMini DVI -> VGA Adapter",
+            "ParentCategory": 12411
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 124115,
+		"fields": {
+			"LabelName": "MacMini DVI -> DVI Adapter",
+            "ParentCategory": 12411
+		}
+	},
+
+	{
+		"model": "website.Label",
+		"pk": 12412,
+		"fields": {
+			"LabelName": "iPad Video Adapter",
+            "ParentCategory": 1241
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 124121,
+		"fields": {
+			"LabelName": "Apple 30-Pin -> VGA Adapter",
+            "ParentCategory": 12412
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 124122,
+		"fields": {
+			"LabelName": "Lightning -> DVI Adapter",
+            "ParentCategory": 12412
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 124123,
+		"fields": {
+			"LabelName": "Lightning -> VGA Adapter",
+            "ParentCategory": 12412
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 124124,
+		"fields": {
+			"LabelName": "Lightning -> HDMI Adapter",
+            "ParentCategory": 12412
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 13,
+		"fields": {
+			"LabelName": "Cable",
+            "ParentCategory": 13
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 131,
+		"fields": {
+			"LabelName": "A/V Cable",
+            "ParentCategory": 13
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1311,
+		"fields": {
+			"LabelName": "VGA+3.5mm Audio Cable",
+            "ParentCategory": 131
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1312,
+		"fields": {
+			"LabelName": "HDMI Cable",
+            "ParentCategory": 131
+		}
+	},
+
+	{
+		"model": "website.Label",
+		"pk": 132,
+		"fields": {
+			"LabelName": "Audio Cable",
+            "ParentCategory": 13
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1321,
+		"fields": {
+			"LabelName": "1/4 inch Audio Cable",
+            "ParentCategory": 132
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 13211,
+		"fields": {
+			"LabelName": "1/4 inch Mono Audio Cable",
+            "ParentCategory": 1321
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 13212,
+		"fields": {
+			"LabelName": "1/4 inch Stereo Audio Cable",
+            "ParentCategory": 1321
+		}
+	},
+
+	{
+		"model": "website.Label",
+		"pk": 1322,
+		"fields": {
+			"LabelName": "RCA Audio Cable",
+            "ParentCategory": 132
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 13221,
+		"fields": {
+			"LabelName": "RCA Mono Audio Cable",
+            "ParentCategory": 1322
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 13222,
+		"fields": {
+			"LabelName": "RCA Stereo Audio Cable",
+            "ParentCategory": 1322
+		}
+	},
+
+	{
+		"model": "website.Label",
+		"pk": 1323,
+		"fields": {
+			"LabelName": "Speaker Cable",
+            "ParentCategory": 132
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 13231,
+		"fields": {
+			"LabelName": "1/4 inch Speaker Cable",
+            "ParentCategory": 1323
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 13232,
+		"fields": {
+			"LabelName": "Speakon Speaker Cable",
+            "ParentCategory": 1323
+		}
+	},
+
+	{
+		"model": "website.Label",
+		"pk": 1324,
+		"fields": {
+			"LabelName": "XLR Audio Cable",
+            "ParentCategory": 132
+		}
+	},
+
+
+	{
+		"model": "website.Label",
+		"pk": 133,
+		"fields": {
+			"LabelName": "Video Cable",
+            "ParentCategory": 13
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1331,
+		"fields": {
+			"LabelName": "VGA Cable",
+            "ParentCategory": 133
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1332,
+		"fields": {
+			"LabelName": "RCA Composite Video Cable",
+            "ParentCategory": 133
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1333,
+		"fields": {
+			"LabelName": "RF Composite Video Cable",
+            "ParentCategory": 133
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1334,
+		"fields": {
+			"LabelName": "S-Video Cable",
+            "ParentCategory": 133
+		}
+	},
+
+
+	{
+		"model": "website.Label",
+		"pk": 14,
+		"fields": {
+			"LabelName": "Computer",
+            "ParentCategory": 1
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 141,
+		"fields": {
+			"LabelName": "Desktop Computer",
+            "ParentCategory": 14
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1411,
+		"fields": {
+			"LabelName": "PC Desktop Computer",
+            "ParentCategory": 141
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1412,
+		"fields": {
+			"LabelName": "Mac Desktop Computer",
+            "ParentCategory": 141
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 142,
+		"fields": {
+			"LabelName": "Laptop Computer",
+            "ParentCategory": 14
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1421,
+		"fields": {
+			"LabelName": "PC Laptop",
+            "ParentCategory": 142
+		}
+	},
+	{
+		"model": "website.Label",
+		"pk": 1422,
+		"fields": {
+			"LabelName": "Mac Laptop",
+            "ParentCategory": 142
+		}
+	}
 ]

@@ -71,7 +71,15 @@ $(document).ready(function() {
          */
          $("#mainrow").load("/labelAndCategoryMgmt/", function() {
              loadLabels();
-             $("#categoryMasterTree").jstree();
+             $("#categoryMasterTree").jstree({
+                 'core' : {
+                    'data' : {
+                        'url' : '/categoryHierarchy/'
+
+                     }
+                 }
+             }
+             );
          });
 
     });
