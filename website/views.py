@@ -157,6 +157,24 @@ def labelAndCategoryMgmt(request):
     '''
     return render(request, u'label_category_mgmt.html', {})
 
+def addNewEquipment(request):
+    '''
+    This function returns the initial page for adding new equipment
+    '''
+    return render(request, u'add_new_equipment.html', {})
+
+def addNewInventoryItemForm(request):
+    '''
+    This function returns the form for adding a new inventory item
+    '''
+    return render(request, u'forms/add_new_inventory_item_form.html')
+
+def addNewNonInventoryItemForm(request):
+    '''
+    This function returns the form for adding a new inventory item
+    '''
+    return render(request, u'forms/add_new_non_inventory_item_form.html')
+
 @csrf_exempt
 @api_view(['GET', 'PUT', 'DELETE'])
 def collectionDetail(request, pk, format=None):

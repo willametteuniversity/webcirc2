@@ -1,0 +1,63 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Add New Inventory Item</h3>
+    </div>
+    <div class="panel-body" id="addNewInventoryItemFormBody">
+         <form role="form" id="addNewInventoryItemForm">
+             <div class="form-group">
+                 <label for="brandInput">Brand:</label>
+                 <input type="text" class="form-control" id="brandInput" placeholder="Enter the brand...">
+             </div>
+             <div class="form-group">
+                 <label for="modelInput">Model:</label>
+                 <input type="text" class="form-control" id="modelInput" placeholder="Enter the model...">
+             </div>
+             <div class="form-group">
+                 <label for="descriptionInput">Description:</label>
+                 <textarea class="form-control" id="descriptionInput" placeholder="Enter the description..." />
+             </div>
+             <div class="form-group">
+                 <label for="notes">Notes:</label>
+                 <textarea type="text" class="form-control" id="notesInput" placeholder="Enter the notes..." />
+             </div>
+             <div class="form-group">
+                 <label for="categoryInput">Category:</label>
+                 <input type="text" class="form-control" id="categoryInput" placeholder="Enter the category...">
+             </div>
+             <div class="form-group">
+                 <label for="statusSelect">Status:</label>
+                 <select class="form-control" id="statsSelect">
+                     <option value="status1">Status 1</option>
+                     <option value="status2">Status 2</option>
+                 </select>
+             </div>
+             <div class="form-group">
+                 <label for="storageLocationSelect">Storage Location:</label>
+                 <select class="form-control" id="storageLocationSelect">
+                     <option value="location1">Location 1</option>
+                     <option value="location2">Location 2</option>
+                 </select>
+             </div>
+             <div class="form-group">
+                 <label for="collectionInput">Collection:</label>
+                 <input type="text" class="form-control" id="collectionInput" placeholder="Enter the collection name...">
+             </div>
+             <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+    </div>
+</div>
+
+<!--
+class InventoryItem(models.Model):
+    ItemID = models.AutoField(primary_key=True)
+    AlternateID = models.ForeignKey('InventoryWidget')
+    BrandID = models.ForeignKey('ItemBrand')
+    ModelID = models.ForeignKey('ItemModel')
+    Description = models.CharField(max_length=500)
+    Notes = models.CharField(max_length=500)
+    CategoryID = models.ForeignKey('Label')
+    ParentItem = models.ForeignKey('InventoryItem', null=True, blank=True)
+    StatusID = models.ForeignKey('Status')
+    StorageLocation = models.ForeignKey('Location')
+    CollectionID = models.ForeignKey('Collection')
+-->

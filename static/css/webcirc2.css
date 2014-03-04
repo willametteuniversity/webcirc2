@@ -79,3 +79,8 @@ label {
 }
 
 /* End label management page styles */
+
+/* Begin Add New Equipment styles */
+#addNewEquipmentDiv {
+    width: 30%;
+}

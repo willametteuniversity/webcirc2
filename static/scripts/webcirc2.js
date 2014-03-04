@@ -22,7 +22,6 @@ $(document).ready(function() {
     var csrftoken = getCookie('csrftoken');
 
     steal("can/can.js", function() {});
-
     steal("scripts/utility.js", function() {});
     steal("scripts/models/collection.js", function() {});
     steal("scripts/models/label.js", function() {});
@@ -46,6 +45,7 @@ $(document).ready(function() {
             }
         });
     });
+    steal("scripts/addNewEquipment.js", function() {});
 
     $("#registerBtn").on("click", function(event) {
         /**
@@ -67,7 +67,7 @@ $(document).ready(function() {
 
     $("#labelAndCategoryMgmtLink").on("click", function(event) {
         /**
-         * This function handles the register button being clicked on the main page.
+         * This function handles the Label and Category Mgmt link being clicked.
          */
          $("#mainrow").load("/labelAndCategoryMgmt/", function() {
              loadLabels();
@@ -82,7 +82,6 @@ $(document).ready(function() {
                  'plugins' : ['dnd']
              });
              $("#categoryMasterTree").on("move_node.jstree", function (e, data) {
-                    console.log(data);
                  $.ajax({
                      url:'/labels/'+data.node.id,
                      type: 'PUT',
@@ -93,7 +92,15 @@ $(document).ready(function() {
                  });
              });
          });
+    });
 
+    $("#addNewEquipmentLink").on("click", function(event) {
+        /**
+         * This function loads the add new equipment page
+         */
+        $("#mainrow").load("/addNewEquipment/", function() {
+
+        });
     });
 
     $("#mainblock").on("click", "#submitRegistrationBtn", function(event) {

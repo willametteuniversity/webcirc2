@@ -18,5 +18,5 @@ urlpatterns = patterns('',
     url(r'^registerNewUser/', 'website.views.registerNewUser'),
     url(r'^$', 'website.views.index'),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^', include('website.urls')),
+    url(r'^', include('website.urls.urls')),
 )
