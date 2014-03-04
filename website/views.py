@@ -583,36 +583,6 @@ def actionTypeDetail(request, pk):
         current_model.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-
-'''
-@api_view(['GET'])
-def categoryHierarchy(request):
-
-    #retrive a list of categories in a hierarchy structure
-
-    if request.method == 'GET':
-        root = Label.objects.get(pk=1)
-
-        def get_nodes(node):
-            d = {node.pk : node}
-            children = get_children(node=node)
-            if children:
-                for x in children:
-                    d[x.pk] = x
-                    print x.pk
-                    d = dict(d.items() + get_nodes(node=x).items())
-            return d
-
-        def get_children(node):
-            return [x for x in Label.objects.all() if (str(x.pk).startswith(str(node.pk))) and (str(x.pk) != str(node.pk))]
-
-        tree = get_nodes(node=root)
-
-        #serialized_tree = serializers.serialize('json', Label.objects.all())
-
-        return HttpResponse(simplejson.dumps(tree), content_type = 'application/javascript; charset=utf8')
-'''
-
 @api_view(['GET'])
 def categoryHierarchy(request):
 
