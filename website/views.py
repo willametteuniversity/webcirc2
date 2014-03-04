@@ -622,19 +622,16 @@ def categoryHierarchy(request):
         root = Label.objects.get(pk=1)
 
         def get_nodes(node):
-            print node
-            d = {node.pk : node}
+            d = {}
             children = get_children(node=node)
-            d['key'] = node.pk
-            d['name'] = node.LabelName
-            d['children'] = get_nodes(x for x in children)
+            d['id'] = node.pk
+            d['text'] = node.LabelName
+            d['children'] = [get_nodes(x) for x in children]
             return d
 
         def get_children(node):
-            return [x for x in Label.objects.all() if (str(x.pk).startswith(str(node.pk))) and (str(x.pk) != str(node.pk))]
+            return Label.objects.filter(ParentCategory=node.pk)
 
         tree = get_nodes(node=root)
 
-        #serialized_tree = serializers.serialize('json', Label.objects.all())
-
-        return HttpResponse(json.dumps(tree))
+        return HttpResponse(json.dumps(tree), content_type=u'appplication/json')
