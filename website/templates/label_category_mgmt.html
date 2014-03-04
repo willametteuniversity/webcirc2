@@ -1,3 +1,4 @@
+
 <div class="panel col-md-3" id="labelMasterList">
     <div class="panel-heading">Labels</div>
     <div class="panel-body">
@@ -14,8 +15,20 @@
 <div class="panel col-md-6 pull-right col-md-pull-1" id="categoryMasterList">
     <div class="panel-heading">Categories</div>
     <div class="panel-body">
+        <!--
         <select multiple="multiple" id="categoryListBox">
         </select>
+        -->
+        <div id="categoryMasterTree">
+          <ul>
+            <li>Root node 1
+              <ul>
+                <li>Child node 1</li>
+                <li><a href="#">Child node 2</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
     </div>
         <button type="button" class="btn btn-default btn-xs catMgmtBtn" id="addCategoryBtn"><span class="glyphicon glyphicon-plus-sign"></span></button>
         <button type="button" class="btn btn-default btn-xs catMgmtBtn" id="delCategoryBtn"><span class="glyphicon glyphicon-minus-sign"></span></button>

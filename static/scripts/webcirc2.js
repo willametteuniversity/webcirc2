@@ -25,6 +25,7 @@ $(document).ready(function() {
     steal("scripts/utility.js", function() {});
     steal("scripts/models/collection.js", function() {});
     steal("scripts/models/label.js", function() {});
+    steal("jstree/dist/jstree.min.js", function() {});
     steal("scripts/labelAndCategoryMgmt.js", function() {
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
             /**
@@ -43,11 +44,8 @@ $(document).ready(function() {
                 }
             }
         });
-
-
-
-
     });
+    steal("scripts/addNewEquipment.js", function() {});
 
     $("#registerBtn").on("click", function(event) {
         /**
@@ -69,12 +67,40 @@ $(document).ready(function() {
 
     $("#labelAndCategoryMgmtLink").on("click", function(event) {
         /**
-         * This function handles the register button being clicked on the main page.
+         * This function handles the Label and Category Mgmt link being clicked.
          */
          $("#mainrow").load("/labelAndCategoryMgmt/", function() {
              loadLabels();
-         });
+             $("#categoryMasterTree").jstree({
+                 'core' : {
+                    'data' : {
+                        'url' : '/categoryHierarchy/'
+                     },
+                     'check_callback' : true
 
+                 },
+                 'plugins' : ['dnd']
+             });
+             $("#categoryMasterTree").on("move_node.jstree", function (e, data) {
+                 $.ajax({
+                     url:'/labels/'+data.node.id,
+                     type: 'PUT',
+                     data: {
+                         ParentCategory:data.parent,
+                         LabelName:data.node.text
+                     }
+                 });
+             });
+         });
+    });
+
+    $("#addNewEquipmentLink").on("click", function(event) {
+        /**
+         * This function loads the add new equipment page
+         */
+        $("#mainrow").load("/addNewEquipment/", function() {
+
+        });
     });
 
     $("#mainblock").on("click", "#submitRegistrationBtn", function(event) {
