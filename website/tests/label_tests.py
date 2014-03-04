@@ -111,3 +111,20 @@ class LabelAPITests(TestCase):
         # Let's check the status code
         self.assertEqual(204, response.status_code)
 
+    def test_can_resolve_category_hierarchy(self):
+        '''
+        This tests the category hierarchy view resolves properly
+        '''
+        found = resolve(u'/categoryHierarchy/')
+        self.assertEqual(found.func, categoryHierarchy)
+
+    def test_can_get_category_hierarchy(self):
+        '''
+        This tests that a hierarchical JSON data structure can be retrieved at the /categoryHierarchy/ view.
+        '''
+        rootObj = Label.objects.create(LabelName=u'RootObject')
+        childObj = Label.objects.create(LabelName=u'ChildObj', ParentCategory=rootObj)
+        c = Client()
+
+        response = c.get(u'/categoryHierarchy/')
+        self.assertEqual(200, response.status_code)

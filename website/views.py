@@ -527,17 +527,23 @@ def itemModelDetail(request, pk):
 
 @api_view(['GET'])
 def categoryHierarchy(request):
-    '''
-    retrive a list of categories in a hierarchy structure
-    '''
+
+    #retrive a list of categories in a hierarchy structure
+
     if request.method == 'GET':
         root = Label.objects.get(pk=1)
+
         def get_nodes(node):
             d = {}
+            children = get_children(node=node)
             d['id'] = node.pk
-            d['text']=node.LabelName
-            children = Label.objects.filter(ParentCategory=node.pk)
-            d['children'] = [get_nodes(child) for child in children]
+            d['text'] = node.LabelName
+            d['children'] = [get_nodes(x) for x in children]
             return d
+
+        def get_children(node):
+            return Label.objects.filter(ParentCategory=node.pk)
+
         tree = get_nodes(node=root)
-        return HttpResponse(json.dumps(tree, indent=4), content_type=u'application/json')
+
+        return HttpResponse(json.dumps(tree), content_type=u'application/json')
