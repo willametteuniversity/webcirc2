@@ -576,3 +576,9 @@ def actionTypeDetail(request, pk):
     elif request.method == 'DELETE':
         current_model.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+def itemHistoryDetail(request, fk):
+    history = InventoryItem.objects.filter(ItemID=fk, order_by=u"ChangeDateTime")
+    return HttpResponse(json.dumps(history), status_code=201, content_type=u'application/json')
