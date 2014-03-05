@@ -157,6 +157,24 @@ def labelAndCategoryMgmt(request):
     '''
     return render(request, u'label_category_mgmt.html', {})
 
+def addNewEquipment(request):
+    '''
+    This function returns the initial page for adding new equipment
+    '''
+    return render(request, u'add_new_equipment.html', {})
+
+def addNewInventoryItemForm(request):
+    '''
+    This function returns the form for adding a new inventory item
+    '''
+    return render(request, u'forms/add_new_inventory_item_form.html')
+
+def addNewNonInventoryItemForm(request):
+    '''
+    This function returns the form for adding a new inventory item
+    '''
+    return render(request, u'forms/add_new_non_inventory_item_form.html')
+
 @csrf_exempt
 @api_view(['GET', 'PUT', 'DELETE'])
 def collectionDetail(request, pk, format=None):
@@ -474,13 +492,12 @@ def inventoryItemDetail(request, pk, format=None):
     elif request.method == 'DELETE':
         inventoryItem.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-
-
+    
 @api_view(['GET', 'POST'])
 def itemModelList(request):
     if request.method == 'GET':
         all_models = ItemModel.objects.all()
-        serializer = ItemModelSerializer(all_models, many=True)
+        serializer = ItemModelSerializer(all_models)
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = ItemModelSerializer(data=request.DATA)
@@ -488,7 +505,6 @@ def itemModelList(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def itemModelDetail(request, pk):
@@ -582,3 +598,26 @@ def actionTypeDetail(request, pk):
 def itemHistoryDetail(request, fk):
     history = InventoryItem.objects.filter(ItemID=fk, order_by=u"ChangeDateTime")
     return HttpResponse(json.dumps(history), status_code=201, content_type=u'application/json')
+
+@api_view(['GET'])
+def categoryHierarchy(request):
+
+    #retrive a list of categories in a hierarchy structure
+
+    if request.method == 'GET':
+        root = Label.objects.get(pk=1)
+
+        def get_nodes(node):
+            d = {}
+            children = get_children(node=node)
+            d['id'] = node.pk
+            d['text'] = node.LabelName
+            d['children'] = [get_nodes(x) for x in children]
+            return d
+
+        def get_children(node):
+            return Label.objects.filter(ParentCategory=node.pk)
+
+        tree = get_nodes(node=root)
+
+        return HttpResponse(json.dumps(tree), content_type=u'application/json')
