@@ -1,0 +1,19 @@
+[
+    {
+        "model": "website.InventoryItem",
+        "pk": 1,
+        "fields": {
+            "ItemID": 1,
+            "AlternateID": 123,
+            "BrandID": 1,
+            "ModelID": 1,
+            "Description": "This is a nice item",
+            "Notes": "What a cool item",
+            "CategoryID": 1,
+            "ParentItem": null,
+            "StatusID": 1,
+            "StorageLocation": 1,
+            "CollectionID": 1
+        }
+    }
+]
