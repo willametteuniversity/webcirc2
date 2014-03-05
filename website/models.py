@@ -138,7 +138,7 @@ class InstitutionalUser(models.Model):
     Username = models.IntegerField()
     UserPhone = models.CharField(max_length=500)
     UserEmail = models.CharField(max_length=500)
-    UserDept = models.ForeignKey('InstitutionalDepartment')
+    UserDept = models.ForeignKey(u'InstitutionalDepartment')
     UserFirstName = models.CharField(max_length=500)
     UserLastName = models.CharField(max_length=500)
 
