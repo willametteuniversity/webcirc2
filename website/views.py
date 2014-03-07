@@ -118,6 +118,48 @@ def registerNewUser(request):
         # Let's load the form up
         return render(request, u'forms/register.html', {})
 
+@api_view(['POST'])
+def addInventoryItem(request):
+    
+    if request.method == 'POST':
+        responseData = {}
+        if u'model' not in request.POST:
+            responseData[u'result'] = u'failed'
+            responseData[u'reason'] = u'A model is required.'
+            return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+        if u'brand' not in request.POST:
+            responseData[u'result'] = u'failed'
+            responseData[u'reason'] = u'A brand is required.'
+            return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+        if u'description' not in request.POST:
+            responseData[u'result'] = u'failed'
+            responseData[u'reason'] = u'A description is required.'
+            return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+        if u'category' not in request.POST:
+            responseData[u'result'] = u'failed'
+            responseData[u'reason'] = u'A category is required.'
+            return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+        if u'status' not in request.POST:
+            responseData[u'result'] = u'failed'
+            responseData[u'reason'] = u'A status is required.'
+            return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+        if u'location' not in request.POST:
+            responseData[u'result'] = u'failed'
+            responseData[u'reason'] = u'A location is required.'
+            return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+
+        n = InventoryItem()
+        n.model = request.POST[u'model']
+        n.brand = request.POST[u'brand']
+        n.description = request.POST[u'description']
+        n.category = request.POST[u'category']
+        n.status = status.POST[u'status']
+        n.location = status.POST[u'location']
+        
+        n.save()
+        responseData = {}
+        responseData[u'result'] = u'succeeded'
+        return HttpResponse(json.dumps(responseData), content_type=u'application/json')
 
 @csrf_exempt
 def login(request):
