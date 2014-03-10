@@ -597,6 +597,8 @@ def actionTypeDetail(request, pk):
 @api_view(['GET'])
 def itemHistoryDetail(request, fk):
     history = InventoryItem.objects.filter(ItemID=fk, order_by=u"ChangeDateTime")
+    if history is None:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     return HttpResponse(json.dumps(history), status_code=201, content_type=u'application/json')
 
 
