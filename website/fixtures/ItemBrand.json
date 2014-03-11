@@ -1,0 +1,16 @@
+[
+    {
+        "model": "website.ItemBrand",
+        "pk": 1,
+        "fields": {
+            "BrandName": "Dell"
+        }
+    },
+    {
+        "model": "website.ItemBrand",
+        "pk": 2,
+        "fields": {
+            "BrandName": "Canon"
+        }
+    }
+]

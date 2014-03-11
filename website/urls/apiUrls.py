@@ -5,6 +5,8 @@ urlpatterns = patterns('website.views',
                        url(r'^collections/(?P<pk>[0-9]+)$', 'collectionDetail'),
                        url(r'^labels/$', 'labelList'),
                        url(r'^labels/(?P<pk>[0-9]+)$', 'labelDetail'),
+                       url(r'^locations/$', 'locationList'),
+                       url(r'^locations/(?P<pk>[0-9]+)$', 'locationDetail'),
                        url(r'^models/$', 'itemModelList'),
                        url(r'^models/(?P<pk>[0-9]+)$', 'itemModelDetail'),
                        url(r'^reservations/$', 'reservationList'),
@@ -21,6 +23,7 @@ urlpatterns = patterns('website.views',
                        url(r'^brands/(?P<pk>[0-9]+)$', 'itemBrandDetail'),
                        url(r'^actions/$', 'actionTypeList'),
                        url(r'^actions/(?P<pk>[0-9]+)$', 'actionTypeDetail'),
-                       url(r'^categoryHierarchy/', 'categoryHierarchy'))
+                       url(r'^categoryHierarchy/', 'categoryHierarchy'),
+                       url(r'^autocomplete/', 'autocomplete'))
 
 
