@@ -596,10 +596,24 @@ def actionTypeDetail(request, pk):
 
 @api_view(['GET'])
 def itemHistoryDetail(request, fk):
-    history = InventoryItem.objects.filter(ItemID=fk, order_by=u"ChangeDateTime")
-    if history is None:
+    # TODO:
+    # Check if the item is real, if not return 404?
+    # If it is real, return the history, if there is no history return blank?
+    # What makes sense to me is have no history just return a blank history page,
+    # and have an incorrect model number return an error or some sort.
+    history = ItemHistory.objects.filter(ItemID=fk).order_by(u"ChangeDateTime")
+    if len(history) is 0:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-    return HttpResponse(json.dumps(history), status_code=201, content_type=u'application/json')
+    all_history = []
+    for item in history:
+        values = {
+            u'Username': item.OperatorID.username,
+            u'ItemID': item.ItemID.ItemID,
+            u'ChangeDescription': item.ChangeDescription,
+            u'ChangeDateTime': item.ChangeDateTime
+        }
+        all_history.append(values)
+    return HttpResponse(json.dumps(all_history), status=201, content_type=u'application/json')
 
 
 @api_view(['GET'])
