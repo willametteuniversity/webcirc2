@@ -1,0 +1,10 @@
+[
+    {
+        "model": "website.Building",
+        "pk": 1,
+        "fields": {
+            "BuildingCode": "SML",
+            "BuildingName": "Smullin"
+        }
+    }
+]

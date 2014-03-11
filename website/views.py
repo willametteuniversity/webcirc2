@@ -6,6 +6,9 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
+from django.core import serializers
+from django.utils import simplejson
+
 # Auth imports
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
@@ -21,6 +24,9 @@ from rest_framework.response import Response
 # Our application imports
 from website.models import *
 from website.serializers import *
+
+#JSON imports
+import json
 
 
 def index(request):
@@ -437,22 +443,22 @@ def statusDetail(request, pk, format=None):
     Retrieve, update or delete Label Note.
     '''
     try:
-        state = Status.objects.get(StatusID=pk)
+        status = Status.objects.get(StatusID=pk)
     except Status.DoesNotExist:
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        return HttpResponse(status=404)
 
     if request.method == 'GET':
         serializer = StatusSerializer(status)
         return Response(serializer.data)
     elif request.method == 'PUT':
-        serializer = StatusSerializer(state, data=request.DATA)
+        serializer = StatusSerializer(status, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
-        state.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        status.delete()
+        return HttpResponse(status=204)
 
 @api_view(['GET', 'POST'])
 def inventoryItemList(request, format=None):
@@ -492,7 +498,8 @@ def inventoryItemDetail(request, pk, format=None):
     elif request.method == 'DELETE':
         inventoryItem.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-    
+
+
 @api_view(['GET', 'POST'])
 def itemModelList(request):
     if request.method == 'GET':
@@ -559,6 +566,38 @@ def itemBrandDetail(request, pk):
         current_model.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
+@api_view(['GET', 'POST'])
+def locationList(request):
+    if request.method == 'GET':
+        all_models = Location.objects.all()
+        serializer = LocationSerializer(all_models, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = Location(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def locationDetail(request, pk):
+    try:
+        current_model = Location.objects.get(LocationID=pk)
+    except Location.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        serializer = LocationSerializer(current_model)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = LocationSerializer(current_model, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        current_model.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
 def actionTypeList(request):
@@ -594,6 +633,8 @@ def actionTypeDetail(request, pk):
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
+
+
 @api_view(['GET'])
 def itemHistoryDetail(request, fk):
     history = InventoryItem.objects.filter(ItemID=fk, order_by=u"ChangeDateTime")
@@ -621,4 +662,16 @@ def categoryHierarchy(request):
 
         tree = get_nodes(node=root)
 
-        return HttpResponse(json.dumps(tree), content_type=u'application/json')
+        return HttpResponse(json.dumps(tree), content_type=u'application/json')        return HttpResponse(json.dumps(tree), content_type=u'application/json')
+
+def autocomplete(request):
+    '''
+    This function takes a search token and a model, and returns autocomplete results to the client.
+    '''
+    results = []
+    if request.GET['model'].lower() == 'brand':
+        r = ItemBrand.objects.filter(BrandName__icontains = request.GET['term'])
+        for eachResult in r:
+            results.append({'BrandID':eachResult.BrandID, 'BrandName':eachResult.BrandName})
+    print results
+    return HttpResponse(json.dumps(results), content_type=u'application/json')

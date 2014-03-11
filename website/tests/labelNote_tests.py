@@ -33,14 +33,14 @@ class LabelNotesAPITests(TestCase):
         self.assertEqual(found.func, labelNoteList)
 
     def test_labelNotes_url_resolves_to_labelNoteDetail(self):
-	   found = resolve(u'/labelNotes/1')
-	   self.assertEqual(found.func, labelNoteDetail)
+        found = resolve(u'/labelNotes/1')
+        self.assertEqual(found.func, labelNoteDetail)
 
     def test_can_get_specific_labelNote(self):
-	   c = Client()
-	   response = c.get(u'/labelNotes/1')
+        c = Client()
+        response = c.get(u'/labelNotes/1')
 
-	   self.assertEqual(u'LabelNotes1', response.data['LabelNote'])
+        self.assertEqual(u'LabelNotes1', response.data['LabelNote'])
 	   #self.assertEqual(1, response.data['LabelNotesID'])
 
     def test_cannot_get_nonexistant_labelNote(self):
@@ -52,7 +52,11 @@ class LabelNotesAPITests(TestCase):
     def test_can_create_new_labelNote(self):
         c = Client()
         # Make the request to make the labelNote...
-        response = c.post(u'/labelNotes/', {u'LabelNote' : u'LabelNotes3'})
+
+        lbl3 = Label.objects.create(LabelName='Label3')
+
+        response = c.post(u'/labelNotes/', {u'LabelNote' : u'LabelNotes3',
+                                            u'LabelID' : lbl3.pk})
         # We expect the server to return a proper status code and the item it made. So lets check all of those:
         self.assertEqual(u'LabelNotes3', response.data[u'LabelNote'])
         self.assertEqual(201, response.status_code)

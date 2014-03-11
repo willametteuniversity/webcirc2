@@ -15,8 +15,8 @@ from django.contrib.auth.models import User
 class ImageAPITests(TestCase):
 
     def setUp(self):
-	   inv1 = Image.objects.create(ImageName='Image1')
-	   inv2 = Image.objects.create(ImageName='Image2')
+        inv1 = Image.objects.create(ImageName='Image1')
+        inv2 = Image.objects.create(ImageName='Image2')
 
     def test_can_get_list_of_images(self):
         c = Client()
@@ -29,14 +29,14 @@ class ImageAPITests(TestCase):
         self.assertEqual(found.func, imageList)
 
     def test_images_url_resolves_to_imageDetail(self):
-	   found = resolve(u'/images/1')
-	   self.assertEqual(found.func, imageDetail)
+        found = resolve(u'/images/1')
+        self.assertEqual(found.func, imageDetail)
 
     def test_can_get_specific_image(self):
-	   c = Client()
-	   response = c.get(u'/images/1')
+        c = Client()
+        response = c.get(u'/images/1')
 
-	   self.assertEqual(1, response.data['ImageID'])
+        self.assertEqual(1, response.data['ImageID'])
 
     def test_cannot_get_nonexistant_image(self):
         c = Client()

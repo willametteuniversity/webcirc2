@@ -1,0 +1,11 @@
+[
+    {
+        "model": "website.Location",
+        "pk": 1,
+        "fields": {
+            "BuildingID": 1,
+            "RoomNumber": 116,
+            "LocationDescription": "Network Services Office"
+        }
+    }
+]
