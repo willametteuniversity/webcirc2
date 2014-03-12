@@ -3,10 +3,35 @@
         <h3 class="panel-title">Add New Non-Inventory Item</h3>
     </div>
     <div class="panel-body" id="addNewNonInventoryItemFormBody">
-         <form role="form" id="addNewNonInventoryItemForm">
+         <form role="form" class="form-horizontal" id="addNewNonInventoryItemForm">
              <div class="form-group">
-                 <label for="quantityInput">Quantity:</label>
-                 <input type="text" class="form-control" id="quantityInput" placeholder="Enter the amount on hand...">
+                 <label class="control-label col-sm-3" for="nonInventoryItemNameInput">Name:</label>
+                 <div class="col-sm-9">
+                    <input class="form-control" type="text" id="nonInventoryItemNameInput" placeholder="Enter the name of the item..."/>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="nonInventoryItemDescriptionInput">Description:</label>
+                 <div class="col-sm-9">
+                    <textarea class="form-control" id="nonInventoryItemDescriptionInput"></textarea>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="col-sm-3 control-label" for="nonInventoryItemCategoryInput">Category:</label>
+                 <div class="col-sm-9">
+                    <input type="text" class="form-control" id="nonInventoryItemCategoryInput" name="category" placeholder="Enter the category...">
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="nonInventoryQuantityInput">Quantity:</label>
+                 <div class="col-sm-9">
+                     <input type="text" class="form-control" id="nonInventoryItemQuantityInput" placeholder="Enter the amount on hand...">
+                 </div>
+             </div>
+             <div class="form-group">
+                 <div class="col-sm-offset-3 col-sm-10">
+                    <button type="submit" class="btn btn-default" id="submitCreateNewInventoryItemBtn">Submit</button>
+                 </div>
              </div>
         </form>
     </div>

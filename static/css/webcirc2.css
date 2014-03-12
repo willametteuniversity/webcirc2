@@ -84,5 +84,15 @@ label {
 #addNewEquipmentDiv {
     margin-top: 50px;
 }
+
+#selectCreateItemType {
+    background-color: black;
+}
+
+#createItemTypeBtn {
+    background-color: #222222;
+    border-color: #080808;
+    color: #999999;
+}
 /* End Add New Equipment styles */
 
