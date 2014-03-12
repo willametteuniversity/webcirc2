@@ -52,6 +52,7 @@ class InventoryItem(models.Model):
     StorageLocation = models.ForeignKey('Location')
     CollectionID = models.ForeignKey('Collection')
 
+
 class NonInventoryItem(models.Model):
     ItemID = models.AutoField(primary_key=True)
     Description = models.CharField(max_length=500)
@@ -59,6 +60,8 @@ class NonInventoryItem(models.Model):
     StorageLocation = models.ForeignKey('Location')
     CollectionID = models.ForeignKey('Collection')
     Notes = models.CharField(max_length=500)
+    Quantity = models.IntegerField(default=0)
+
 
 class InventoryWidget(models.Model):
     InventoryID = models.AutoField(primary_key=True)

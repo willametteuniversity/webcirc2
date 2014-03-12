@@ -1,11 +1,20 @@
 steal(function() {
+    /**
+     * This module contains functionality to deal with creating new equipment
+     * entries on the server.
+     */
+
     jQuery.noConflict();
     $("#mainrow").on("click", "#createInventoryItemBtn", function(event) {
+        /**
+         * This is called when the user wants to create a new Inventory item
+         */
         $("#addNewEquipmentDiv").load("/addNewInventoryItemForm/", function() {
             // TODO: Look at doing this using the Model functionality. Maybe move this to a utility function?
 
             /** Begin section to populate the form **/
             // This pulls all the valid locations to populate the text box.
+            // TODO: Look for an error response and display appropriately
             $.getJSON("/locations/", function(data) {
                 $("#storageLocationSelect").empty();
                 $.each(data, function(key, val) {
@@ -14,6 +23,7 @@ steal(function() {
             });
 
             // This pulls all the valid statuses to populate
+            // TODO: Look for an error response and display something
             $.getJSON("/statuses/", function(data) {
                 $("#statusSelect").empty();
                 $.each(data, function(key, val) {
@@ -21,6 +31,9 @@ steal(function() {
                 });
             });
 
+            /** Begin autocomplete configuration section for the new Inventory Item form **/
+            // This section handles setting up the Bloodhound stuff for autocomplete. We are using the
+            // typeahead.js module.
             var brands = new Bloodhound({
                datumTokenizer: function(d) {
                    return Bloodhound.tokenizers.whitespace(d.BrandName);
@@ -28,6 +41,7 @@ steal(function() {
                queryTokenizer: Bloodhound.tokenizers.whitespace,
                remote: '/autocomplete/?model=brand&term=%QUERY'
             });
+
             brands.initialize();
             $("#brandInput").typeahead(null, {
                 name: 'brands',
@@ -42,6 +56,7 @@ steal(function() {
                queryTokenizer: Bloodhound.tokenizers.whitespace,
                remote: '/autocomplete/?model=model&term=%QUERY'
             });
+
             models.initialize();
             $("#modelInput").typeahead(null, {
                 name: 'models',
@@ -56,24 +71,57 @@ steal(function() {
                queryTokenizer: Bloodhound.tokenizers.whitespace,
                remote: '/autocomplete/?model=category&term=%QUERY'
             });
+
             categories.initialize();
             $("#categoryInput").typeahead(null, {
                 name: 'categories',
                 displayKey: 'LabelName',
                 source: categories.ttAdapter()
             });
+            /** End of Bloodhound configuration section **/
         });
     });
 
     $("#mainrow").on("click", "#submitCreateNewInventoryItemBtn", function(event) {
+        /**
+         * This function handles the submission of the create new Inventory Item form
+         */
         event.preventDefault();
         var newInventoryItemForm = $("#addNewInventoryItemForm").serialize();
         $.post("/addNewInventoryItem/", newInventoryItemForm, function(response) {
-
+            // TODO: Check for error and display to the user
         });
     });
     $("#mainrow").on("click", "#createNonInventoryItemBtn", function(event) {
-        $("#addNewEquipmentDiv").load("/addNewNonInventoryItemForm/");
+        /**
+         * This function handles displaying the form for creating a non-Inventory Item
+         */
+        $("#addNewEquipmentDiv").load("/addNewNonInventoryItemForm/", function() {
+            /** Begin Bloodhound setup section for typeahead.js **/
+            var categories = new Bloodhound({
+               datumTokenizer: function(d) {
+                   return Bloodhound.tokenizers.whitespace(d.LabelName);
+               },
+               queryTokenizer: Bloodhound.tokenizers.whitespace,
+               remote: '/autocomplete/?model=category&term=%QUERY'
+            });
+            categories.initialize();
+            $("#nonInventoryItemCategoryInput").typeahead(null, {
+                name: 'categories',
+                displayKey: 'LabelName',
+                source: categories.ttAdapter()
+            });
+            /** End Bloodhound configuration section **/
+        });
+
+
+    });
+
+    $("#mainrow").on("click", "#submitCreateNewNonInventoryItemBtn", function(event) {
+        /**
+        * This function handles the submission of the create new non-Inventory Item form
+        */
+        // TODO: Write code for this!
     });
 
 });

@@ -46,6 +46,7 @@ $(document).ready(function() {
         });
     });
     steal("scripts/addNewEquipment.js", function() {});
+    steal("scripts/administerCollections.js", function() {});
 
     $("#registerBtn").on("click", function(event) {
         /**
@@ -53,6 +54,7 @@ $(document).ready(function() {
          */
        $("#mainrow").load("/registerNewUser/");
     });
+
 
     $("#signInBtn").on("click", function(event) {
         /**
@@ -99,7 +101,16 @@ $(document).ready(function() {
          * This function loads the add new equipment page
          */
         $("#mainrow").load("/addNewEquipment/", function() {
+            $("#createInventoryItemBtn").click();
+        });
+    });
 
+    $("#collectionAdministrationLink").on("click", function(event) {
+        /**
+         * This function loads the page to administer collections
+         */
+        $("#mainrow").load("/administerCollections/", function() {
+            $("#createNewCollectionFormLink").click();
         });
     });
 

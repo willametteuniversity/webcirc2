@@ -10,30 +10,21 @@ body {
 
 .panel {
     border-color: black;
-    background: #2f384f; /* Old browsers */
-    background: -moz-radial-gradient(center, ellipse cover, #2f384f 0%, #242b3c 100%); /* FF3.6+ */
-    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#2f384f), color-stop(100%,#242b3c)); /* Chrome,Safari4+ */
-    background: -webkit-radial-gradient(center, ellipse cover, #2f384f 0%,#242b3c 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-radial-gradient(center, ellipse cover, #2f384f 0%,#242b3c 100%); /* Opera 12+ */
-    background: -ms-radial-gradient(center, ellipse cover, #2f384f 0%,#242b3c 100%); /* IE10+ */
-    background: radial-gradient(ellipse at center, #2f384f 0%,#242b3c 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2f384f', endColorstr='#242b3c',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-    box-shadow: 2px 2px #000000;
-
+background: rgb(173,31,31); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(173,31,31,1) 0%, rgba(173,31,31,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(173,31,31,1)), color-stop(100%,rgba(173,31,31,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, rgba(173,31,31,1) 0%,rgba(173,31,31,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, rgba(173,31,31,1) 0%,rgba(173,31,31,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, rgba(173,31,31,1) 0%,rgba(173,31,31,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom, rgba(173,31,31,1) 0%,rgba(173,31,31,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ad1f1f', endColorstr='#ad1f1f',GradientType=0 ); /* IE6-9 */
+color: #CCCCCC;
 }
 
-.panel {
-
-}
-
-.panel {
-    padding: 0px;
-    color: #cccccc;
-}
-
-.panel-heading {
-    background-color: #0F1A33;
-    border-color: #292E3B;
+.panel-default > .panel-heading {
+    background-color: #901017;
+    border-color: #8c1017;
+    color: #dbdbdb;
 }
 
 label {
@@ -80,19 +71,19 @@ label {
 
 /* End label management page styles */
 
-/* Begin Add New Equipment styles */
-#addNewEquipmentDiv {
-    margin-top: 50px;
-}
-
-#selectCreateItemType {
-    background-color: black;
-}
-
-#createItemTypeBtn {
+/* Begin section for site-wide nav-pills */
+.nav-pills > li.active > a {
     background-color: #222222;
-    border-color: #080808;
     color: #999999;
 }
-/* End Add New Equipment styles */
 
+.nav-pills > li.active > a:hover, .nav-pills > li > a:hover {
+    color: white;
+    background: #2e2e2e;
+
+}
+.nav-pills > li > a {
+    color: #999999;
+    background-color: #1D1D1D;
+}
+/* End site wide section for nav pills */
