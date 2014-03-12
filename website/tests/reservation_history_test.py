@@ -14,29 +14,29 @@ from website.views import *
 from website.models import *
 
 
-class ItemHistoryAPITest(TestCase):
-    fixtures = ['User.json', 'InventoryItem.json', 'Label.json', 'Status.json']
+class ReservationHistoryAPITest(TestCase):
+    fixtures = ['User.json', 'InventoryItem.json', 'Label.json', 'Status.json', 'Reservation.json']
 
     def setUp(self):
-        ItemHistory.objects.create(OperatorID=User.objects.filter(id=1)[0],
-                                   ItemID=InventoryItem.objects.filter(ItemID=1)[0],
-                                   ChangeDescription=u'Reinstalled',
-                                   ChangeDateTime=u'03092014')
+        ReservationHistory.objects.create(OperatorID=User.objects.filter(id=1)[0],
+                                          ReservationID=Reservation.objects.filter(ReservationID=1)[0],
+                                          ChangeDescription=u'Reinstalled',
+                                          ChangeDateTime=u'03092014')
 
     def test_api_url_resolves_correctly(self):
-        found = resolve(u'/itemHistory/1')
-        self.assertEqual(found.func, itemHistoryDetail)
+        found = resolve(u'/reservationHistory/1')
+        self.assertEqual(found.func, reservationHistoryDetail)
 
-    def test_can_view_item_history(self):
+    def test_can_view_reservation_history(self):
         client = Client()
-        response = client.get(u'/itemHistory/1')
+        response = client.get(u'/reservationHistory/1')
         data = json.loads(response.content)
         self.assertEqual(u'user1', data[0][u'Username'])
-        self.assertEqual(1, data[0][u'ItemID'])
+        self.assertEqual(1, data[0][u'ReservationID'])
         self.assertEqual(u'Reinstalled', data[0][u'ChangeDescription'])
         self.assertEqual(u'03092014', data[0][u'ChangeDateTime'])
 
     def test_cannot_view_nonexistent_history(self):
         client = Client()
-        response = client.get(u'/itemHistory/2')
+        response = client.get(u'/reservationHistory/2')
         self.assertEqual(404, response.status_code)
