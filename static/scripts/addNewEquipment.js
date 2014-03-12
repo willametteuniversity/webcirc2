@@ -34,10 +34,44 @@ steal(function() {
                 displayKey: 'BrandName',
                 source: brands.ttAdapter()
             });
-            /** End section to populate the form **/
+
+            var models = new Bloodhound({
+               datumTokenizer: function(d) {
+                   return Bloodhound.tokenizers.whitespace(d.ModelDesignation);
+               },
+               queryTokenizer: Bloodhound.tokenizers.whitespace,
+               remote: '/autocomplete/?model=model&term=%QUERY'
+            });
+            models.initialize();
+            $("#modelInput").typeahead(null, {
+                name: 'models',
+                displayKey: 'ModelDesignation',
+                source: models.ttAdapter()
+            });
+
+            var categories = new Bloodhound({
+               datumTokenizer: function(d) {
+                   return Bloodhound.tokenizers.whitespace(d.LabelName);
+               },
+               queryTokenizer: Bloodhound.tokenizers.whitespace,
+               remote: '/autocomplete/?model=category&term=%QUERY'
+            });
+            categories.initialize();
+            $("#categoryInput").typeahead(null, {
+                name: 'categories',
+                displayKey: 'LabelName',
+                source: categories.ttAdapter()
+            });
         });
     });
 
+    $("#mainrow").on("click", "#submitCreateNewInventoryItemBtn", function(event) {
+        event.preventDefault();
+        var newInventoryItemForm = $("#addNewInventoryItemForm").serialize();
+        $.post("/addNewInventoryItem/", newInventoryItemForm, function(response) {
+
+        });
+    });
     $("#mainrow").on("click", "#createNonInventoryItemBtn", function(event) {
         $("#addNewEquipmentDiv").load("/addNewNonInventoryItemForm/");
     });

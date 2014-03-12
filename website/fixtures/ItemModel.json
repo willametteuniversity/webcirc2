@@ -10,7 +10,7 @@
         "model": "website.ItemModel",
         "pk": 2,
         "fields": {
-            "BrandName": "Latitude"
+            "ModelDesignation": "Latitude"
         }
     }
 ]
