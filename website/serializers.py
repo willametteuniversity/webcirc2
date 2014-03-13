@@ -51,7 +51,3 @@ class ItemBrandSerializer(serializers.ModelSerializer):
 class ActionTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActionType
-
-class LocationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Location

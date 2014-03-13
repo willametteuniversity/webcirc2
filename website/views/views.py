@@ -635,9 +635,42 @@ def actionTypeDetail(request, pk):
 
 @api_view([u'GET'])
 def itemHistoryDetail(request, fk):
-    history = InventoryItem.objects.filter(ItemID=fk, order_by=u"ChangeDateTime")
-    return HttpResponse(json.dumps(history), status_code=201, content_type=u'application/json')
+    # TODO:
+    # Check if the item is real, if not return 404?
+    # If it is real, return the history, if there is no history return blank?
+    # What makes sense to me is have no history just return a blank history page,
+    # and have an incorrect model number return an error or some sort.
+    # Same question for reservation history.
+    history = ItemHistory.objects.filter(ItemID=fk).order_by(u"ChangeDateTime")
+    if len(history) is 0:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    all_history = []
+    for item in history:
+        values = {
+            u'Username': item.OperatorID.username,
+            u'ItemID': item.ItemID.ItemID,
+            u'ChangeDescription': item.ChangeDescription,
+            u'ChangeDateTime': item.ChangeDateTime
+        }
+        all_history.append(values)
+    return HttpResponse(json.dumps(all_history), status=201, content_type=u'application/json')
 
+
+@api_view(['GET'])
+def reservationHistoryDetail(request, fk):
+    history = ReservationHistory.objects.filter(ReservationID=fk).order_by(u"ChangeDateTime")
+    if len(history) is 0:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    all_history = []
+    for item in history:
+        values = {
+            u'Username': item.OperatorID.username,
+            u'ReservationID': item.ReservationID.ReservationID,
+            u'ChangeDescription': item.ChangeDescription,
+            u'ChangeDateTime': item.ChangeDateTime
+        }
+        all_history.append(values)
+    return HttpResponse(json.dumps(all_history), status=201, content_type=u'application/json')
 
 @api_view([u'GET'])
 def categoryHierarchy(request):

@@ -1,0 +1,15 @@
+[
+    {
+        "model": "website.Reservation",
+        "pk": 1,
+        "fields": {
+            "CustomerID": 1,
+            "CustomerPhone": "5555555555",
+            "CustomerEmail": "wits@willamette.edu",
+            "CustomerDept": "WITS",
+            "CustomerStatus": "Not sure what this is",
+            "ReservationNotes": "Don't forget this",
+            "EventTitle": "Cool event"
+        }
+    }
+]
