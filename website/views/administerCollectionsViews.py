@@ -30,14 +30,16 @@ def administerCollections(request):
     '''
     return render(request, u'administer_collections.html', {})
 
+@csrf_exempt
 def addNewCollectionForm(request):
     '''
     This handles a request to display the adding a new collection form.
     '''
     return render(request, u'forms/add_new_collection_form.html', {})
 
-def editCollectionForm(request):
+@csrf_exempt
+def chooseCollectionToEditForm(request):
     '''
     This handles a request to display the edit form for collections.
     '''
-    return render(request, u'forms/edit_collection_form.html', {})
+    return render(request, u'forms/choose_collection_to_edit_form.html', {})
