@@ -25,6 +25,9 @@ $(document).ready(function() {
     steal("scripts/utility.js", function() {});
     steal("scripts/models/collection.js", function() {});
     steal("scripts/models/label.js", function() {});
+    steal("scripts/models/itemBrand.js", function() {});
+    steal("scripts/models/itemModel.js", function() {});
+    steal("scripts/models/inventoryItem.js", function() {});
     steal("jstree/dist/jstree.min.js", function() {});
     steal("scripts/labelAndCategoryMgmt.js", function() {
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {

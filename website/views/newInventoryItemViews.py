@@ -23,11 +23,4 @@ from rest_framework.response import Response
 from website.models import *
 from website.serializers import *
 
-@csrf_exempt
-def addNewInventoryItem(request):
-    '''
-    This handles a request to create a new inventory item.
-    '''
-    print request.POST
-    return HttpResponse("OK")
 

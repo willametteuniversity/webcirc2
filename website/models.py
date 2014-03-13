@@ -41,7 +41,7 @@ class Status(models.Model):
 
 class InventoryItem(models.Model):
     ItemID = models.AutoField(primary_key=True)
-    AlternateID = models.ForeignKey('InventoryWidget')
+    AlternateID = models.ForeignKey('InventoryWidget', blank=True, null=True)
     BrandID = models.ForeignKey('ItemBrand')
     ModelID = models.ForeignKey('ItemModel')
     Description = models.CharField(max_length=500)

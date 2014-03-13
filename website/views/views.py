@@ -543,9 +543,12 @@ def itemBrandList(request):
 
 
 @api_view([u'GET', u'PUT', u'DELETE'])
-def itemBrandDetail(request, pk):
+def itemBrandDetail(request, pk=None, bn=None):
     try:
-        current_model = ItemBrand.objects.get(BrandID=pk)
+        if pk:
+            current_model = ItemBrand.objects.get(BrandID=pk)
+        elif bn:
+            current_model = ItemBrand.objects.get(BrandName=bn)
     except ItemBrand.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     if request.method == u'GET':

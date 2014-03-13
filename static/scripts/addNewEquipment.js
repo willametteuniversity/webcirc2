@@ -87,10 +87,17 @@ steal(function() {
          * This function handles the submission of the create new Inventory Item form
          */
         event.preventDefault();
-        var newInventoryItemForm = $("#addNewInventoryItemForm").serialize();
-        $.post("/addNewInventoryItem/", newInventoryItemForm, function(response) {
-            // TODO: Check for error and display to the user
+        // Adding an inventory item is a teensy bit more complicated.
+        // First, let's figure out if the Brand they entered already exists, or if we need to
+        // create it.
+        var brandName = $("#brandInput").val();
+        console.log("Brand name is: "+brandName)
+        var newItemBrand = ItemBrand.findOne({BrandName:brandName}, function(success) {
+            // If it exists, 
+        }, function(failure) {
+            console.log("Brand does not exist!");
         });
+
     });
     $("#mainrow").on("click", "#createNonInventoryItemBtn", function(event) {
         /**
@@ -121,7 +128,8 @@ steal(function() {
         /**
         * This function handles the submission of the create new non-Inventory Item form
         */
-        // TODO: Write code for this!
+
+
     });
 
 });
