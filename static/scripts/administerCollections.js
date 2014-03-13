@@ -119,6 +119,7 @@ steal(function() {
         /**
          * This function handles the pressing of the create new collection button
          */
+            event.preventDefault();
         var newCollection = new Collection({CollectionName: $("#newCollectionNameInput").val(),
                             CollectionDescription: $("#newCollectionDescriptionInput").val()
                             });
