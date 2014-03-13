@@ -41,7 +41,7 @@ class Status(models.Model):
 
 class InventoryItem(models.Model):
     ItemID = models.AutoField(primary_key=True)
-    AlternateID = models.ForeignKey('InventoryWidget')
+    AlternateID = models.ForeignKey('InventoryWidget', blank=True, null=True)
     BrandID = models.ForeignKey('ItemBrand')
     ModelID = models.ForeignKey('ItemModel')
     Description = models.CharField(max_length=500)
@@ -51,6 +51,16 @@ class InventoryItem(models.Model):
     StatusID = models.ForeignKey('Status')
     StorageLocation = models.ForeignKey('Location')
     CollectionID = models.ForeignKey('Collection')
+
+
+class NonInventoryItem(models.Model):
+    ItemID = models.AutoField(primary_key=True)
+    Description = models.CharField(max_length=500)
+    CategoryID = models.ForeignKey('Label')
+    StorageLocation = models.ForeignKey('Location')
+    CollectionID = models.ForeignKey('Collection')
+    Notes = models.CharField(max_length=500)
+    Quantity = models.IntegerField(default=0)
 
 
 class InventoryWidget(models.Model):
@@ -76,7 +86,7 @@ class Location(models.Model):
 
 class Building(models.Model):
     BuildingID = models.AutoField(primary_key=True)
-    BuildingCode = models.IntegerField()
+    BuildingCode = models.CharField(max_length=20)
     # Alternate Key
     BuildingName = models.CharField(max_length=500)
 

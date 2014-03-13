@@ -3,8 +3,9 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = patterns('website.views',
                         url(r'^', include('website.urls.apiUrls')),
-                        url(r'^', include('website.urls.inventoryItemUrls')),
                         url(r'^', include('website.urls.labelAndCategoryMgmtUrls')),
+                        url(r'^', include('website.urls.newItemUrls')),
+                        url(r'^', include('website.urls.administerCollectionsUrls')),
                         )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

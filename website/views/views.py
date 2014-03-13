@@ -6,6 +6,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
+
 # Auth imports
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
@@ -136,7 +137,7 @@ def login(request):
         return HttpResponse(json.dumps(responseData), content_type=u'application/json')
 
     # Now let's try to log them in
-    u = authenticate(username=request.POST['username'], password=request.POST['password'])
+    u = authenticate(username=request.POST[u'username'], password=request.POST[u'password'])
 
     # If it is none, login returned a user which means they logged in successfully
     if u is not None:
@@ -176,7 +177,7 @@ def addNewNonInventoryItemForm(request):
     return render(request, u'forms/add_new_non_inventory_item_form.html')
 
 @csrf_exempt
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view([u'GET', u'PUT', u'DELETE'])
 def collectionDetail(request, pk, format=None):
     '''
     Retrieve, update or delete a Collection.
@@ -192,13 +193,13 @@ def collectionDetail(request, pk, format=None):
 
     # Again we check for the method and do a different
     # thing depending on which method the client used.
-    if request.method == 'GET':
+    if request.method == u'GET':
         # If they used GET, we want to retrieve, serialize
         # and send back the particular Collection they
         # requested.
         serializer = CollectionSerializer(collection)
         return Response(serializer.data)
-    elif request.method == 'PUT':
+    elif request.method == u'PUT':
         # If they used PUT, they want to change an already
         # existing collection. So, we deserialize the JSON
         # data the client sent, check if it is valid, and if
@@ -212,14 +213,14 @@ def collectionDetail(request, pk, format=None):
         # the errors from the serializer, and a HTTP status
         # code
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
+    elif request.method == u'DELETE':
         # If they used DELETE, they want to delete the Collection
         # that they sent the PK for.
         collection.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET', 'POST'])
+@api_view([u'GET', u'POST'])
 def collectionList(request, format=None):
     '''
     Lists all Collections
@@ -229,7 +230,7 @@ def collectionList(request, format=None):
     # GET. When you just visit a website, that's a GET, for
     # example. You can always check the "method" attribute of
     # a request object in Django to get the type of request.
-    if request.method == 'GET':
+    if request.method == u'GET':
         # Here we retrieve all of our Collection instances.
         collections = Collection.objects.all()
         # Here we instantiate our CollectionSerializer. Note that
@@ -242,7 +243,7 @@ def collectionList(request, format=None):
         return Response(serializer.data)
     # If the method is POST...remember, we use POST for creating
     # things on the server.
-    elif request.method == 'POST':
+    elif request.method == u'POST':
         # Create a serializer. Note that we are giving
         # it the data, in JSON format.
         serializer = CollectionSerializer(data=request.DATA)
@@ -258,23 +259,23 @@ def collectionList(request, format=None):
         # an HTTP error code.
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'POST'])
+@api_view([u'GET', u'POST'])
 def labelList(request, format=None):
     '''
     Lists all Labels
     '''
-    if request.method == 'GET':
+    if request.method == u'GET':
         labels = Label.objects.all()
         serializer = LabelSerializer(labels, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+    elif request.method == u'POST':
         serializer = LabelSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view([u'GET', u'PUT', u'DELETE'])
 def labelDetail(request, pk, format=None):
     '''
     Retrieve, update or delete a Label.
@@ -283,38 +284,38 @@ def labelDetail(request, pk, format=None):
         label = Label.objects.get(LabelID=pk)
     except Label.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-    if request.method == 'GET':
+    if request.method == u'GET':
         serializer = LabelSerializer(label)
         return Response(serializer.data)
-    elif request.method == 'PUT':
+    elif request.method == u'PUT':
         serializer = LabelSerializer(label, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
+    elif request.method == u'DELETE':
         # If they used DELETE, they want to delete the Collection
         # that they sent the PK for.
         label.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET', 'POST'])
+@api_view([u'GET', u'POST'])
 def reservationList(request, format=None):
     '''
     Retrieve a list of all Reservations
     '''
-    if request.method == 'GET':
+    if request.method == u'GET':
         reservations = Reservation.objects.all()
         serializer = ReservationSerializer(reservations, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+    elif request.method == u'POST':
         serializer = ReservationSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view([u'GET', u'PUT', u'DELETE'])
 def reservationDetail(request, pk, format=None):
     '''
     Retrieve, update or delete a Reservation.
@@ -324,36 +325,36 @@ def reservationDetail(request, pk, format=None):
     except Reservation.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
+    if request.method == u'GET':
         serializer = ReservationSerializer(reservation)
         return Response(serializer.data)
-    elif request.method == 'PUT':
+    elif request.method == u'PUT':
         serializer = ReservationSerializer(reservation, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
+    elif request.method == u'DELETE':
         reservation.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET', 'POST'])
+@api_view([u'GET', u'POST'])
 def labelNoteList(request, format=None):
     '''
     Retrieve a list of all Label Notes
     '''
-    if request.method == 'GET':
+    if request.method == u'GET':
         labelNotes = LabelNotes.objects.all()
         serializer = LabelNotesSerializer(labelNotes, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+    elif request.method == u'POST':
         serializer = LabelNotesSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view([u'GET', u'PUT', u'DELETE'])
 def labelNoteDetail(request, pk, format=None):
     '''
     Retrieve, update or delete Label Note.
@@ -363,36 +364,36 @@ def labelNoteDetail(request, pk, format=None):
     except LabelNotes.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
+    if request.method == u'GET':
         serializer = LabelNotesSerializer(labelNote)
         return Response(serializer.data)
-    elif request.method == 'PUT':
+    elif request.method == u'PUT':
         serializer = LabelNotesSerializer(labelNote, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
+    elif request.method == u'DELETE':
         labelNote.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET', 'POST'])
+@api_view([u'GET', u'POST'])
 def imageList(request, format=None):
     '''
     Retrieve a list of all Label Notes
     '''
-    if request.method == 'GET':
+    if request.method == u'GET':
         images = Image.objects.all()
         serializer = ImageSerializer(images, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+    elif request.method == u'POST':
         serializer = ImageSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view([u'GET', u'PUT', u'DELETE'])
 def imageDetail(request, pk, format=None):
     '''
     Retrieve, update or delete Label Note.
@@ -402,75 +403,75 @@ def imageDetail(request, pk, format=None):
     except Image.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
+    if request.method == u'GET':
         serializer = ImageSerializer(image)
         return Response(serializer.data)
-    elif request.method == 'PUT':
+    elif request.method == u'PUT':
         serializer = ImageSerializer(image, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
+    elif request.method == u'DELETE':
         image.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET', 'POST'])
+@api_view([u'GET', u'POST'])
 def statusList(request, format=None):
     '''
     Retrieve a list of all Label Notes
     '''
-    if request.method == 'GET':
+    if request.method == u'GET':
         states = Status.objects.all()
         serializer = StatusSerializer(states, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+    elif request.method == u'POST':
         serializer = StatusSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view([u'GET', u'PUT', u'DELETE'])
 def statusDetail(request, pk, format=None):
     '''
     Retrieve, update or delete Label Note.
     '''
     try:
-        state = Status.objects.get(StatusID=pk)
+        status = Status.objects.get(StatusID=pk)
     except Status.DoesNotExist:
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        return HttpResponse(status=404)
 
-    if request.method == 'GET':
+    if request.method == u'GET':
         serializer = StatusSerializer(status)
         return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = StatusSerializer(state, data=request.DATA)
+    elif request.method == u'PUT':
+        serializer = StatusSerializer(status, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        state.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+    elif request.method == u'DELETE':
+        status.delete()
+        return HttpResponse(status=204)
 
-@api_view(['GET', 'POST'])
+@api_view([u'GET', u'POST'])
 def inventoryItemList(request, format=None):
     '''
     Retrieve a list of all Label Notes
     '''
-    if request.method == 'GET':
+    if request.method == u'GET':
         inventoryItems = InventoryItem.objects.all()
         serializer = InventoryItemSerializer(inventoryItems, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+    elif request.method == u'POST':
         serializer = InventoryItemSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view([u'GET', u'PUT', u'DELETE'])
 def inventoryItemDetail(request, pk, format=None):
     '''
     Retrieve, update or delete Inventory Item.
@@ -480,59 +481,60 @@ def inventoryItemDetail(request, pk, format=None):
     except InventoryItem.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
+    if request.method == u'GET':
         serializer = InventoryItemSerializer(inventoryItem)
         return Response(serializer.data)
-    elif request.method == 'PUT':
+    elif request.method == u'PUT':
         serializer = InventoryItemSerializer(inventoryItem, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
+    elif request.method == u'DELETE':
         inventoryItem.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-    
-@api_view(['GET', 'POST'])
+
+
+@api_view([u'GET', u'POST'])
 def itemModelList(request):
-    if request.method == 'GET':
+    if request.method == u'GET':
         all_models = ItemModel.objects.all()
         serializer = ItemModelSerializer(all_models)
         return Response(serializer.data)
-    elif request.method == 'POST':
+    elif request.method == u'POST':
         serializer = ItemModelSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view([u'GET', u'PUT', u'DELETE'])
 def itemModelDetail(request, pk):
     try:
         current_model = ItemModel.objects.get(ModelID=pk)
     except ItemModel.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-    if request.method == 'GET':
+    if request.method == u'GET':
         serializer = ItemModelSerializer(current_model)
         return Response(serializer.data)
-    elif request.method == 'PUT':
+    elif request.method == u'PUT':
         serializer = ItemModelSerializer(current_model, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
+    elif request.method == u'DELETE':
         current_model.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET', 'POST'])
+@api_view([u'GET', u'POST'])
 def itemBrandList(request):
-    if request.method == 'GET':
+    if request.method == u'GET':
         all_models = ItemBrand.objects.all()
         serializer = ItemBrandSerializer(all_models, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+    elif request.method == u'POST':
         serializer = ItemBrandSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
@@ -540,33 +542,68 @@ def itemBrandList(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def itemBrandDetail(request, pk):
+@api_view([u'GET', u'PUT', u'DELETE'])
+def itemBrandDetail(request, pk=None, bn=None):
     try:
-        current_model = ItemBrand.objects.get(BrandID=pk)
+        if pk:
+            current_model = ItemBrand.objects.get(BrandID=pk)
+        elif bn:
+            current_model = ItemBrand.objects.get(BrandName=bn)
     except ItemBrand.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-    if request.method == 'GET':
+    if request.method == u'GET':
         serializer = ItemBrandSerializer(current_model)
         return Response(serializer.data)
-    elif request.method == 'PUT':
+    elif request.method == u'PUT':
         serializer = ItemBrandSerializer(current_model, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
+    elif request.method == u'DELETE':
         current_model.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
+@api_view([u'GET', u'POST'])
+def locationList(request):
+    if request.method == u'GET':
+        all_models = Location.objects.all()
+        serializer = LocationSerializer(all_models, many=True)
+        return Response(serializer.data)
+    elif request.method == u'POST':
+        serializer = Location(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'POST'])
+
+@api_view([u'GET', u'PUT', u'DELETE'])
+def locationDetail(request, pk):
+    try:
+        current_model = Location.objects.get(LocationID=pk)
+    except Location.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    if request.method == u'GET':
+        serializer = LocationSerializer(current_model)
+        return Response(serializer.data)
+    elif request.method == u'PUT':
+        serializer = LocationSerializer(current_model, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == u'DELETE':
+        current_model.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+@api_view([u'GET', u'POST'])
 def actionTypeList(request):
-    if request.method == 'GET':
+    if request.method == u'GET':
         all_models = ActionType.objects.all()
         serializer = ActionTypeSerializer(all_models, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+    elif request.method == u'POST':
         serializer = ActionTypeSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
@@ -574,27 +611,29 @@ def actionTypeList(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view([u'GET', u'PUT', u'DELETE'])
 def actionTypeDetail(request, pk):
     try:
         current_model = ActionType.objects.get(ActionTypeID=pk)
     except ActionType.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-    if request.method == 'GET':
+    if request.method == u'GET':
         serializer = ActionTypeSerializer(current_model)
         return Response(serializer.data)
-    elif request.method == 'PUT':
+    elif request.method == u'PUT':
         serializer = ActionTypeSerializer(current_model, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
+    elif request.method == u'DELETE':
         current_model.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET'])
+
+
+@api_view([u'GET'])
 def itemHistoryDetail(request, fk):
     # TODO:
     # Check if the item is real, if not return 404?
@@ -633,21 +672,20 @@ def reservationHistoryDetail(request, fk):
         all_history.append(values)
     return HttpResponse(json.dumps(all_history), status=201, content_type=u'application/json')
 
-
-@api_view(['GET'])
+@api_view([u'GET'])
 def categoryHierarchy(request):
 
     #retrive a list of categories in a hierarchy structure
 
-    if request.method == 'GET':
+    if request.method == u'GET':
         root = Label.objects.get(pk=1)
 
         def get_nodes(node):
             d = {}
             children = get_children(node=node)
-            d['id'] = node.pk
-            d['text'] = node.LabelName
-            d['children'] = [get_nodes(x) for x in children]
+            d[u'id'] = node.pk
+            d[u'text'] = node.LabelName
+            d[u'children'] = [get_nodes(x) for x in children]
             return d
 
         def get_children(node):
@@ -656,3 +694,30 @@ def categoryHierarchy(request):
         tree = get_nodes(node=root)
 
         return HttpResponse(json.dumps(tree), content_type=u'application/json')
+
+def autocomplete(request):
+    '''
+    This function takes a search token and a model, and returns autocomplete results to the client.
+    '''
+    results = []
+    if request.GET[u'model'].lower() == u'brand':
+        r = ItemBrand.objects.filter(BrandName__icontains = request.GET[u'term'])
+        for eachResult in r:
+            results.append({u'BrandID':eachResult.BrandID, u'BrandName':eachResult.BrandName})
+
+    elif request.GET[u'model'].lower() == u'model':
+        r = ItemModel.objects.filter(ModelDesignation__icontains = request.GET[u'term'])
+        for eachResult in r:
+            results.append({u'ModelID':eachResult.ModelID, u'ModelDesignation':eachResult.ModelDesignation})
+
+    elif request.GET[u'model'].lower() == u'collection':
+        r = Collection.objects.filter(CollectionName__icontains = request.GET[u'term'])
+        for eachResult in r:
+            results.append({u'CollectionID':eachResult.CollectionID, u'CollectionName': eachResult.CollectionName})
+
+    elif request.GET[u'model'].lower() == u'category':
+        r = Label.objects.filter(LabelName__icontains = request.GET[u'term']).exclude(ParentCategory = None)
+        for eachResult in r:
+            results.append({u'LabelID':eachResult.LabelID, u'LabelName': eachResult.LabelName})
+
+    return HttpResponse(json.dumps(results), content_type=u'application/json')

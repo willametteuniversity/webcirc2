@@ -1,0 +1,16 @@
+[
+    {
+        "model": "website.ItemModel",
+        "pk": 1,
+        "fields": {
+            "ModelDesignation": "Inspiron"
+        }
+    },
+    {
+        "model": "website.ItemModel",
+        "pk": 2,
+        "fields": {
+            "ModelDesignation": "Latitude"
+        }
+    }
+]

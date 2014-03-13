@@ -25,6 +25,9 @@ $(document).ready(function() {
     steal("scripts/utility.js", function() {});
     steal("scripts/models/collection.js", function() {});
     steal("scripts/models/label.js", function() {});
+    steal("scripts/models/itemBrand.js", function() {});
+    steal("scripts/models/itemModel.js", function() {});
+    steal("scripts/models/inventoryItem.js", function() {});
     steal("jstree/dist/jstree.min.js", function() {});
     steal("scripts/labelAndCategoryMgmt.js", function() {
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
@@ -46,6 +49,25 @@ $(document).ready(function() {
         });
     });
     steal("scripts/addNewEquipment.js", function() {});
+    steal("scripts/administerCollections.js", function() {
+        $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+            /**
+             * This function handles inserting out CSRF token into outgoing
+             * AJAX requests
+             */
+            if ( options.processData
+            && /^application\/json((\+|;).+)?$/i.test( options.contentType )
+            && /^(post|put|delete)$/i.test( options.type )
+            ) {
+                options.data = JSON.stringify( originalOptions.data );
+            }
+            if (!options.crossDomain) {
+                if (csrftoken) {
+                    return jqXHR.setRequestHeader('X-CSRFToken', csrftoken);
+                }
+            }
+        });
+    });
 
     $("#registerBtn").on("click", function(event) {
         /**
@@ -53,6 +75,7 @@ $(document).ready(function() {
          */
        $("#mainrow").load("/registerNewUser/");
     });
+
 
     $("#signInBtn").on("click", function(event) {
         /**
@@ -99,7 +122,16 @@ $(document).ready(function() {
          * This function loads the add new equipment page
          */
         $("#mainrow").load("/addNewEquipment/", function() {
+            $("#createInventoryItemBtn").click();
+        });
+    });
 
+    $("#collectionAdministrationLink").on("click", function(event) {
+        /**
+         * This function loads the page to administer collections
+         */
+        $("#mainrow").load("/administerCollections/", function() {
+            $("#createNewCollectionFormLink").click();
         });
     });
 

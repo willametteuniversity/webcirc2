@@ -53,16 +53,16 @@ class InventoryItemAPITests(TestCase):
         self.assertEqual(found.func, inventoryItemList)
 
     def test_inventoryItems_url_resolves_to_inventoryItemDetail(self):
-	   found = resolve(u'/inventoryItems/1')
-	   self.assertEqual(found.func, inventoryItemDetail)
+        found = resolve(u'/inventoryItems/1')
+        self.assertEqual(found.func, inventoryItemDetail)
 
     def test_can_get_specific_inventoryItem(self):
-	   c = Client()
-	   response = c.get(u'/inventoryItems/1')
+        c = Client()
+        response = c.get(u'/inventoryItems/1')
 
-	   self.assertEqual(u'InventoryItem1', response.data['Description'])
-	   self.assertEqual(u'Note1', response.data['Notes'])
-	   self.assertEqual(1, response.data['ItemID'])
+        self.assertEqual(u'InventoryItem1', response.data['Description'])
+        self.assertEqual(u'Note1', response.data['Notes'])
+        self.assertEqual(1, response.data['ItemID'])
 
     def test_cannot_get_nonexistant_inventoryItem(self):
         c = Client()
@@ -72,9 +72,30 @@ class InventoryItemAPITests(TestCase):
 
     def test_can_create_new_inventoryItem(self):
         c = Client()
+
+        invw3 = InventoryWidget.objects.create();
+
+        brand3 = ItemBrand.objects.create();
+
+        model3 = ItemModel.objects.create();
+
+        label3 = Label.objects.create();
+
+        status3 = Status.objects.create();
+
+        building = Building.objects.create(BuildingCode=1);
+
+        location3 = Location.objects.create(BuildingID=building);
+
+        collection3 = Collection.objects.create();
+
+        inv3 = InventoryItem.objects.create(Description=u'InventoryItem1', Notes=u'Note1', AlternateID=invw3, BrandID=brand3, ModelID=model3, CategoryID=label3, StatusID=status3, StorageLocation=location3, CollectionID=collection3)
+
         # Make the request to make the inventoryItem...
         response = c.post(u'/inventoryItems/', {u'Description' : u'InventoryItem3',
-                                         u'Notes' : u'Note3'})
+                                         u'Notes' : u'Note3', u'AlternateID' : invw3.pk, u'BrandID' : brand3.pk, u'StatusID' : status3.pk,
+                                         u'ModelID' : model3.pk, u'CategoryID' : label3.pk,
+                                         u'StorageLocation' : location3.pk, u'CollectionID' : collection3.pk})
         # We expect the server to return a proper status code and the item it made. So lets check all of those:
         self.assertEqual(u'InventoryItem3', response.data[u'Description'])
         self.assertEqual(u'Note3', response.data[u'Notes'])
