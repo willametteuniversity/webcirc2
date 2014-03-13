@@ -633,6 +633,7 @@ def reservationHistoryDetail(request, fk):
         all_history.append(values)
     return HttpResponse(json.dumps(all_history), status=201, content_type=u'application/json')
 
+
 @api_view(['GET'])
 def categoryHierarchy(request):
 
