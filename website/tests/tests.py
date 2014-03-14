@@ -19,7 +19,7 @@ from django.test.client import Client
 from django.http import HttpRequest
 
 # Import all of our views for testing
-from website.views import *
+from website.views.views import *
 
 # Same for models
 from website.models import *

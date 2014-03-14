@@ -32,6 +32,9 @@ class InventoryItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = InventoryItem
 
+class NonInventoryItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NonInventoryItem
 
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -51,3 +54,7 @@ class ItemBrandSerializer(serializers.ModelSerializer):
 class ActionTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActionType
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location

@@ -45,7 +45,7 @@ class InventoryItem(models.Model):
     BrandID = models.ForeignKey('ItemBrand')
     ModelID = models.ForeignKey('ItemModel')
     Description = models.CharField(max_length=500)
-    Notes = models.CharField(max_length=500)
+    Notes = models.CharField(max_length=500, null=True, blank=True)
     CategoryID = models.ForeignKey('Label')
     ParentItem = models.ForeignKey('InventoryItem', null=True, blank=True)
     StatusID = models.ForeignKey('Status')
@@ -59,7 +59,7 @@ class NonInventoryItem(models.Model):
     CategoryID = models.ForeignKey('Label')
     StorageLocation = models.ForeignKey('Location')
     CollectionID = models.ForeignKey('Collection')
-    Notes = models.CharField(max_length=500)
+    Notes = models.CharField(max_length=500, null=True, blank=True)
     Quantity = models.IntegerField(default=0)
 
 

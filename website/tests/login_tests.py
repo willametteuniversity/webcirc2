@@ -2,7 +2,7 @@
 This file contains tests that test the logging in functionality.
 '''
 
-from website.views import *
+from website.views.views import *
 from django.core.urlresolvers import resolve
 from django.test import TestCase
 from django.test.client import Client
