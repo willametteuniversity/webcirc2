@@ -119,9 +119,15 @@ def registerNewUser(request):
         return render(request, u'forms/register.html', {})
 
 @api_view(['POST'])
-def addInventoryItem(request):
+def addNewInventoryItemForm(request):
     
-    if request.method == 'POST':
+#    print "dis got called"
+
+    if request.GET:
+        # Is there any reason we would be doing GET to this URL?
+        # TODO: Refactor this to use the 501 redirection and create a 501 page
+        return render(request, u'forms/add_new_inventory_item_form.html')
+    elif request.POST:
         responseData = {}
         if u'model' not in request.POST:
             responseData[u'result'] = u'failed'
@@ -157,9 +163,15 @@ def addInventoryItem(request):
         n.location = status.POST[u'location']
         
         n.save()
+        print "n is:", n
         responseData = {}
         responseData[u'result'] = u'succeeded'
         return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+
+    else:
+        # This means we need to display the add inventory item form
+        # Let's load the form up
+        return HttpResponse(status=501)
 
 @csrf_exempt
 def login(request):
@@ -666,3 +678,47 @@ def categoryHierarchy(request):
         tree = get_nodes(node=root)
 
         return HttpResponse(json.dumps(tree), content_type=u'application/json')
+
+def checkAvailable(item, startTime, endTime):
+    actionItems = ActionItem.objects.filter(InventoryItemID=item.pk)
+    startDate = datetime.strptime(startTime, "%d-%m-%Y %H:%M:%S")
+    endDate = datetime.strptime(endTime, "%d-%m-%Y %H:%M:%S")
+    if not actionItem:
+        return true
+    else:
+        actions = Action.objects.filter(ActionID=[x.ActionID for x in actionItems])
+
+        for action in actions:
+            actionStartDate = datetime.strptime(action.startTime, "%d-%m-%Y %H:%M:%S")
+            actionEndDate = datetime.strptime(action.endTime, "%d-%m-%Y %H:%M:%S")
+
+            if actionStartDate <= startDate and startDate <= actionEndDate:
+                return false
+            elif actionStartDate <= endDate and endDate <= actionEndDate:
+                return false
+            elif actionStartDate >= startDate and actionEndDate <= endDate:
+                return false
+            elif actionStartDate <= startDate and actionEndDate >= endDate:
+                return false
+
+        return true
+
+
+    # def dateIsLater(date, compDate):
+    
+    #     year = int(date[0:4])
+    #     compYear = int(compDate[0:4])
+    #     month = int(date[5:7])
+    #     compMonth = int(compDate[5:7])
+    #     day = int(date[8:])
+    #     compDay = int(compDate[8:])
+
+    #     if compYear < year:
+    #         return false
+    #     elif compYear == year and compMonth < month:
+    #         return false
+    #     elif compYear == year and compMonth == month:
+    #         return compDay < day
+
+    #     return true
+
