@@ -19,6 +19,7 @@ $(document).ready(function() {
         }
         return cookieValue;
     }
+
     var csrftoken = getCookie('csrftoken');
 
     steal("can/can.js", function() {});
@@ -28,6 +29,7 @@ $(document).ready(function() {
     steal("scripts/models/itemBrand.js", function() {});
     steal("scripts/models/itemModel.js", function() {});
     steal("scripts/models/inventoryItem.js", function() {});
+    steal("scripts/models/nonInventoryItem.js", function() {});
     steal("jstree/dist/jstree.min.js", function() {});
     steal("scripts/labelAndCategoryMgmt.js", function() {
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {

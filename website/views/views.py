@@ -178,15 +178,18 @@ def addNewNonInventoryItemForm(request):
 
 @csrf_exempt
 @api_view([u'GET', u'PUT', u'DELETE'])
-def collectionDetail(request, pk, format=None):
+def collectionDetail(request, pk=None, cn=None, format=None):
     '''
     Retrieve, update or delete a Collection.
     '''
     # We will use try/except. If Django cannot find an object
-    # with the primary key we give it using get(), it throws
+    # with the primary key or provided collection name we give it using get(), it throws
     # an error.
     try:
-        collection = Collection.objects.get(CollectionID=pk)
+        if pk is not None:
+            collection = Collection.objects.get(CollectionID=pk)
+        elif cn is not None:
+            collection = Collection.objects.get(CollectionName=cn)
     except Collection.DoesNotExist:
         # If we didn't find it, return a HTTP code of 404
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
@@ -276,12 +279,15 @@ def labelList(request, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view([u'GET', u'PUT', u'DELETE'])
-def labelDetail(request, pk, format=None):
+def labelDetail(request, pk=None, ln=None, format=None):
     '''
     Retrieve, update or delete a Label.
     '''
     try:
-        label = Label.objects.get(LabelID=pk)
+        if pk is not None:
+            label = Label.objects.get(LabelID=pk)
+        elif ln is not None:
+            label = Label.objects.get(LabelName=ln)
     except Label.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     if request.method == u'GET':
@@ -493,7 +499,44 @@ def inventoryItemDetail(request, pk, format=None):
     elif request.method == u'DELETE':
         inventoryItem.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+@api_view([u'GET', u'POST'])
 
+def nonInventoryItemList(request, format=None):
+    '''
+    Retrieve a list of all non Inventory items
+    '''
+    if request.method == u'GET':
+        nonInventoryItems = NonInventoryItem.objects.all()
+        serializer = NonInventoryItemSerializer(nonInventoryItems, many=True)
+        return Response(serializer.data)
+    elif request.method == u'POST':
+        serializer = NonInventoryItemSerializer(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view([u'GET', u'PUT', u'DELETE'])
+def nonInventoryItemDetail(request, pk, format=None):
+    '''
+    Retrieve, update or delete a non Inventory Item.
+    '''
+    try:
+        nonInventoryItem = NonInventoryItem.objects.get(ItemID=pk)
+    except InventoryItem.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    if request.method == u'GET':
+        serializer = NonInventoryItemSerializer(nonInventoryItem)
+        return Response(serializer.data)
+    elif request.method == u'PUT':
+        serializer = InventoryItemSerializer(nonInventoryItem, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == u'DELETE':
+        nonInventoryItem.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @api_view([u'GET', u'POST'])
 def itemModelList(request):
@@ -509,9 +552,12 @@ def itemModelList(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view([u'GET', u'PUT', u'DELETE'])
-def itemModelDetail(request, pk):
+def itemModelDetail(request, pk=None, mn=None):
     try:
-        current_model = ItemModel.objects.get(ModelID=pk)
+        if pk is not None:
+            current_model = ItemModel.objects.get(ModelID=pk)
+        elif mn is not None:
+            current_model = ItemModel.objects.get(ModelDesignation=mn)
     except ItemModel.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     if request.method == u'GET':
@@ -730,5 +776,10 @@ def autocomplete(request):
         r = Label.objects.filter(LabelName__icontains = request.GET[u'term']).exclude(ParentCategory = None)
         for eachResult in r:
             results.append({u'LabelID':eachResult.LabelID, u'LabelName': eachResult.LabelName})
+
+    elif request.GET[u'model'].lower() == u'collection':
+        r = Label.objects.filter(CollectionName__icontains = request.GET[u'term'])
+        for eachResult in r:
+            results.append({u'CollectionID':eachResult.CollectionID, u'CollectionName': eachResult.CollectionName})
 
     return HttpResponse(json.dumps(results), content_type=u'application/json')

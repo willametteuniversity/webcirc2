@@ -4,4 +4,4 @@ var InventoryItem = can.Model({
     create:  'POST /inventoryitems/',
     update:  'PUT /inventoryitems/{id}',
     destroy: 'DELETE /inventoryitems/{id}'
-}, {})
+}, {});

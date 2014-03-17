@@ -1,6 +1,20 @@
 var Label = can.Model.extend({
     findAll: 'GET /labels/',
-    findOne: 'GET /labels/{id}',
+    findOne: function(params) {
+        if (params.id) {
+            return $.ajax({
+                url: '/labels/'+params.id,
+                type: 'get',
+                dataType: 'json'
+            });
+        } else if (params.LabelName) {
+                return $.ajax({
+                    url: '/labels/'+params.LabelName,
+                    type: 'get',
+                    dataType: 'json'
+            })
+        }
+    },
     create:  {
         type: 'POST',
         contentType: 'application/json',

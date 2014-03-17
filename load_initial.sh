@@ -8,3 +8,6 @@ python manage.py loaddata ItemBrand
 python manage.py loaddata ItemModel
 python manage.py loaddata Collection
 python manage.py loaddata Label
+python manage.py loaddata InventoryItem
+python manage.py loaddata ItemHistory
+

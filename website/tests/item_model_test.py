@@ -10,7 +10,7 @@ sys.path.insert(0, project_dir)
 from django.core.urlresolvers import resolve
 from django.test import TestCase
 from django.test.client import Client
-from website.views import *
+from website.views.views import *
 from website.models import *
 
 
