@@ -674,7 +674,13 @@ def reservationHistoryDetail(request, fk):
 
 
 def labels_not_categories(request):
-    pass
+    all_labels = Label.objects
+    labels_without_parents = Label.objects.filter(ParentCategory=None)
+    for label in all_labels:
+        for potential_parent in labels_without_parents:
+            if label.ParentCategory == potential_parent:
+                labels_without_parents.remove(potential_parent)
+    return HttpResponse(json.dumps(labels_without_parents), status=201, content_type=u'application/json')
 
 
 @api_view([u'GET'])
