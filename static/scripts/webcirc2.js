@@ -137,6 +137,15 @@ $(document).ready(function() {
         });
     });
 
+	$("#alocationAdministrationLink").on("click", function(event) {
+        /**
+         * This function loads the add new equipment page
+         */
+        $("#mainrow").load("/administerLocations/", function() {
+            $("#createNewLocationFormLink").click();
+        });
+    });
+
     $("#mainblock").on("click", "#submitRegistrationBtn", function(event) {
         /**
          * This function handles the submission of a new operator registration form.
