@@ -1,6 +1,9 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns('website.views',
+                       url(r'^buildings/$', 'views.buildingList'),
+                       url(r'^buildings/(?P<pk>[0-9]+)$', 'views.buildingDetail'),
+                       url(r'^buildings/(?P<bc>.+)$', 'views.buildingDetail'),
                        url(r'^collections/$', 'views.collectionList'),
                        url(r'^collections/(?P<pk>[0-9]+)$', 'views.collectionDetail'),
                        url(r'^collections/(?P<cn>.+)$', 'views.collectionDetail'),

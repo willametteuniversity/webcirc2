@@ -222,6 +222,47 @@ def collectionDetail(request, pk=None, cn=None, format=None):
         collection.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
+@csrf_exempt
+@api_view([u'GET', u'PUT', u'DELETE'])
+def buildingDetail(request, pk=None, bc=None, format=None):
+    '''
+    Retrieve, update or delete a Building.
+    '''
+    try:
+        if pk is not None:
+            building = Building.objects.get(BuildingID=pk)
+        elif bc is not None:
+            building = Building.objects.get(BuildingCode=bc)
+    except Building.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    if request.method == u'GET':
+        serializer = BuildingSerializer(building)
+        return Response(serializer.data)
+    elif request.method == u'PUT':
+        serializer = BuildingSerializer(building, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == u'DELETE':
+        building.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+@api_view([u'GET', u'POST'])
+def buildingList(request, format=None):
+    '''
+    Lists all Buildings
+    '''
+    if request.method == u'GET':
+        buildings = Building.objects.all()
+        serializer = BuildingSerializer(buildings, many=True)
+        return Response(serializer.data)
+    elif request.method == u'POST':
+        serializer = BuildingSerializer(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view([u'GET', u'POST'])
 def collectionList(request, format=None):

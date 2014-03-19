@@ -24,6 +24,7 @@ $(document).ready(function() {
 
     steal("can/can.js", function() {});
     steal("scripts/utility.js", function() {});
+    steal("scripts/models/building.js", function() {});
     steal("scripts/models/collection.js", function() {});
     steal("scripts/models/label.js", function() {});
     steal("scripts/models/itemBrand.js", function() {});
@@ -52,6 +53,26 @@ $(document).ready(function() {
     });
     steal("scripts/addNewEquipment.js", function() {});
     steal("scripts/administerCollections.js", function() {
+        $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+            /**
+             * This function handles inserting out CSRF token into outgoing
+             * AJAX requests
+             */
+            if ( options.processData
+            && /^application\/json((\+|;).+)?$/i.test( options.contentType )
+            && /^(post|put|delete)$/i.test( options.type )
+            ) {
+                options.data = JSON.stringify( originalOptions.data );
+            }
+            if (!options.crossDomain) {
+                if (csrftoken) {
+                    return jqXHR.setRequestHeader('X-CSRFToken', csrftoken);
+                }
+            }
+        });
+    });
+
+    steal("scripts/administerBuildings.js", function() {
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
             /**
              * This function handles inserting out CSRF token into outgoing
@@ -134,6 +155,15 @@ $(document).ready(function() {
          */
         $("#mainrow").load("/administerCollections/", function() {
             $("#createNewCollectionFormLink").click();
+        });
+    });
+
+    $("#buildingAdministrationLink").on("click", function(event) {
+        /**
+         * This function loads the page to administer collections
+         */
+        $("#mainrow").load("/administerBuildings/", function() {
+            $("#createNewBuildingFormLink").click();
         });
     });
 

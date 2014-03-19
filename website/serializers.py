@@ -58,3 +58,7 @@ class ActionTypeSerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
+
+class BuildingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Building
