@@ -71,7 +71,7 @@ steal(function() {
             Building.attr("BuildingCode", $("#existingBuildingCode").val());
             // Save to the server
             Building.save(function(saved) {
-                $("#editBuildingFormBody").prepend("<div id='editBuildingSuccessAlert' class='alert alert-success fade out'>Building Updated!</div>");
+                $("#editBuildingFormBody").prepend("<div id='editBuildingSuccessAlert' class='alert alert-success'>Building Updated!</div>");
                 updateEditBuildingForm(saved);
                 updateBuildingSelect();
             });

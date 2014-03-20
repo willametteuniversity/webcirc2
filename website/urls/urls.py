@@ -7,6 +7,7 @@ urlpatterns = patterns('website.views',
                         url(r'^', include('website.urls.newItemUrls')),
                         url(r'^', include('website.urls.administerCollectionsUrls')),
                         url(r'^', include('website.urls.administerBuildingsUrls')),
+                        url(r'^', include('website.urls.administerActionTypeUrls')),
                         )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

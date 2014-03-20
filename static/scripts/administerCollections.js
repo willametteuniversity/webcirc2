@@ -71,7 +71,7 @@ steal(function() {
             collection.attr("CollectionDescription", $("#existingCollectionDescription").val());
             // Save to the server
             collection.save(function(saved) {
-                $("#editCollectionFormBody").prepend("<div id='editCollectionSuccessAlert' class='alert alert-success fade out'>Collection Updated!</div>");
+                $("#editCollectionFormBody").prepend("<div id='editCollectionSuccessAlert' class='alert alert-success'>Collection Updated!</div>");
                 updateEditCollectionForm(saved);
                 updateCollectionSelect();
             });
