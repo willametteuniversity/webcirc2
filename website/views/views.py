@@ -176,6 +176,12 @@ def addNewNonInventoryItemForm(request):
     '''
     return render(request, u'forms/add_new_non_inventory_item_form.html')
 
+def addNewConsumableItemForm(request):
+    '''
+    This function returns the form for adding a new consumable item
+    '''
+    return render(request, u'forms/add_new_consumable_item_form.html')
+
 @csrf_exempt
 @api_view([u'GET', u'PUT', u'DELETE'])
 def collectionDetail(request, pk=None, cn=None, format=None):
@@ -718,7 +724,41 @@ def actionTypeDetail(request, pk):
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
+@api_view(['GET', 'POST'])
+def consumableItemList(request):
+    '''
+    This function handles retrieving a list of consumable items
+    or of creating a new one
+    '''
+    if request.method == u'GET':
+        all_items = ConsumableItem.objects.all()
+        serializer = ConsumableItemSerializer(all_items, many=True)
+        return Response(serializer.data)
+    elif request.method == u'POST':
+        serializer = ConsumableItemSerializer(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view([u'GET', u'PUT', u'DELETE'])
+def consumableItemDetail(request, pk):
+    try:
+        current_model = ConsumableItem.objects.get(ActionTypeID=pk)
+    except ConsumableItem.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    if request.method == u'GET':
+        serializer = ConsumableItemSerializer(current_model)
+        return Response(serializer.data)
+    elif request.method == u'PUT':
+        serializer = ConsumableItemSerializer(current_model, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == u'DELETE':
+        current_model.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @api_view([u'GET'])
 def itemHistoryDetail(request, fk):
