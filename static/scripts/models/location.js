@@ -1,4 +1,4 @@
-var Collection = can.Model({
+var Location = can.Model({
     findAll: 'GET /locations/',
     findOne: function(params) {
         if (params.id) {

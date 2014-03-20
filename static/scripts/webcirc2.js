@@ -51,6 +51,7 @@ $(document).ready(function() {
         });
     });
     steal("scripts/addNewEquipment.js", function() {});
+    steal("scripts/administerLocations.js", function() {});
     steal("scripts/administerCollections.js", function() {
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
             /**
@@ -137,7 +138,7 @@ $(document).ready(function() {
         });
     });
 
-	$("#alocationAdministrationLink").on("click", function(event) {
+	$("#locationAdministrationLink").on("click", function(event) {
         /**
          * This function loads the add new equipment page
          */
