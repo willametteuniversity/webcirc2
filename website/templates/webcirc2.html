@@ -13,6 +13,7 @@
     <link href="{% static "jstree/dist/themes/default/style.min.css" %}" rel="stylesheet">
     <link href="{% static "css/webcirc2.css" %}" rel="stylesheet">
     <link href="{% static "css/typeahead.css" %}" rel="stylesheet">
+    <link href="{% static "css/bootstrap-datetimepicker.min.css" %}" rel="stylesheet">
   </head>
   <body>
     <script src="{% static "scripts/jquery-1.10.2.js" %}"></script>
@@ -20,6 +21,8 @@
     <script src="{% static "scripts/handlebars.js" %}"></script>
     <script src="{% static "scripts/bootstrap.js" %}"></script>
     <script src="{% static "scripts/typeahead.js" %}"></script>
+    <script src="{% static "scripts/moment-with-langs.js" %}"></script>
+    <script src="{% static "scripts/bootstrap-datetimepicker.min.js" %}"></script>
     <script src="{% static "steal/steal.js" %}"></script>
     <script src="{% static "jstree/dist/jstree.js" %}"></script>
     <script src="{% static "scripts/webcirc2.js" %}"></script>
@@ -66,7 +69,7 @@
         <div class="navbar-collapse collapse">
         {%  if user.is_authenticated %}
             <ul class="nav navbar-nav">
-                <li><a href="#">New</a></li>
+                <li><a href="#" id="addNewReservationLink">New</a></li>
                 <li><a href="#">Daily</a></li>
                 <li><a href="#">Monthly</a></li>
                 <li><a href="#">Overdue Stuff</a></li>

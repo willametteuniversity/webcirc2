@@ -7,7 +7,9 @@ body {
     background-image: url('/static/images/blackfelt.png');
 }
 
-
+h1 {
+    color: #999999;
+}
 .panel {
     border-color: black;
 background: rgb(12,28,44); /* Old browsers */
@@ -25,7 +27,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0c1c2c', end
     border-color: black;
     color: rgb(192, 162, 67);
 }
-
+ .panel-default > .panel-body {
+     color: #999999;
+ }
 label {
     color: rgb(192, 162, 67);
     font-weight: bold;
@@ -87,3 +91,13 @@ label {
     background-color: #1D1D1D;
 }
 /* End site wide section for nav pills */
+
+/* This removes the annoying padding from around panel headers */
+#newCustomerFormDiv, #newReservationActionsDiv, #newReservationNewActionDiv {
+    padding: 0px;
+}
+
+/* TODO: Figure out what this is necessary and get rid of it */
+#newCustomerFormBtns {
+    margin-left: -6px;
+}

@@ -54,6 +54,7 @@ $(document).ready(function() {
         });
     });
     steal("scripts/addNewEquipment.js", function() {});
+    steal("scripts/addNewReservation.js", function() {});
     steal("scripts/administerCollections.js", function() {
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
             /**
@@ -223,4 +224,16 @@ $(document).ready(function() {
             $("#createNewActionTypeFormLink").click();
         });
     });
+
+    $("#addNewReservationLink").on("click", function(event) {
+        /**
+         * This function loads the page to add new reservations
+         */
+        $("#mainrow").load("/addNewReservation/", function() {
+            // This sets up the datepickers in the add action form
+            $("#startDateTime").datetimepicker();
+            $("#endDateTime").datetimepicker();
+        });
+    });
+
 });
