@@ -30,8 +30,8 @@ class NonInventoryItemAPITests(TestCase):
         collection1 = Collection.objects.create();
         collection2 = Collection.objects.create();
 
-        inv1 = NonInventoryItem.objects.create(Description=u'NonInventoryItem1', Quantity=5, Notes=u'Note1', CategoryID=label1, StatusID=status1, StorageLocation=location1, CollectionID=collection1)
-        inv2 = NonInventoryItem.objects.create(Description=u'NonInventoryItem2', Quantity=10, Notes=u'Note2', CategoryID=label2, StatusID=status2, StorageLocation=location2, CollectionID=collection2)
+        inv1 = NonInventoryItem.objects.create(Description=u'NonInventoryItem1', Quantity=5, Notes=u'Note1', CategoryID=label1, StorageLocation=location1, CollectionID=collection1)
+        inv2 = NonInventoryItem.objects.create(Description=u'NonInventoryItem2', Quantity=10, Notes=u'Note2', CategoryID=label2, StorageLocation=location2, CollectionID=collection2)
 
     def test_can_get_list_of_nonInventoryItems(self):
         c = Client()
@@ -43,13 +43,13 @@ class NonInventoryItemAPITests(TestCase):
         found = resolve(u'/noninventoryitems/')
         self.assertEqual(found.func, nonInventoryItemList)
 
-    def test_inventoryItems_url_resolves_to_inventoryItemDetail(self):
-        found = resolve(u'/noninventoryItems/1')
-        self.assertEqual(found.func, inventoryItemDetail)
+    def test_inventoryItems_url_resolves_to_nonInventoryItemDetail(self):
+        found = resolve(u'/noninventoryitems/1')
+        self.assertEqual(found.func, nonInventoryItemDetail)
 
     def test_can_get_specific_inventoryItem(self):
         c = Client()
-        response = c.get(u'/noninventoryItems/1')
+        response = c.get(u'/noninventoryitems/1')
 
         self.assertEqual(u'NonInventoryItem1', response.data['Description'])
         self.assertEqual(u'Note1', response.data['Notes'])
@@ -61,7 +61,7 @@ class NonInventoryItemAPITests(TestCase):
 
         self.assertEqual(404, response.status_code)
 
-    def test_can_create_new_inventoryItem(self):
+    def test_can_create_new_nonInventoryItem(self):
         c = Client()
 
         label3 = Label.objects.create();
@@ -75,7 +75,7 @@ class NonInventoryItemAPITests(TestCase):
         collection3 = Collection.objects.create();
 
         # Make the request to make the inventoryItem...
-        response = c.post(u'/inventoryItems/', {u'Description' : u'NonInventoryItem3',
+        response = c.post(u'/noninventoryitems/', {u'Description' : u'NonInventoryItem3',
                                          u'Notes' : u'Note3', u'StatusID' : status3.pk,
                                          u'CategoryID' : label3.pk,
                                          u'StorageLocation' : location3.pk, u'CollectionID' : collection3.pk})
@@ -84,7 +84,7 @@ class NonInventoryItemAPITests(TestCase):
         self.assertEqual(u'Note3', response.data[u'Notes'])
         self.assertEqual(201, response.status_code)
 
-    def test_can_delete_inventoryItem(self):
+    def test_can_delete_nonInventoryItem(self):
         '''
         This tests that we can delete a inventoryItem
         '''

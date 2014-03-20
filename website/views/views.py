@@ -570,7 +570,7 @@ def nonInventoryItemDetail(request, pk, format=None):
     '''
     try:
         nonInventoryItem = NonInventoryItem.objects.get(ItemID=pk)
-    except InventoryItem.DoesNotExist:
+    except NonInventoryItem.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     if request.method == u'GET':
         serializer = NonInventoryItemSerializer(nonInventoryItem)
@@ -744,7 +744,7 @@ def consumableItemList(request):
 @api_view([u'GET', u'PUT', u'DELETE'])
 def consumableItemDetail(request, pk):
     try:
-        current_model = ConsumableItem.objects.get(ActionTypeID=pk)
+        current_model = ConsumableItem.objects.get(ItemID=pk)
     except ConsumableItem.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     if request.method == u'GET':
