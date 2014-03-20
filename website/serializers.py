@@ -71,3 +71,8 @@ class LocationSerializer(serializers.ModelSerializer):
 class BuildingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Building
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
