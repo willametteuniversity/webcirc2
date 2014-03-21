@@ -625,7 +625,7 @@ def locationList(request):
 
 
 @api_view([u'GET', u'PUT', u'DELETE'])
-def locationDetail(request, pk):
+def locationDetail(request, pk=None):
     try:
         current_model = Location.objects.get(LocationID=pk)
     except Location.DoesNotExist:
