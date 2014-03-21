@@ -1,0 +1,54 @@
+
+[
+    {
+        "model": "website.Building",
+        "pk": 1,
+        "fields": {
+            "BuildingCode" : 1,
+            "BuildingName" : "Building1",
+        }  
+    },
+    {
+        "model": "website.Building",
+        "pk": 2,
+        "fields": {
+            "BuildingCode" : 2,
+            "BuildingName" : "Building2",
+        }  
+    },
+    {
+        "model": "website.Building",
+        "pk": 3,
+        "fields": {
+            "BuildingCode" : 3,
+            "BuildingName" : "Building3",
+        }  
+    },
+	{
+        "model": "website.Location",
+        "pk": 1,
+        "fields": {
+            "BuildingID" : 1,
+            "RoomNumber" : 101,
+            "LocationDescription" : "Location1"
+        }  
+    },
+    {
+        "model": "website.Location",
+        "pk": 2,
+        "fields": {
+            "BuildingID" : 2,
+            "RoomNumber" : 102,
+            "LocationDescription" : "Location2"
+        }  
+    },
+    {
+        "model": "website.Location",
+        "pk": 3,
+        "fields": {
+            "BuildingID" : 3,
+            "RoomNumber" : 103,
+            "LocationDescription" : "Location3"
+        }  
+    },
+]
