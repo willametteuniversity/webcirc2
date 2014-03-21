@@ -189,3 +189,9 @@ class ConsumableItem(models.Model):
     MinQuantity = models.IntegerField(default=0)
     # Cost per item
     Cost = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+
+
+class Customer(models.Model):
+    user = models.OneToOneField(User)
+    phoneNumber = models.IntegerField(max_length=15)
+    altPhoneNumber = models.IntegerField(max_length=15)

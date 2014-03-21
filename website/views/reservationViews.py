@@ -30,6 +30,7 @@ def addNewReservation(request):
     '''
     return render(request, u'add_new_reservation.html', {})
 
+@csrf_exempt
 def addNewReservationForm(request):
     '''
     This handles a request to display the form for adding a new reservation

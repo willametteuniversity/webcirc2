@@ -761,6 +761,7 @@ def userDetail(request, pk=None, em=None):
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     if request.method == u'GET':
         serializer = UserSerializer(current_model)
+        return Response(serializer.data)
     elif request.method == u'PUT':
         serializer = UserSerializer(current_model, data=request.DATA)
         if serializer.is_valid():
