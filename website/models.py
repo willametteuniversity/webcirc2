@@ -5,28 +5,28 @@ from django.contrib.auth.models import User
 class Label(models.Model):
     LabelID = models.AutoField(primary_key=True)
     LabelName = models.CharField(max_length=500)
-    ParentCategory = models.ForeignKey('Label', null=True, blank=True)
+    ParentCategory = models.ForeignKey(u'Label', null=True, blank=True)
 
 
 class ItemLabel(models.Model):
-    LabelID = models.ForeignKey('Label')
-    ItemID = models.ForeignKey('InventoryItem')
+    LabelID = models.ForeignKey(u'Label')
+    ItemID = models.ForeignKey(u'InventoryItem')
 
 
 class LabelNotes(models.Model):
     LabelNoteID = models.AutoField(primary_key=True)
-    LabelID = models.ForeignKey('Label')
+    LabelID = models.ForeignKey(u'Label')
     LabelNote = models.CharField(max_length=500)
 
 
 class LabelImage(models.Model):
-    LabelID = models.ForeignKey('Label')
-    ImageID = models.ForeignKey('Image')
+    LabelID = models.ForeignKey(u'Label')
+    ImageID = models.ForeignKey(u'Image')
 
 
 class ItemImage(models.Model):
-    ItemID = models.ForeignKey('InventoryItem')
-    ImageID = models.ForeignKey('Image')
+    ItemID = models.ForeignKey(u'InventoryItem')
+    ImageID = models.ForeignKey(u'Image')
 
 
 class Image(models.Model):
@@ -41,24 +41,24 @@ class Status(models.Model):
 
 class InventoryItem(models.Model):
     ItemID = models.AutoField(primary_key=True)
-    AlternateID = models.ForeignKey('InventoryWidget', blank=True, null=True)
-    BrandID = models.ForeignKey('ItemBrand')
-    ModelID = models.ForeignKey('ItemModel')
+    AlternateID = models.ForeignKey(u'InventoryWidget', blank=True, null=True)
+    BrandID = models.ForeignKey(u'ItemBrand')
+    ModelID = models.ForeignKey(u'ItemModel')
     Description = models.CharField(max_length=500)
     Notes = models.CharField(max_length=500, null=True, blank=True)
-    CategoryID = models.ForeignKey('Label')
-    ParentItem = models.ForeignKey('InventoryItem', null=True, blank=True)
-    StatusID = models.ForeignKey('Status')
-    StorageLocation = models.ForeignKey('Location')
-    CollectionID = models.ForeignKey('Collection')
+    CategoryID = models.ForeignKey(u'Label')
+    ParentItem = models.ForeignKey(u'InventoryItem', null=True, blank=True)
+    StatusID = models.ForeignKey(u'Status')
+    StorageLocation = models.ForeignKey(u'Location')
+    CollectionID = models.ForeignKey(u'Collection')
 
 
 class NonInventoryItem(models.Model):
     ItemID = models.AutoField(primary_key=True)
     Description = models.CharField(max_length=500)
-    CategoryID = models.ForeignKey('Label')
-    StorageLocation = models.ForeignKey('Location')
-    CollectionID = models.ForeignKey('Collection')
+    CategoryID = models.ForeignKey(u'Label')
+    StorageLocation = models.ForeignKey(u'Location')
+    CollectionID = models.ForeignKey(u'Collection')
     Notes = models.CharField(max_length=500, null=True, blank=True)
     Quantity = models.IntegerField(default=0)
 
@@ -79,7 +79,7 @@ class ItemModel(models.Model):
 
 class Location(models.Model):
     LocationID = models.AutoField(primary_key=True)
-    BuildingID = models.ForeignKey('Building')
+    BuildingID = models.ForeignKey(u'Building')
     RoomNumber = models.CharField(max_length=500)
     LocationDescription = models.CharField(max_length=500)
 
@@ -97,27 +97,27 @@ class Restriction(models.Model):
 
 
 class ItemRestriction(models.Model):
-    ItemRestrictionID = models.ForeignKey('Restriction')
-    ItemID = models.ForeignKey('InventoryItem')
+    ItemRestrictionID = models.ForeignKey(u'Restriction')
+    ItemID = models.ForeignKey(u'InventoryItem')
 
 
 class ItemHistory(models.Model):
     OperatorID = models.ForeignKey(User)
-    ItemID = models.ForeignKey('InventoryItem')
+    ItemID = models.ForeignKey(u'InventoryItem')
     ChangeDescription = models.CharField(max_length=500)
-    ChangeDateTime = models.CharField(max_length=500)
+    ChangeDateTime = models.DateTimeField()
 
 
 class ReservationHistory(models.Model):
     OperatorID = models.ForeignKey(User)
-    ReservationID = models.ForeignKey('Reservation')
+    ReservationID = models.ForeignKey(u'Reservation')
     ChangeDescription = models.CharField(max_length=500)
-    ChangeDateTime = models.CharField(max_length=500)
+    ChangeDateTime = models.DateTimeField()
 
 
 class ActionItem(models.Model):
-    InventoryItemID = models.ForeignKey('InventoryItem')
-    ActionID = models.ForeignKey('Action')
+    InventoryItemID = models.ForeignKey(u'InventoryItem')
+    ActionID = models.ForeignKey(u'Action')
 
 
 class ActionType(models.Model):
@@ -126,36 +126,26 @@ class ActionType(models.Model):
 
 
 class ReservationAction(models.Model):
-    ReservationID = models.ForeignKey('Reservation')
-    ActionID = models.ForeignKey('Action')
+    ReservationID = models.ForeignKey(u'Reservation')
+    ActionID = models.ForeignKey(u'Action')
 
 
 class Action(models.Model):
     ActionID = models.AutoField(primary_key=True)
     # TODO: What should this go to?
     # AssignedOperatorID = models.ForeignKey()
-    ActionTypeID = models.ForeignKey('ActionType')
+    ActionTypeID = models.ForeignKey(u'ActionType')
     StartTime = models.CharField(max_length=500)
     EndTime = models.CharField(max_length=500)
-    Origin = models.ForeignKey('Location', related_name='action_origin')
-    Destination = models.ForeignKey('Location', related_name='action_destination')
+    Origin = models.ForeignKey(u'Location', related_name=u'action_origin')
+    Destination = models.ForeignKey(u'Location', related_name=u'action_destination')
     ActionStatus = models.CharField(max_length=500)
     ActionNotes = models.CharField(max_length=500)
 
 
-class InstitutionalUser(models.Model):
-    InstitutionalID = models.AutoField(primary_key=True)
-    Username = models.IntegerField()
-    UserPhone = models.CharField(max_length=500)
-    UserEmail = models.CharField(max_length=500)
-    UserDept = models.ForeignKey(u'InstitutionalDepartment')
-    UserFirstName = models.CharField(max_length=500)
-    UserLastName = models.CharField(max_length=500)
-
-
 class InstitutionalDepartment(models.Model):
     DepartmentID = models.AutoField(primary_key=True)
-    DepartmentAbbreviation = models.IntegerField()
+    DepartmentCode = models.CharField(max_length=50)
     DepartmentName = models.CharField(max_length=500)
 
 
@@ -191,7 +181,10 @@ class ConsumableItem(models.Model):
     Cost = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
 
 
-class Customer(models.Model):
+class CustomerProfile(models.Model):
     user = models.OneToOneField(User)
-    phoneNumber = models.IntegerField(max_length=15)
-    altPhoneNumber = models.IntegerField(max_length=15)
+    phoneNumber = models.IntegerField(max_length=15, blank=True, null=True)
+    altPhoneNumber = models.IntegerField(max_length=15, blank=True, null=True)
+    altEmail = models.EmailField(blank=True, null=True)
+    userDept = models.ForeignKey(u'InstitutionalDepartment')
+    userNote = models.TextField(blank=True, null=True)
