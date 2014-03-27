@@ -6,13 +6,19 @@ var User = can.Model.extend({
                 url: '/users/'+params.id,
                 type: 'get',
                 dataType: 'json'
-            });
+                });
         } else if (params.UserEmail) {
                 return $.ajax({
                     url: '/users/'+params.UserEmail,
                     type: 'get',
                     dataType: 'json'
-            })
+                });
+        } else if (params.UserName) {
+                return $.ajax({
+                    url: '/users/'+params.FullName,
+                    type: 'get',
+                    dataType: 'json'
+                });
         }
     },
     create:  {

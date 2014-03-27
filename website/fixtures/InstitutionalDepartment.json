@@ -1,7 +1,7 @@
 [
     {
         "pk": 1,
-        "model": "website.InsitutionalDepartment",
+        "model": "website.InstitutionalDepartment",
         "fields": {
             "DepartmentCode": "PSYCH",
             "DepartmentName": "Psychology"
@@ -9,7 +9,7 @@
     },
     {
         "pk": 2,
-        "model": "website.InsitutionalDepartment",
+        "model": "website.InstitutionalDepartment",
         "fields": {
             "DepartmentCode": "CS",
             "DepartmentName": "Computer Science"

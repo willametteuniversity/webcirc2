@@ -6,7 +6,7 @@
             "OperatorID": 1,
             "ItemID": 1,
             "ChangeDescription": "Reinstalled the OS",
-            "ChangeDateTime": "3-3-2014 15:32"
+            "ChangeDateTime": "2014-03-03 15:32-08:00"
         }
     },
 	{
@@ -16,7 +16,7 @@
             "OperatorID": 2,
             "ItemID": 1,
             "ChangeDescription": "Replaced the hard drive",
-            "ChangeDateTime": "3-2-2014 12:02"
+            "ChangeDateTime": "2014-03-03 12:02-08:00"
         }
     },
     {
@@ -26,7 +26,7 @@
             "OperatorID": 1,
             "ItemID": 2,
             "ChangeDescription": "Labeled the device",
-            "ChangeDateTime": "3-1-2014 11:35"
+            "ChangeDateTime": "2014-03-03 11:35-08:00"
         }
     }
 ]
