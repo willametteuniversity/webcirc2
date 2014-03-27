@@ -62,6 +62,20 @@ class NonInventoryItem(models.Model):
     Notes = models.CharField(max_length=500, null=True, blank=True)
     Quantity = models.IntegerField(default=0)
 
+class ConsumableItem(models.Model):
+    ItemID = models.AutoField(primary_key=True)
+    ItemName = models.CharField(max_length=100)
+    Description = models.CharField(max_length=500)
+    CategoryID = models.ForeignKey(u'Label')
+    StorageLocation = models.ForeignKey(u'Location')
+    Notes = models.CharField(max_length=500, null=True, blank=True)
+    Quantity = models.IntegerField(default=0)
+    # This is the quantity we want to always have on hand
+    MinQuantity = models.IntegerField(default=0)
+    # Cost per item
+    Cost = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+    CollectionID = models.ForeignKey(u'Collection')
+
 
 class InventoryWidget(models.Model):
     InventoryID = models.AutoField(primary_key=True)
@@ -133,7 +147,7 @@ class ReservationAction(models.Model):
 class Action(models.Model):
     ActionID = models.AutoField(primary_key=True)
     # TODO: What should this go to?
-    # AssignedOperatorID = models.ForeignKey()
+    AssignedOperatorID = models.ForeignKey(User)
     ActionTypeID = models.ForeignKey(u'ActionType')
     StartTime = models.CharField(max_length=500)
     EndTime = models.CharField(max_length=500)
@@ -164,21 +178,6 @@ class Collection(models.Model):
     CollectionID = models.AutoField(primary_key=True)
     CollectionName = models.CharField(max_length=500)
     CollectionDescription = models.CharField(max_length=500)
-
-
-class ConsumableItem(models.Model):
-    ItemID = models.AutoField(primary_key=True)
-    ItemName = models.CharField(max_length=100)
-    Description = models.CharField(max_length=500)
-    CategoryID = models.ForeignKey('Label')
-    # TODO: This should be mandatory once Hayden gets storage locations done
-    StorageLocation = models.ForeignKey('Location', null=True, blank=True)
-    Notes = models.CharField(max_length=500, null=True, blank=True)
-    Quantity = models.IntegerField(default=0)
-    # This is the quantity we want to always have on hand
-    MinQuantity = models.IntegerField(default=0)
-    # Cost per item
-    Cost = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
 
 
 class CustomerProfile(models.Model):

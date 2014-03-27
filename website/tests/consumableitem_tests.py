@@ -16,22 +16,22 @@ class ConsumableItemAPITests(TestCase):
 
     def setUp(self):
 
-        label1 = Label.objects.create();
-        label2 = Label.objects.create();
+        label1 = Label.objects.create()
+        label2 = Label.objects.create()
 
-        status1 = Status.objects.create();
-        status2 = Status.objects.create();
+        status1 = Status.objects.create()
+        status2 = Status.objects.create()
 
-        building = Building.objects.create(BuildingCode=1);
+        building = Building.objects.create(BuildingCode=1)
 
-        location1 = Location.objects.create(BuildingID=building);
-        location2 = Location.objects.create(BuildingID=building);
+        location1 = Location.objects.create(BuildingID=building)
+        location2 = Location.objects.create(BuildingID=building)
 
-        collection1 = Collection.objects.create();
-        collection2 = Collection.objects.create();
+        collection1 = Collection.objects.create()
+        collection2 = Collection.objects.create()
 
-        inv1 = ConsumableItem.objects.create(Description=u'ConsumableItem1', Quantity=5, MinQuantity=10, Cost=10.00, Notes=u'Note1', CategoryID=label1, StorageLocation=location1)
-        inv2 = ConsumableItem.objects.create(Description=u'ConsumableItem2', Quantity=10, MinQuantity=10, Cost=5.00, Notes=u'Note2', CategoryID=label2, StorageLocation=location2)
+        inv1 = ConsumableItem.objects.create(Description=u'ConsumableItem1', CollectionID=collection1, Quantity=5, MinQuantity=10, Cost=10.00, Notes=u'Note1', CategoryID=label1, StorageLocation=location1)
+        inv2 = ConsumableItem.objects.create(Description=u'ConsumableItem2', CollectionID=collection2, Quantity=10, MinQuantity=10, Cost=5.00, Notes=u'Note2', CategoryID=label2, StorageLocation=location2)
 
     def test_can_get_list_of_consumableItems(self):
         c = Client()
@@ -75,12 +75,12 @@ class ConsumableItemAPITests(TestCase):
         collection3 = Collection.objects.create();
 
         # Make the request to make the consumable item...
-        response = c.post(u'/consumableitems/', {u'Description' : u'ConsumableItem3',
-                                                 u'ItemName':u'Batteries',
-                                         u'Notes' : u'Note3',
-                                         u'CategoryID' : label3.pk,
-                                         u'StorageLocation' : location3.pk, u'CollectionID' : collection3.pk,
-                                         u'Cost':5.00, u'Quantity':10, u'MinQuantity':10})
+        response = c.post(u'/consumableitems/', {u'Description': u'ConsumableItem3',
+                                                 u'ItemName': u'Batteries',
+                                                 u'Notes' : u'Note3',
+                                                 u'CategoryID': label3.pk,
+                                                 u'StorageLocation': location3.pk, u'CollectionID': collection3.pk,
+                                                 u'Cost': 5.00, u'Quantity': 10, u'MinQuantity': 10})
         # We expect the server to return a proper status code and the item it made. So lets check all of those:
         self.assertEqual(u'ConsumableItem3', response.data[u'Description'])
         self.assertEqual(u'Note3', response.data[u'Notes'])

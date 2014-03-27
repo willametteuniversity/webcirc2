@@ -31,6 +31,13 @@ steal(function() {
                 });
             });
 
+            $.getJSON("/collections/", function(data) {
+                $("#inventoryItemCollectionSelect").empty();
+                $.each(data, function(key, val) {
+                    $("#inventoryItemCollectionSelect").append($('<option value="'+val.CollectionID+'">'+val.CollectionName+'</option>'));
+                });
+            });
+
             /** Begin autocomplete configuration section for the new Inventory Item form **/
             // This section handles setting up the Bloodhound stuff for autocomplete. We are using the
             // typeahead.js module.
@@ -220,6 +227,12 @@ steal(function() {
                 });
             });
 
+            $.getJSON("/collections/", function(data) {
+                $("#nonInventoryItemCollectionSelect").empty();
+                $.each(data, function(key, val) {
+                    $("#nonInventoryItemCollectionSelect").append($('<option value="'+val.CollectionID+'">'+val.CollectionName+'</option>'));
+                });
+            });
             /** Begin Bloodhound setup section for typeahead.js **/
             var categories = new Bloodhound({
                 datumTokenizer: function(d) {
@@ -235,20 +248,6 @@ steal(function() {
                 source: categories.ttAdapter()
             });
 
-            var collections = new Bloodhound({
-                datumTokenizer: function(d) {
-                    return Bloodhound.tokenizers.whitespace(d.LabelName);
-                },
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                remote: '/autocomplete/?model=collection&term=%QUERY'
-            });
-
-            collections.initialize();
-            $("#nonInventoryItemCollectionInput").typeahead(null, {
-                name: 'collections',
-                displayKey: 'CollectionName',
-                source: collections.ttAdapter()
-            });
             /** End Bloodhound configuration section **/
         });
     });
@@ -361,9 +360,16 @@ steal(function() {
                 // This pulls all the valid locations to populate the text box.
                 // TODO: Look for an error response and display appropriately
             $.getJSON("/locations/", function(data) {
-                $("#storageLocationSelect").empty();
+                $("#consumableItemStorageLocationSelect").empty();
                 $.each(data, function(key, val) {
-                    $("#storageLocationSelect").append($('<option value="'+val.LocationID+'">'+val.LocationDescription+'</option>'));
+                    $("#consumableItemStorageLocationSelect").append($('<option value="'+val.LocationID+'">'+val.LocationDescription+'</option>'));
+                });
+            });
+
+            $.getJSON("/collections/", function(data) {
+                $("#consumableItemCollectionSelect").empty();
+                $.each(data, function(key, val) {
+                    $("#consumableItemCollectionSelect").append($('<option value="'+val.CollectionID+'">'+val.CollectionName+'</option>'));
                 });
             });
 
@@ -416,7 +422,7 @@ steal(function() {
         if (category == "") {
             $("#addNewConsumableItemFormBody").prepend("<div id='addNewEquipmentCategoryNotEnteredAlert' class='alert alert-danger'>" +
                 "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
-                "<h4 id='collectionNotEnteredMsg'>Please enter a Category!</h4>");
+                "<h4 id='categoryNotEnteredMsg'>Please enter a Category!</h4>");
             fieldMissing = true;
         }
 
@@ -424,24 +430,24 @@ steal(function() {
         if (minQuantity == "") {
             $("#addNewConsumableItemFormBody").prepend("<div id='addNewEquipmentMinQuantityNotEnteredAlert' class='alert alert-danger'>" +
                 "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
-                "<h4 id='collectionNotEnteredMsg'>Please enter a Minimum Quantity!</h4>");
+                "<h4 id='minQuantityNotEnteredMsg'>Please enter a Minimum Quantity!</h4>");
             fieldMissing = true;
         }
 
         // TODO: Put this in one Hayden has Locations done
-        /*
-        var location = $("#consumableItemStorageLocationInput").val();
+
+        var location = $("#consumableItemStorageLocationSelect").val();
         if (location == "") {
             $("#addNewConsumableItemFormBody").prepend("<div id='addNewEquipmentStorageLocationNotEnteredAlert' class='alert alert-danger'>" +
                 "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
-                "<h4 id='collectionNotEnteredMsg'>Please select a Storage Location!</h4>");
+                "<h4 id='locationNotEnteredMsg'>Please select a Storage Location!</h4>");
             fieldMissing = true;
         }
         // If we had any missing fields, don't bother to execute the rest, just return
         if (fieldMissing == true) {
             return;
         }
-        */
+
         /** END **/
         /** Here we begin the asynchronous AJAX calls to validate and retrieve the associated models from
          * the server. We do this so we can extract things like the ID and then feed it back to the server
@@ -467,14 +473,11 @@ steal(function() {
                     Notes:$("#consumableItemNotesInput").val(),
                     CategoryID:category.LabelID,
                     //TODO: Need a field for parent category?
-
-                    // TODO: Uncomment this when Hayden gets locations done
-                    //StorageLocation:$("#storageLocationSelect").val(),
+                    StorageLocation:$("#consumableItemStorageLocationSelect").val(),
                     Quantity:$("#consumableItemQuantityInput").val(),
                     MinQuantity:$("#consumableItemMinQuantityInput").val(),
                     Cost:$("#consumableItemCostInput").val(),
-
-
+                    CollectionID:$("#consumableItemCollectionInput").val()
                 });
                 steal.dev.log("Saving new consumable item to server...");
                 // Try and save it to the server
