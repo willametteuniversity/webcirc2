@@ -1,0 +1,24 @@
+
+[
+	{
+        "model": "website.ItemModel",
+        "pk": 1,
+        "fields": {
+            "ModelDesignation" : "Designation1"
+        }  
+    },
+    {
+        "model": "website.ItemModel",
+        "pk": 2,
+        "fields": {
+            "ModelDesignation" : "Designation2"
+        }  
+    },
+    {
+        "model": "website.ItemModel",
+        "pk": 3,
+        "fields": {
+            "ModelDesignation" : "Designation3"
+        }  
+    },
+]
