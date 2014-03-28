@@ -18,6 +18,24 @@
     }
 },
 {
+    "pk": 4,
+    "model": "auth.user",
+    "fields": {
+        "username": "user4",
+        "first_name": "Support",
+        "last_name": "Troublekiller",
+        "is_active": true,
+        "is_superuser": true,
+        "is_staff": true,
+        "last_login": "2014-03-24T22:34:25.656Z",
+        "groups": [],
+        "user_permissions": [],
+        "password": "pbkdf2_sha256$12000$Mv3oi0Qybvw4$BCN0phLrLVO24sNtWGpCFvUJLMbKtU24TfiDPUZr9j4=",
+        "email": "wits4@willamette.edu",
+        "date_joined": "2014-03-23T19:00:18.187Z"
+    }
+},
+{
     "pk": 2,
     "model": "auth.user",
     "fields": {

@@ -1,14 +1,43 @@
 steal(function() {
+    var populateInfo = function(result) {
+        var numResults = 0;
+        $.each(result, function(key) {
+            if ($.isNumeric(key)) {
+                numResults += 1;
+            }
+        });
+        if (numResults > 0) {
+            for (var x = 0; x < numResults; x++) {
+                console.log(result[x]);
+            }
+        } else {
+            console.log(result);
+        }
+    };
     $("#mainrow").on("click", "#newReservationFindCustomerBtn", function(event) {
         event.preventDefault();
         // Let's search by their e-mail first
-        var userEmail = $("#customerEmail").val();
-        User.findOne({id: userEmail}, function(User) {
-            steal.dev.log(User);
-        }, function(failed) {
-            steal.dev.warn("User was not found!");
-        });
-        steal.dev.log("Find Customer Btn clicked!");
+
+        if ($("#customerEmail").val()) {
+            User.findOne({id: $("#customerEmail").val()}, function(User) {
+                populateInfo(User);
+            });
+        } else if ($("#customerFirstName").val() && $("#customerLastName").val()) {
+            User.findOne({FullName: $("#customerFirstName").val()+" "+$("#customerLastName").val()}, function(User) {
+                populateInfo(User);
+            });
+        } else if (($("#customerFirstName").val() || $("#customerLastName").val())) {
+            if ($("#customerFirstName").val()) {
+                oneName = $("#customerFirstName").val();
+            } else if ($("#customerLastName")) {
+                oneName = $("#customerLastName").val();
+            }
+            User.findOne({OneName: oneName}, function(User) {
+                populateInfo(User);
+            });
+        }
+
+
     });
 
     $("#mainrow").on("click", "#newReservationNewCustomerBtn", function(event) {

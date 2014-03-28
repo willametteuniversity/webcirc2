@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
+from django.db.models import Q
 
 # Django REST Framework imports
 from rest_framework.renderers import JSONRenderer
@@ -745,27 +746,36 @@ def userList(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def userDetail(request, pk=None, em=None, fn=None):
+def userDetail(request, pk=None, em=None, fn=None, n=None):
     '''
     This function handles retrieving details about a single user,
     deleting them or updating them
     '''
     try:
+        current_model = None
+        userModels = None
         if pk:
             current_model = User.objects.get(id=pk)
-            print "Here"
         elif em:
-            print "Here 2"
             current_model = User.objects.get(email=em)
         elif fn:
-            print "Here 3"
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+            firstName, lastName = fn.split(" ", 1)
+            userModels = User.objects.filter(first_name=firstName, last_name=lastName)
+            if len(userModels) == 0:
+                raise User.DoesNotExist
+        elif n:
+            userModels = User.objects.filter(Q(first_name=n) | Q(last_name=n))
+            if len(userModels) == 0:
+                raise User.DoesNotExist
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
     except User.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     if request.method == u'GET':
-        serializer = UserSerializer(current_model)
+        if current_model:
+            serializer = UserSerializer(current_model)
+        elif userModels:
+            serializer = UserSerializer(userModels, many=True)
         return Response(serializer.data)
     elif request.method == u'PUT':
         serializer = UserSerializer(current_model, data=request.DATA)

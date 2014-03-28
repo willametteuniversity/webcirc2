@@ -13,9 +13,16 @@ var User = can.Model.extend({
                     type: 'get',
                     dataType: 'json'
                 });
-        } else if (params.UserName) {
+        } else if (params.FullName) {
                 return $.ajax({
                     url: '/users/'+params.FullName,
+                    type: 'get',
+                    dataType: 'json'
+                });
+
+        } else if (params.OneName) {
+                return $.ajax({
+                    url: '/users/'+params.OneName,
                     type: 'get',
                     dataType: 'json'
                 });
