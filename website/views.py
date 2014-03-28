@@ -491,28 +491,51 @@ def statusList(request, format=None):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def statusDetail(request, pk, format=None):
+@csrf_exempt
+@api_view([u'GET', u'PUT', u'DELETE'])
+def statusDetail(request, pk=None, cn=None, format=None):
     '''
-    Retrieve, update or delete Label Note.
+    Retrieve, update or delete a Status.
     '''
+    # We will use try/except. If Django cannot find an object
+    # with the primary key or provided status name we give it using get(), it throws
+    # an error.
     try:
-        status = Status.objects.get(StatusID=pk)
+        if pk is not None:
+            status = Status.objects.get(StatusID=pk)
+        elif cn is not None:
+            status = Status.objects.get(StatusName=cn)
     except Status.DoesNotExist:
-        return HttpResponse(status=404)
+        # If we didn't find it, return a HTTP code of 404
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
+    # Again we check for the method and do a different
+    # thing depending on which method the client used.
+    if request.method == u'GET':
+        # If they used GET, we want to retrieve, serialize
+        # and send back the particular Status they
+        # requested.
         serializer = StatusSerializer(status)
         return Response(serializer.data)
-    elif request.method == 'PUT':
+    elif request.method == u'PUT':
+        # If they used PUT, they want to change an already
+        # existing status. So, we deserialize the JSON
+        # data the client sent, check if it is valid, and if
+        # it is, save it to the DB and send back a success
+        # HTTP code.
         serializer = StatusSerializer(status, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        # If the JSON they sent was not valid, send back
+        # the errors from the serializer, and a HTTP status
+        # code
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
+    elif request.method == u'DELETE':
+        # If they used DELETE, they want to delete the Status
+        # that they sent the PK for.
         status.delete()
-        return HttpResponse(status=204)
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
 def inventoryItemList(request, format=None):
@@ -703,22 +726,24 @@ def checkAvailable(item, startTime, endTime):
 
         return true
 
+@csrf_exempt
+def administerStatuses(request):
+    '''
+    This handles a request to display the form for administering statuses.
+    '''
+    return render(request, u'administer_statuses.html', {})
 
-    # def dateIsLater(date, compDate):
-    
-    #     year = int(date[0:4])
-    #     compYear = int(compDate[0:4])
-    #     month = int(date[5:7])
-    #     compMonth = int(compDate[5:7])
-    #     day = int(date[8:])
-    #     compDay = int(compDate[8:])
+@csrf_exempt
+def addNewStatusForm(request):
+    '''
+    This handles a request to display the adding a new status form.
+    '''
+    return render(request, u'forms/add_new_status_form.html', {})
 
-    #     if compYear < year:
-    #         return false
-    #     elif compYear == year and compMonth < month:
-    #         return false
-    #     elif compYear == year and compMonth == month:
-    #         return compDay < day
-
-    #     return true
+@csrf_exempt
+def chooseStatusesToEditForm(request):
+    '''
+    This handles a request to display the edit form for statuses.
+    '''
+    return render(request, u'forms/choose_status_to_edit_form.html', {})
 

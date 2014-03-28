@@ -21,6 +21,8 @@ urlpatterns = patterns('website.views',
                        url(r'^brands/(?P<pk>[0-9]+)$', 'itemBrandDetail'),
                        url(r'^actions/$', 'actionTypeList'),
                        url(r'^actions/(?P<pk>[0-9]+)$', 'actionTypeDetail'),
-                       url(r'^categoryHierarchy/', 'categoryHierarchy'))
+                       url(r'^categoryHierarchy/', 'categoryHierarchy'),
+                       url(r'^statuses/(?P<pk>[0-9]+)$', 'statusDetail'),
+                       url(r'^statuses/(?P<cn>.+)$', 'statusDetail'),)
 
 

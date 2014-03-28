@@ -94,6 +94,15 @@ $(document).ready(function() {
          });
     });
 
+    $("#statusAdministrationLink").on("click", function(event) {
+        /**
+         * This function loads the page to administer statuses
+         */
+        $("#mainrow").load("/administerStatuses/", function() {
+            $("#createNewStatusFormLink").click();
+        });
+    });
+
     $("#addNewEquipmentLink").on("click", function(event) {
         /**
          * This function loads the add new equipment page

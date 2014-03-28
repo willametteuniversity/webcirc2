@@ -3,7 +3,7 @@ var Status = can.Model({
     findOne: function(params) {
         if (params.id) {
             return $.ajax({
-                url: '/satuses/'+params.id,
+                url: '/statuses/'+params.id,
                 type: 'get',
                 dataType: 'json'
             });
@@ -15,7 +15,7 @@ var Status = can.Model({
             })
         }
     },
-    create:  'POST /satuses/',
+    create:  'POST /statuses/',
     update:  'PUT /statuses/{id}',
     destroy: 'DELETE /statuses/{id}'
 }, {})

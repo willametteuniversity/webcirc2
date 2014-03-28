@@ -51,7 +51,7 @@ steal(function() {
         }
         // When they choose an existing status from the dropdown, we want to pre-populate the form
         // with existing values
-        var status = $.getJSON("/satuses/"+selectedStatusID, function(response) {
+        var status = $.getJSON("/statuses/"+selectedStatusID, function(response) {
             updateEditStatusForm(response)
         });
     });
