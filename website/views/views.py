@@ -114,6 +114,60 @@ def registerNewUser(request):
         # Let's load the form up
         return render(request, u'forms/register.html', {})
 
+@api_view(['POST'])
+def addNewInventoryItemForm(request):
+    
+#    print "dis got called"
+
+    if request.GET:
+        # Is there any reason we would be doing GET to this URL?
+        # TODO: Refactor this to use the 501 redirection and create a 501 page
+        return render(request, u'forms/add_new_inventory_item_form.html')
+    elif request.POST:
+        responseData = {}
+        if u'model' not in request.POST:
+            responseData[u'result'] = u'failed'
+            responseData[u'reason'] = u'A model is required.'
+            return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+        if u'brand' not in request.POST:
+            responseData[u'result'] = u'failed'
+            responseData[u'reason'] = u'A brand is required.'
+            return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+        if u'description' not in request.POST:
+            responseData[u'result'] = u'failed'
+            responseData[u'reason'] = u'A description is required.'
+            return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+        if u'category' not in request.POST:
+            responseData[u'result'] = u'failed'
+            responseData[u'reason'] = u'A category is required.'
+            return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+        if u'status' not in request.POST:
+            responseData[u'result'] = u'failed'
+            responseData[u'reason'] = u'A status is required.'
+            return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+        if u'location' not in request.POST:
+            responseData[u'result'] = u'failed'
+            responseData[u'reason'] = u'A location is required.'
+            return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+
+        n = InventoryItem()
+        n.model = request.POST[u'model']
+        n.brand = request.POST[u'brand']
+        n.description = request.POST[u'description']
+        n.category = request.POST[u'category']
+        n.status = status.POST[u'status']
+        n.location = status.POST[u'location']
+        
+        n.save()
+        print "n is:", n
+        responseData = {}
+        responseData[u'result'] = u'succeeded'
+        return HttpResponse(json.dumps(responseData), content_type=u'application/json')
+
+    else:
+        # This means we need to display the add inventory item form
+        # Let's load the form up
+        return HttpResponse(status=501)
 
 @csrf_exempt
 def login(request):
@@ -486,28 +540,51 @@ def statusList(request, format=None):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@csrf_exempt
 @api_view([u'GET', u'PUT', u'DELETE'])
-def statusDetail(request, pk, format=None):
+def statusDetail(request, pk=None, cn=None, format=None):
     '''
-    Retrieve, update or delete Label Note.
+    Retrieve, update or delete a Status.
     '''
+    # We will use try/except. If Django cannot find an object
+    # with the primary key or provided status name we give it using get(), it throws
+    # an error.
     try:
-        status = Status.objects.get(StatusID=pk)
+        if pk is not None:
+            status = Status.objects.get(StatusID=pk)
+        elif cn is not None:
+            status = Status.objects.get(StatusName=cn)
     except Status.DoesNotExist:
-        return HttpResponse(status=404)
+        # If we didn't find it, return a HTTP code of 404
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
+    # Again we check for the method and do a different
+    # thing depending on which method the client used.
     if request.method == u'GET':
+        # If they used GET, we want to retrieve, serialize
+        # and send back the particular Status they
+        # requested.
         serializer = StatusSerializer(status)
         return Response(serializer.data)
     elif request.method == u'PUT':
+        # If they used PUT, they want to change an already
+        # existing status. So, we deserialize the JSON
+        # data the client sent, check if it is valid, and if
+        # it is, save it to the DB and send back a success
+        # HTTP code.
         serializer = StatusSerializer(status, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        # If the JSON they sent was not valid, send back
+        # the errors from the serializer, and a HTTP status
+        # code
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == u'DELETE':
+        # If they used DELETE, they want to delete the Status
+        # that they sent the PK for.
         status.delete()
-        return HttpResponse(status=204)
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @api_view([u'GET', u'POST'])
 def inventoryItemList(request, format=None):
@@ -917,3 +994,49 @@ def autocomplete(request):
             results.append({u'CollectionID':eachResult.CollectionID, u'CollectionName': eachResult.CollectionName})
 
     return HttpResponse(json.dumps(results), content_type=u'application/json')
+
+def checkAvailable(item, startTime, endTime):
+    actionItems = ActionItem.objects.filter(InventoryItemID=item.pk)
+    startDate = datetime.strptime(startTime, "%d-%m-%Y %H:%M:%S")
+    endDate = datetime.strptime(endTime, "%d-%m-%Y %H:%M:%S")
+    if not actionItem:
+        return true
+    else:
+        actions = Action.objects.filter(ActionID=[x.ActionID for x in actionItems])
+
+        for action in actions:
+            actionStartDate = datetime.strptime(action.startTime, "%d-%m-%Y %H:%M:%S")
+            actionEndDate = datetime.strptime(action.endTime, "%d-%m-%Y %H:%M:%S")
+
+            if actionStartDate <= startDate and startDate <= actionEndDate:
+                return false
+            elif actionStartDate <= endDate and endDate <= actionEndDate:
+                return false
+            elif actionStartDate >= startDate and actionEndDate <= endDate:
+                return false
+            elif actionStartDate <= startDate and actionEndDate >= endDate:
+                return false
+
+        return true
+
+@csrf_exempt
+def administerStatuses(request):
+    '''
+    This handles a request to display the form for administering statuses.
+    '''
+    return render(request, u'administer_statuses.html', {})
+
+@csrf_exempt
+def addNewStatusForm(request):
+    '''
+    This handles a request to display the adding a new status form.
+    '''
+    return render(request, u'forms/add_new_status_form.html', {})
+
+@csrf_exempt
+def chooseStatusesToEditForm(request):
+    '''
+    This handles a request to display the edit form for statuses.
+    '''
+    return render(request, u'forms/choose_status_to_edit_form.html', {})
+

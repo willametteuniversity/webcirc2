@@ -11,3 +11,4 @@ from inventoryItem_tests import *
 from noninventoryitem_tests import *
 from consumableitem_tests import *
 from action_type_test import *
+from new_inventory_item_tests import *
