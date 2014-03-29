@@ -8,8 +8,7 @@ urlpatterns = patterns('website.views',
                         url(r'^', include('website.urls.administerCollectionsUrls')),
                         url(r'^', include('website.urls.administerBuildingsUrls')),
                         url(r'^', include('website.urls.administerActionTypeUrls')),
-                        url(r'^', include('website.urls.newReservationUrls'))
-                        url(r'^', include('website.urls.administerStatusesUrls'))
-                        )
+                        url(r'^', include('website.urls.newReservationUrls')),
+                        url(r'^', include('website.urls.administerStatusesUrls')))
 
 urlpatterns = format_suffix_patterns(urlpatterns)
