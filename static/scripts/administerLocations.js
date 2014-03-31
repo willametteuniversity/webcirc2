@@ -113,8 +113,10 @@ steal(function() {
         /**
          * This function handles the pressing of the create new Location button
          */
-            event.preventDefault();
-        var newLocation = new Location({LocationName: $("#newLocationNameInput").val(),
+        event.preventDefault();
+        var newLocation = new Location({//LocationName: $("#newLocationNameInput").val(),
+                            BuildingID: 1,
+                            RoomNumber: "132",
                             LocationDescription: $("#newLocationDescriptionInput").val()
                             });
         newLocation.save(function(saved) {

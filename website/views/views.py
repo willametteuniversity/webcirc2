@@ -617,7 +617,7 @@ def locationList(request):
         serializer = LocationSerializer(all_models, many=True)
         return Response(serializer.data)
     elif request.method == u'POST':
-        serializer = Location(data=request.DATA)
+        serializer = LocationSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

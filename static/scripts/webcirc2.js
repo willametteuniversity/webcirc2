@@ -52,6 +52,7 @@ $(document).ready(function() {
     });
     steal("scripts/addNewEquipment.js", function() {});
     steal("scripts/administerLocations.js", function() {});
+    steal("scripts/models/location.js", function() {});
     steal("scripts/administerCollections.js", function() {
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
             /**
