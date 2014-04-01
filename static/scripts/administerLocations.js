@@ -4,6 +4,7 @@ steal(function() {
          * Load the new new location form
          */
         $("#administerLocationsDiv").load("/addNewLocationForm/", function() {
+            updateBuildingSelect();
         });
     });
 
@@ -12,26 +13,37 @@ steal(function() {
          * Load the edit new location window
          */
         $("#administerLocationsDiv").load("/chooseLocationToEditForm/", function() {
+            updateBuildingSelect();
             updateLocationSelect();
         });
     });
 
+    var updateBuildingSelect = function() {
+        $("#newLocationBuildingSelect").empty();
+        $("#newLocationBuildingSelect").append("<option value='None' selected='selected'>Choose a Building...</option>");
+        $.getJSON("/buildings/", function(data) {
+                $.each(data, function(key, value) {
+                    $("#newLocationBuildingSelect").append("<option value='"+value.BuildingID+"'>"+value.BuildingName+"</option>");
+                });
+        });
+    }
+
     var updateLocationSelect = function() {
-        // Here we are going to get the list of Locations to populate
         $("#existingLocationNameSelect").empty();
         $("#existingLocationNameSelect").append("<option value='None' selected='selected'>Choose a Location...</option>");
+  //      all_buildings = Building.findAll;
         $.getJSON("/locations/", function(data) {
-                // This populates the dropdown to let people choose a Location to edit
                 $.each(data, function(key, value) {
-                    // If we had one selected prior, remember to restore that one as the selected one
-                    $("#existingLocationNameSelect").append("<option value='"+value.LocationID+"'>"+value.LocationName+"</option>");
+                    //all_buildings[value.BuildingID].BuildingName+" "+
+                    $("#existingLocationNameSelect").append("<option value='"+value.LocationID+"'>"+value.RoomNumber+"</option>");
                 });
         });
     }
 
     var updateEditLocationForm = function(location) {
-        $("#existingLocationName").val(Location.LocationName);
-        $("#existingLocationDescription").val(Location.LocationDescription);
+        $("#newLocationBuildingSelect").val(location.BuildingID);
+        $("#existingLocationRoomNumberInput").val(location.RoomNumber);
+        $("#existingLocationDescription").val(location.LocationDescription);
     };
 
     $("#mainrow").on("change", "#existingLocationNameSelect", function() {
@@ -46,7 +58,7 @@ steal(function() {
         }
         // When they choose an existing Location from the dropdown, we want to pre-populate the form
         // with existing values
-        var Location = $.getJSON("/Locations/"+selectedLocationID, function(response) {
+        var Location = $.getJSON("/locations/"+selectedLocationID, function(response) {
             updateEditLocationForm(response)
         });
     });
@@ -54,7 +66,6 @@ steal(function() {
     $("#mainrow").on("click", "#submitChooseLocationToEditBtn", function(event) {
         event.preventDefault();
         var selectedLocationID = $("#existingLocationNameSelect").val();
-
         // Here we create a Model for the particular Location we want to edit. We retrieve the Location
         // from the server with a matching ID to the one in the drop down.
         // Even though the server side model doesn't have id, it has LocationID, we have to set an id
@@ -116,17 +127,14 @@ steal(function() {
          * This function handles the pressing of the create new Location button
          */
         event.preventDefault();
-        var newLocation = new Location({
-                            BuildingID: 1,
-                            RoomNumber: $("#newLocationRoomNumberInput").val(),
-                            LocationDescription: $("#newLocationDescriptionInput").val()
-                            });
+        var newLocation = new Location({BuildingID: $("#newLocationBuildingSelect").val(),
+                                        RoomNumber: $("#newLocationRoomNumberInput").val(),
+                                        LocationDescription: $("#newLocationDescriptionInput").val()
+                                        });
         newLocation.save(function(saved) {
             $("#addNewLocationFormBody").prepend("<div id='addLocationConfirmationAlert' class='alert alert-success'>" +
             "<h4>Location added!</h4></div>");
             $("#addLocationConfirmationAlert").fadeOut(8000);
-            $("#newLocationNameInput").val("");
-            $("#newLocationDescriptionInput").val("");
         });
     });
 });

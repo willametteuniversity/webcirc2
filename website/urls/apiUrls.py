@@ -43,6 +43,3 @@ urlpatterns = patterns('website.views',
                        url(r'^autocomplete/', 'views.autocomplete'),
                        url(r'^itemHistory/(?P<fk>[0-9]+)$', 'views.itemHistoryDetail'),
                        url(r'^reservationHistory/(?P<fk>[0-9]+)$', 'views.reservationHistoryDetail'),)
-
-
-

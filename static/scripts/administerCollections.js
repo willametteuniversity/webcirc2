@@ -14,8 +14,6 @@ steal(function() {
          */
         $("#administerCollectionsDiv").load("/chooseCollectionToEditForm/", function() {
             updateCollectionSelect();
-
-
         });
     });
 
@@ -24,12 +22,10 @@ steal(function() {
         $("#existingCollectionNameSelect").empty();
         $("#existingCollectionNameSelect").append("<option value='None' selected='selected'>Choose a Collection...</option>");
         $.getJSON("/collections/", function(data) {
-
                 // This populates the dropdown to let people choose a collection to edit
                 $.each(data, function(key, value) {
                     // If we had one selected prior, remember to restore that one as the selected one
                     $("#existingCollectionNameSelect").append("<option value='"+value.CollectionID+"'>"+value.CollectionName+"</option>");
-
                 });
         });
     }
