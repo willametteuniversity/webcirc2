@@ -24,12 +24,17 @@ $(document).ready(function() {
 
     steal("can/can.js", function() {});
     steal("scripts/utility.js", function() {});
+    steal("scripts/models/actionType.js", function() {});
+    steal("scripts/models/building.js", function() {});
     steal("scripts/models/collection.js", function() {});
     steal("scripts/models/label.js", function() {});
     steal("scripts/models/itemBrand.js", function() {});
     steal("scripts/models/itemModel.js", function() {});
+    steal("scripts/models/consumableItem.js", function() {});
     steal("scripts/models/inventoryItem.js", function() {});
     steal("scripts/models/nonInventoryItem.js", function() {});
+    steal("scripts/models/user.js", function() {});
+    steal("scripts/models/status.js", function() {});
     steal("jstree/dist/jstree.min.js", function() {});
     steal("scripts/labelAndCategoryMgmt.js", function() {
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
@@ -51,8 +56,7 @@ $(document).ready(function() {
         });
     });
     steal("scripts/addNewEquipment.js", function() {});
-    steal("scripts/administerLocations.js", function() {});
-    steal("scripts/models/location.js", function() {});
+    steal("scripts/addNewReservation.js", function() {});
     steal("scripts/administerCollections.js", function() {
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
             /**
@@ -72,7 +76,63 @@ $(document).ready(function() {
             }
         });
     });
+    steal("scripts/administerBuildings.js", function() {
+        $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+            /**
+             * This function handles inserting out CSRF token into outgoing
+             * AJAX requests
+             */
+            if ( options.processData
+            && /^application\/json((\+|;).+)?$/i.test( options.contentType )
+            && /^(post|put|delete)$/i.test( options.type )
+            ) {
+                options.data = JSON.stringify( originalOptions.data );
+            }
+            if (!options.crossDomain) {
+                if (csrftoken) {
+                    return jqXHR.setRequestHeader('X-CSRFToken', csrftoken);
+                }
+            }
+        });
+    });
+    steal("scripts/administerActionTypes.js", function() {
+        $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+            /**
+             * This function handles inserting out CSRF token into outgoing
+             * AJAX requests
+             */
+            if ( options.processData
+            && /^application\/json((\+|;).+)?$/i.test( options.contentType )
+            && /^(post|put|delete)$/i.test( options.type )
+            ) {
+                options.data = JSON.stringify( originalOptions.data );
+            }
+            if (!options.crossDomain) {
+                if (csrftoken) {
+                    return jqXHR.setRequestHeader('X-CSRFToken', csrftoken);
+                }
+            }
+        });
+    });
 
+    $("#registerBtn").on("click", function(event) {
+        /**
+         * This function handles the register button being clicked on the main page.
+         */
+       $("#mainrow").load("/registerNewUser/");
+    });
+
+
+    $("#signInBtn").on("click", function(event) {
+        /**
+         * This function handles a user wanting to sign in
+         */
+        event.preventDefault();
+        var loginForm = $("#signInForm").serialize();
+        $.post("/login/", loginForm, function(response){
+            location.reload();
+        });
+    });
     $("#registerBtn").on("click", function(event) {
         /**
          * This function handles the register button being clicked on the main page.
@@ -121,6 +181,15 @@ $(document).ready(function() {
          });
     });
 
+    $("#statusAdministrationLink").on("click", function(event) {
+        /**
+         * This function loads the page to administer statuses
+         */
+        $("#mainrow").load("/administerStatuses/", function() {
+            $("#createNewStatusFormLink").click();
+        });
+    });
+
     $("#addNewEquipmentLink").on("click", function(event) {
         /**
          * This function loads the add new equipment page
@@ -139,12 +208,12 @@ $(document).ready(function() {
         });
     });
 
-	$("#locationAdministrationLink").on("click", function(event) {
+    $("#buildingAdministrationLink").on("click", function(event) {
         /**
-         * This function loads the add new equipment page
+         * This function loads the page to administer collections
          */
-        $("#mainrow").load("/administerLocations/", function() {
-            $("#createNewLocationFormLink").click();
+        $("#mainrow").load("/administerBuildings/", function() {
+            $("#createNewBuildingFormLink").click();
         });
     });
 
@@ -157,4 +226,25 @@ $(document).ready(function() {
             $("#registrationFormBody").html(response);
         });
     });
+
+    $("#actionTypeAdministrationLink").on("click", function(event) {
+        /**
+         * This function loads the page to administer Action Types
+         */
+        $("#mainrow").load("/administerActionTypes/", function() {
+            $("#createNewActionTypeFormLink").click();
+        });
+    });
+
+    $("#addNewReservationLink").on("click", function(event) {
+        /**
+         * This function loads the page to add new reservations
+         */
+        $("#mainrow").load("/addNewReservation/", function() {
+            // This sets up the datepickers in the add action form
+            $("#startDateTime").datetimepicker();
+            $("#endDateTime").datetimepicker();
+        });
+    });
+
 });

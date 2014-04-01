@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
+from django.db.models import Q
 
 # Django REST Framework imports
 from rest_framework.renderers import JSONRenderer
@@ -176,6 +177,12 @@ def addNewNonInventoryItemForm(request):
     '''
     return render(request, u'forms/add_new_non_inventory_item_form.html')
 
+def addNewConsumableItemForm(request):
+    '''
+    This function returns the form for adding a new consumable item
+    '''
+    return render(request, u'forms/add_new_consumable_item_form.html')
+
 @csrf_exempt
 @api_view([u'GET', u'PUT', u'DELETE'])
 def collectionDetail(request, pk=None, cn=None, format=None):
@@ -222,6 +229,47 @@ def collectionDetail(request, pk=None, cn=None, format=None):
         collection.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
+@csrf_exempt
+@api_view([u'GET', u'PUT', u'DELETE'])
+def buildingDetail(request, pk=None, bc=None, format=None):
+    '''
+    Retrieve, update or delete a Building.
+    '''
+    try:
+        if pk is not None:
+            building = Building.objects.get(BuildingID=pk)
+        elif bc is not None:
+            building = Building.objects.get(BuildingCode=bc)
+    except Building.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    if request.method == u'GET':
+        serializer = BuildingSerializer(building)
+        return Response(serializer.data)
+    elif request.method == u'PUT':
+        serializer = BuildingSerializer(building, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == u'DELETE':
+        building.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+@api_view([u'GET', u'POST'])
+def buildingList(request, format=None):
+    '''
+    Lists all Buildings
+    '''
+    if request.method == u'GET':
+        buildings = Building.objects.all()
+        serializer = BuildingSerializer(buildings, many=True)
+        return Response(serializer.data)
+    elif request.method == u'POST':
+        serializer = BuildingSerializer(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view([u'GET', u'POST'])
 def collectionList(request, format=None):
@@ -441,12 +489,19 @@ def statusList(request, format=None):
 @api_view([u'GET', u'PUT', u'DELETE'])
 def statusDetail(request, pk, format=None):
     '''
-    Retrieve, update or delete Label Note.
+    Retrieve, update or delete a Status.
     '''
+    # We will use try/except. If Django cannot find an object
+    # with the primary key or provided status name we give it using get(), it throws
+    # an error.
     try:
-        status = Status.objects.get(StatusID=pk)
+        if pk is not None:
+            status = Status.objects.get(StatusID=pk)
+        elif cn is not None:
+            status = Status.objects.get(StatusName=cn)
     except Status.DoesNotExist:
-        return HttpResponse(status=404)
+        # If we didn't find it, return a HTTP code of 404
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == u'GET':
         serializer = StatusSerializer(status)
@@ -459,7 +514,7 @@ def statusDetail(request, pk, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == u'DELETE':
         status.delete()
-        return HttpResponse(status=204)
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @api_view([u'GET', u'POST'])
 def inventoryItemList(request, format=None):
@@ -523,7 +578,7 @@ def nonInventoryItemDetail(request, pk, format=None):
     '''
     try:
         nonInventoryItem = NonInventoryItem.objects.get(ItemID=pk)
-    except InventoryItem.DoesNotExist:
+    except NonInventoryItem.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     if request.method == u'GET':
         serializer = NonInventoryItemSerializer(nonInventoryItem)
@@ -678,6 +733,103 @@ def actionTypeDetail(request, pk):
 
 
 
+@api_view(['GET', 'POST'])
+def userList(request):
+    '''
+    This function handles retrieving a list of Users or
+    creating a new one.
+    '''
+    # TODO: Is this even necessary? What about security concerns?
+    if request.method == u'GET':
+        all_users = User.objects.all()
+        serializer = UserSerializer(all_users, many=True)
+        return Response(serializer.data)
+    elif request.method == u'POST':
+        serializer = UserSerializer(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def userDetail(request, pk=None, em=None, fn=None, n=None):
+    '''
+    This function handles retrieving details about a single user,
+    deleting them or updating them
+    '''
+    try:
+        current_model = None
+        userModels = None
+        if pk:
+            current_model = User.objects.get(id=pk)
+        elif em:
+            current_model = User.objects.get(email=em)
+        elif fn:
+            firstName, lastName = fn.split(" ", 1)
+            userModels = User.objects.filter(first_name=firstName, last_name=lastName)
+            if len(userModels) == 0:
+                raise User.DoesNotExist
+        elif n:
+            userModels = User.objects.filter(Q(first_name=n) | Q(last_name=n))
+            if len(userModels) == 0:
+                raise User.DoesNotExist
+        else:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+    except User.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    if request.method == u'GET':
+        if current_model:
+            serializer = UserSerializer(current_model)
+        elif userModels:
+            serializer = UserSerializer(userModels, many=True)
+        return Response(serializer.data)
+    elif request.method == u'PUT':
+        serializer = UserSerializer(current_model, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == u'DELETE':
+        current_model.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET', 'POST'])
+def consumableItemList(request):
+    '''
+    This function handles retrieving a list of consumable items
+    or of creating a new one
+    '''
+    if request.method == u'GET':
+        all_items = ConsumableItem.objects.all()
+        serializer = ConsumableItemSerializer(all_items, many=True)
+        return Response(serializer.data)
+    elif request.method == u'POST':
+        serializer = ConsumableItemSerializer(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view([u'GET', u'PUT', u'DELETE'])
+def consumableItemDetail(request, pk):
+    try:
+        current_model = ConsumableItem.objects.get(ItemID=pk)
+    except ConsumableItem.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    if request.method == u'GET':
+        serializer = ConsumableItemSerializer(current_model)
+        return Response(serializer.data)
+    elif request.method == u'PUT':
+        serializer = ConsumableItemSerializer(current_model, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == u'DELETE':
+        current_model.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @api_view([u'GET'])
 def itemHistoryDetail(request, fk):
@@ -783,3 +935,49 @@ def autocomplete(request):
             results.append({u'CollectionID':eachResult.CollectionID, u'CollectionName': eachResult.CollectionName})
 
     return HttpResponse(json.dumps(results), content_type=u'application/json')
+
+def checkAvailable(item, startTime, endTime):
+    actionItems = ActionItem.objects.filter(InventoryItemID=item.pk)
+    startDate = datetime.strptime(startTime, "%d-%m-%Y %H:%M:%S")
+    endDate = datetime.strptime(endTime, "%d-%m-%Y %H:%M:%S")
+    if not actionItem:
+        return true
+    else:
+        actions = Action.objects.filter(ActionID=[x.ActionID for x in actionItems])
+
+        for action in actions:
+            actionStartDate = datetime.strptime(action.startTime, "%d-%m-%Y %H:%M:%S")
+            actionEndDate = datetime.strptime(action.endTime, "%d-%m-%Y %H:%M:%S")
+
+            if actionStartDate <= startDate and startDate <= actionEndDate:
+                return false
+            elif actionStartDate <= endDate and endDate <= actionEndDate:
+                return false
+            elif actionStartDate >= startDate and actionEndDate <= endDate:
+                return false
+            elif actionStartDate <= startDate and actionEndDate >= endDate:
+                return false
+
+        return true
+
+@csrf_exempt
+def administerStatuses(request):
+    '''
+    This handles a request to display the form for administering statuses.
+    '''
+    return render(request, u'administer_statuses.html', {})
+
+@csrf_exempt
+def addNewStatusForm(request):
+    '''
+    This handles a request to display the adding a new status form.
+    '''
+    return render(request, u'forms/add_new_status_form.html', {})
+
+@csrf_exempt
+def chooseStatusesToEditForm(request):
+    '''
+    This handles a request to display the edit form for statuses.
+    '''
+    return render(request, u'forms/choose_status_to_edit_form.html', {})
+

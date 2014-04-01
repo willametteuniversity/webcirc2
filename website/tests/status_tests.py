@@ -49,7 +49,6 @@ class StatusAPITests(TestCase):
         c = Client()
         # Make the request to make the status...
         response = c.post(u'/statuses/', {u'StatusDescription' : u'Status3'})
-        print response.data
         # We expect the server to return a proper status code and the item it made. So lets check all of those:
         self.assertEqual(u'Status3', response.data[u'StatusDescription'])
         self.assertEqual(201, response.status_code)

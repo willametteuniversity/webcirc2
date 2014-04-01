@@ -1,16 +1,24 @@
+
 [
-    {
+	{
         "model": "website.Status",
         "pk": 1,
         "fields": {
-            "StatusDescription": "Active"
-        }
+            "StatusDescription" : "Status1"
+        }  
     },
     {
         "model": "website.Status",
         "pk": 2,
         "fields": {
-            "StatusDescription": "In repair"
-        }
+            "StatusDescription" : "Status2"
+        }  
+    },
+    {
+        "model": "website.Status",
+        "pk": 3,
+        "fields": {
+            "StatusDescription" : "Status3"
+        }  
     }
 ]

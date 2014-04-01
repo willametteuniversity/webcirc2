@@ -1,0 +1,70 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Add New Consumable Item</h3>
+    </div>
+    <div class="panel-body" id="addNewConsumableItemFormBody">
+         <form role="form" class="form-horizontal" id="addNewConsumableItemForm">
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="consumableItemNameInput">Name:</label>
+                 <div class="col-sm-9">
+                    <input class="form-control" type="text" id="consumableItemNameInput" placeholder="Enter the name of the item..."/>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="consumableItemDescriptionInput">Description:</label>
+                 <div class="col-sm-9">
+                    <textarea class="form-control" id="consumableItemDescriptionInput"></textarea>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="consumableItemNoteInput">Notes:</label>
+                 <div class="col-sm-9">
+                    <textarea class="form-control" id="consumableItemNoteInput"></textarea>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="col-sm-3 control-label" for="consumableItemCategoryInput">Category:</label>
+                 <div class="col-sm-9">
+                    <input type="text" class="form-control" id="consumableItemCategoryInput" name="category" placeholder="Enter the category...">
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="consumableItemQuantityInput">Quantity:</label>
+                 <div class="col-sm-9">
+                     <input type="text" class="form-control" id="consumableItemQuantityInput" placeholder="Enter the amount on hand...">
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="consumableItemMinQuantityInput">Minimum Quantity:</label>
+                 <div class="col-sm-9">
+                     <input type="text" class="form-control" id="consumableItemMinQuantityInput" placeholder="Enter the min quantity...">
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="col-sm-3 control-label" for="consumableItemCollectionSelect">Collection:</label>
+                 <div class="col-sm-9">
+                    <select class="form-control" name="consumableItemCollectionSelect" id="consumableItemCollectionSelect">
+                    </select>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="consumableItemCostInput">Cost:</label>
+                 <div class="col-sm-9">
+                     <input type="text" class="form-control" id="consumableItemCostInput" placeholder="Enter the cost per item...">
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="col-sm-3 control-label" for="consumableItemStorageLocationSelect">Storage Location:</label>
+                 <div class="col-sm-9">
+                    <select class="form-control" name="consumableItemStorageLocationSelect" id="consumableItemStorageLocationSelect">
+                    </select>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <div class="col-sm-offset-3 col-sm-10">
+                    <button type="submit" class="btn btn-default" id="submitCreateNewConsumableItemBtn">Submit</button>
+                 </div>
+             </div>
+        </form>
+    </div>
+</div>

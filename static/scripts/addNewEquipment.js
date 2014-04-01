@@ -31,6 +31,13 @@ steal(function() {
                 });
             });
 
+            $.getJSON("/collections/", function(data) {
+                $("#inventoryItemCollectionSelect").empty();
+                $.each(data, function(key, val) {
+                    $("#inventoryItemCollectionSelect").append($('<option value="'+val.CollectionID+'">'+val.CollectionName+'</option>'));
+                });
+            });
+
             /** Begin autocomplete configuration section for the new Inventory Item form **/
             // This section handles setting up the Bloodhound stuff for autocomplete. We are using the
             // typeahead.js module.
@@ -220,6 +227,12 @@ steal(function() {
                 });
             });
 
+            $.getJSON("/collections/", function(data) {
+                $("#nonInventoryItemCollectionSelect").empty();
+                $.each(data, function(key, val) {
+                    $("#nonInventoryItemCollectionSelect").append($('<option value="'+val.CollectionID+'">'+val.CollectionName+'</option>'));
+                });
+            });
             /** Begin Bloodhound setup section for typeahead.js **/
             var categories = new Bloodhound({
                 datumTokenizer: function(d) {
@@ -235,20 +248,6 @@ steal(function() {
                 source: categories.ttAdapter()
             });
 
-            var collections = new Bloodhound({
-                datumTokenizer: function(d) {
-                    return Bloodhound.tokenizers.whitespace(d.LabelName);
-                },
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                remote: '/autocomplete/?model=collection&term=%QUERY'
-            });
-
-            collections.initialize();
-            $("#nonInventoryItemCollectionInput").typeahead(null, {
-                name: 'collections',
-                displayKey: 'CollectionName',
-                source: collections.ttAdapter()
-            });
             /** End Bloodhound configuration section **/
         });
     });
@@ -348,6 +347,146 @@ steal(function() {
                     steal.dev.log("New non inventory item saved to server");
                 });
 
+    });
+
+    $("#mainrow").on("click", "#createConsumableItemBtn", function(event) {
+        /**
+         * This is called when the user wants to create a new Consumable item
+         */
+        $("#addNewEquipmentDiv").load("/addNewConsumableItemForm/", function() {
+            // TODO: Look at doing this using the Model functionality. Maybe move this to a utility function?
+
+            /** Begin section to populate the form **/
+                // This pulls all the valid locations to populate the text box.
+                // TODO: Look for an error response and display appropriately
+            $.getJSON("/locations/", function(data) {
+                $("#consumableItemStorageLocationSelect").empty();
+                $.each(data, function(key, val) {
+                    $("#consumableItemStorageLocationSelect").append($('<option value="'+val.LocationID+'">'+val.LocationDescription+'</option>'));
+                });
+            });
+
+            $.getJSON("/collections/", function(data) {
+                $("#consumableItemCollectionSelect").empty();
+                $.each(data, function(key, val) {
+                    $("#consumableItemCollectionSelect").append($('<option value="'+val.CollectionID+'">'+val.CollectionName+'</option>'));
+                });
+            });
+
+            /** Begin autocomplete configuration section for the new Consumable Item form **/
+            var categories = new Bloodhound({
+                datumTokenizer: function(d) {
+                    return Bloodhound.tokenizers.whitespace(d.LabelName);
+                },
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: '/autocomplete/?model=category&term=%QUERY'
+            });
+
+            categories.initialize();
+            $("#consumableItemCategoryInput").typeahead(null, {
+                name: 'categories',
+                displayKey: 'LabelName',
+                source: categories.ttAdapter()
+            });
+            /** End of Bloodhound configuration section **/
+        });
+    });
+
+    $("#mainrow").on("click", "#submitCreateNewConsumableItemBtn", function(event) {
+        /**
+         * This function handles the submission of the create new Inventory Item form
+         */
+        event.preventDefault();
+        // First lets hide any existing alerts so they don't grow uncontrolled
+        $(".alert").hide();
+        var fieldMissing = false;
+
+        /** Begin section to check that all required input fields have something in them **/
+        var itemName = $("#consumableItemNameInput").val();
+        if (itemName == "") {
+            $("#addNewConsumableItemFormBody").prepend("<div id='addNewEquipmentCategoryNotEnteredAlert' class='alert alert-danger'>" +
+                "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
+                "<h4 id='categoryNotEnteredMsg'>Please enter a Name!</h4>");
+            fieldMissing = true;
+        }
+
+        var description = $("#consumableItemDescriptionInput").val();
+        if (description == "") {
+            $("#addNewConsumableItemFormBody").prepend("<div id='addNewEquipmentDescriptionNotEnteredAlert' class='alert alert-danger'>" +
+                "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
+                "<h4 id='collectionNotEnteredMsg'>Please enter a Description!</h4>");
+            fieldMissing = true;
+        }
+
+        var category = $("#consumableItemCategoryInput").val();
+        if (category == "") {
+            $("#addNewConsumableItemFormBody").prepend("<div id='addNewEquipmentCategoryNotEnteredAlert' class='alert alert-danger'>" +
+                "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
+                "<h4 id='categoryNotEnteredMsg'>Please enter a Category!</h4>");
+            fieldMissing = true;
+        }
+
+        var minQuantity = $("#consumableItemMinQuantityInput").val();
+        if (minQuantity == "") {
+            $("#addNewConsumableItemFormBody").prepend("<div id='addNewEquipmentMinQuantityNotEnteredAlert' class='alert alert-danger'>" +
+                "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
+                "<h4 id='minQuantityNotEnteredMsg'>Please enter a Minimum Quantity!</h4>");
+            fieldMissing = true;
+        }
+
+        // TODO: Put this in one Hayden has Locations done
+
+        var location = $("#consumableItemStorageLocationSelect").val();
+        if (location == "") {
+            $("#addNewConsumableItemFormBody").prepend("<div id='addNewEquipmentStorageLocationNotEnteredAlert' class='alert alert-danger'>" +
+                "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
+                "<h4 id='locationNotEnteredMsg'>Please select a Storage Location!</h4>");
+            fieldMissing = true;
+        }
+        // If we had any missing fields, don't bother to execute the rest, just return
+        if (fieldMissing == true) {
+            return;
+        }
+
+        /** END **/
+        /** Here we begin the asynchronous AJAX calls to validate and retrieve the associated models from
+         * the server. We do this so we can extract things like the ID and then feed it back to the server
+         * when we save it.
+         */
+        $.when(
+                // TODO: Fix the id of the h4 tag here
+                Label.findOne({LabelName:category}, function(success){}, function(error) {
+                    $("#addNewInventoryItemFormBody").prepend("<div id='addNewEquipmentCategoryNotExistAlert' class='alert alert-danger'>" +
+                        "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>" +
+                        "<h4 id='confirmDeleteMsg'>That is not valid category!</h4>");
+                }))
+
+            // If all of them completed successfully, the done() function gets executed.
+            // We use the error callbacks of findOne up above to tell the user about any invalid
+            // fields. That is, any models we have no record of on the server.
+            .done(function(category) {
+                steal.dev.log("Creating new consumable item...");
+                // Make a new client side inventory item
+                var newConsumableItem = new ConsumableItem({
+                    ItemName:$("#consumableItemNameInput").val(),
+                    Description:$("#consumableItemDescriptionInput").val(),
+                    Notes:$("#consumableItemNotesInput").val(),
+                    CategoryID:category.LabelID,
+                    //TODO: Need a field for parent category?
+                    StorageLocation:$("#consumableItemStorageLocationSelect").val(),
+                    Quantity:$("#consumableItemQuantityInput").val(),
+                    MinQuantity:$("#consumableItemMinQuantityInput").val(),
+                    Cost:$("#consumableItemCostInput").val(),
+                    CollectionID:$("#consumableItemCollectionInput").val()
+                });
+                steal.dev.log("Saving new consumable item to server...");
+                // Try and save it to the server
+                newConsumableItem.save(function(success) {
+                    steal.dev.log("New consumable item saved to server")
+                }, function(error) {
+                    steal.dev.warn("Error saving new consumable item!");
+                });
+            });
     });
 
 });
