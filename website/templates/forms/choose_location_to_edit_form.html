@@ -5,7 +5,7 @@
     <div class="panel-body" id="editLocationFormBody">
          <form role="form" class="form-horizontal" id="chooseLocationToEditForm">
              <div class="form-group">
-                 <label class="control-label col-sm-3" for="existingLocationNameSelect">Choose the Location to Edit:</label>
+                 <label class="control-label col-sm-3" for="existingLocationNameSelect">Location to Edit:</label>
                  <div class="col-sm-9">
                      <select class="form-control" name="LocationID" id="existingLocationNameSelect">
                          <option value="None">Choose a Location...</option>
@@ -13,9 +13,17 @@
                  </div>
              </div>
              <div class="form-group">
-                 <label class="control-label col-sm-3" for="existingLocationName">Name:</label>
+                 <label class="control-label col-sm-3" for="newLocationBuildingSelect">Building:</label>
                  <div class="col-sm-9">
-                    <input type="text" class="form-control" name="LocationName" id="existingLocationName" />
+                     <select class="form-control" name="BuildingID" id="newLocationBuildingSelect">
+                         <option value="None">Choose a Building...</option>
+                    </select>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="newLocationRoomNumberInput">Room Number:</label>
+                 <div class="col-sm-9">
+                    <input class="form-control" type="text" id="newLocationRoomNumberInput" placeholder="Enter the room number..."/>
                  </div>
              </div>
              <div class="form-group">

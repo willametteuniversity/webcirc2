@@ -71,9 +71,11 @@ steal(function() {
             collection.attr("CollectionDescription", $("#existingCollectionDescription").val());
             // Save to the server
             collection.save(function(saved) {
-                $("#editCollectionFormBody").prepend("<div id='editCollectionSuccessAlert' class='alert alert-success fade out'>Collection Updated!</div>");
                 updateEditCollectionForm(saved);
                 updateCollectionSelect();
+                $("#editCollectionFormBody").prepend("<div id='editCollectionSuccessAlert' class='alert alert-success'>" +
+                "<h4>Collection Updated!</h4></div>");
+                $("#editCollectionSuccessAlert").fadeOut(8000);
             });
 
         });

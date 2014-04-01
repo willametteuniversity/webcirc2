@@ -66,9 +66,11 @@ steal(function() {
             Location.attr("LocationDescription", $("#existingLocationDescription").val());
             // Save to the server
             Location.save(function(saved) {
-                $("#editLocationFormBody").prepend("<div id='editLocationSuccessAlert' class='alert alert-success fade out'>Location Updated!</div>");
                 updateEditLocationForm(saved);
                 updateLocationSelect();
+                $("#editLocationFormBody").prepend("<div id='editLocationSuccessAlert' class='alert alert-success'>" +
+                "<h4>Location Edited!</h4></div>");
+                $("#editLocationSuccessAlert").fadeOut(8000);
             });
 
         });
@@ -114,9 +116,9 @@ steal(function() {
          * This function handles the pressing of the create new Location button
          */
         event.preventDefault();
-        var newLocation = new Location({//LocationName: $("#newLocationNameInput").val(),
+        var newLocation = new Location({
                             BuildingID: 1,
-                            RoomNumber: "132",
+                            RoomNumber: $("#newLocationRoomNumberInput").val(),
                             LocationDescription: $("#newLocationDescriptionInput").val()
                             });
         newLocation.save(function(saved) {
