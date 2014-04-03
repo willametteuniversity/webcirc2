@@ -23,7 +23,7 @@ var Location = can.Model({
     update:  {
         type: 'PUT',
         contentType: 'application/json',
-        url: '/location/{id}'
+        url: '/locations/{id}'
     },
     destroy: {
         type: 'DELETE',

@@ -28,15 +28,24 @@ steal(function() {
         });
     }
 
+    var findBuildingByID = function(all_buildings, id) {
+        for (var i=0 ; i < all_buildings.length ; i++) {
+            if (all_buildings[i].BuildingID == id) {
+                return all_buildings[i].BuildingName
+            }
+        }
+    }
+
     var updateLocationSelect = function() {
         $("#existingLocationNameSelect").empty();
         $("#existingLocationNameSelect").append("<option value='None' selected='selected'>Choose a Location...</option>");
-  //      all_buildings = Building.findAll;
-        $.getJSON("/locations/", function(data) {
+        Building.findAll({}, function(all_buildings) {
+            $.getJSON("/locations/", function(data) {
                 $.each(data, function(key, value) {
-                    //all_buildings[value.BuildingID].BuildingName+" "+
-                    $("#existingLocationNameSelect").append("<option value='"+value.LocationID+"'>"+value.RoomNumber+"</option>");
+                    buildingName = findBuildingByID(all_buildings, value.BuildingID);
+                    $("#existingLocationNameSelect").append("<option value='"+value.LocationID+"'>"+buildingName+" "+value.RoomNumber+"</option>");
                 });
+            });
         });
     }
 
@@ -83,9 +92,7 @@ steal(function() {
                 "<h4>Location Edited!</h4></div>");
                 $("#editLocationSuccessAlert").fadeOut(8000);
             });
-
         });
-
     });
 
     $("#mainrow").on("click", "#deleteLocationBtn", function(event) {
