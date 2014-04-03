@@ -47,7 +47,25 @@ $(document).ready(function() {
         });
     });
     steal("scripts/addNewEquipment.js", function() {});
-
+    steal("scripts/administerStatuses.js", function() {
+        $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+            /**
+             * This function handles inserting out CSRF token into outgoing
+             * AJAX requests
+             */
+            if ( options.processData
+            && /^application\/json((\+|;).+)?$/i.test( options.contentType )
+            && /^(post|put|delete)$/i.test( options.type )
+            ) {
+                options.data = JSON.stringify( originalOptions.data );
+            }
+            if (!options.crossDomain) {
+                if (csrftoken) {
+                    return jqXHR.setRequestHeader('X-CSRFToken', csrftoken);
+                }
+            }
+        });
+    });
     $("#registerBtn").on("click", function(event) {
         /**
          * This function handles the register button being clicked on the main page.
@@ -105,11 +123,11 @@ $(document).ready(function() {
     });
 
     $("#addNewEquipmentLink").on("click", function(event) {
-        /**
-         * This function loads the add new equipment page
-         */
-        $("#mainrow").load("/addNewEquipment/", function() {
-
+    /**
+    This function loads the add new equipment page
+    */
+        $("#mainrow").load("/addNewEquipment/", function() { 
+            $("#createInventoryItemBtn").click(); 
         });
     });
 
