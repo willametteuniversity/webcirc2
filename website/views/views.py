@@ -698,6 +698,20 @@ def locationDetail(request, pk):
         current_model.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
+
+@api_view([u'GET'])
+def labelsNotCategories(request):
+    all_labels = Label.objects.all()
+    labels_without_parents = Label.objects.filter(ParentCategory=None)
+    for label in all_labels:
+        for potential_parent in labels_without_parents:
+            if label.ParentCategory == potential_parent:
+                pass
+                #labels_without_parents.delete(potential_parent)
+    label_serializer = LabelSerializer(labels_without_parents, many=True)
+    return HttpResponse(label_serializer.data, status=201, content_type=u'application/json')
+
+
 @api_view([u'GET', u'POST'])
 def actionTypeList(request):
     if request.method == u'GET':
