@@ -701,14 +701,11 @@ def locationDetail(request, pk):
 
 @api_view([u'GET'])
 def labelsNotCategories(request):
-    all_labels = Label.objects.all()
     labels_without_parents = Label.objects.filter(ParentCategory=None)
-    for label in all_labels:
-        for potential_parent in labels_without_parents:
-            if label.ParentCategory == potential_parent:
-                pass
-                #labels_without_parents.delete(potential_parent)
-    label_serializer = LabelSerializer(labels_without_parents, many=True)
+    labels_not_categories = None
+    for potential_parent in labels_without_parents:
+        labels_not_categories = labels_without_parents.exclude(ParentCategory=potential_parent)
+    label_serializer = LabelSerializer(labels_not_categories, many=True)
     return HttpResponse(label_serializer.data, status=201, content_type=u'application/json')
 
 
