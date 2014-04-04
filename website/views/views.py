@@ -672,7 +672,7 @@ def locationList(request):
         serializer = LocationSerializer(all_models, many=True)
         return Response(serializer.data)
     elif request.method == u'POST':
-        serializer = Location(data=request.DATA)
+        serializer = LocationSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -697,6 +697,17 @@ def locationDetail(request, pk):
     elif request.method == u'DELETE':
         current_model.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view([u'GET'])
+def labelsNotCategories(request):
+    labels_without_parents = Label.objects.filter(ParentCategory=None)
+    labels_not_categories = None
+    for potential_parent in labels_without_parents:
+        labels_not_categories = labels_without_parents.exclude(ParentCategory=potential_parent)
+    label_serializer = LabelSerializer(labels_not_categories, many=True)
+    return HttpResponse(label_serializer.data, status=201, content_type=u'application/json')
+
 
 @api_view([u'GET', u'POST'])
 def actionTypeList(request):
@@ -969,4 +980,3 @@ def chooseStatusesToEditForm(request):
     This handles a request to display the edit form for statuses.
     '''
     return render(request, u'forms/choose_status_to_edit_form.html', {})
-

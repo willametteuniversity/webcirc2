@@ -1,5 +1,5 @@
 var Building = can.Model({
-    findAll: 'GET /building/',
+    findAll: 'GET /buildings/',
     findOne: function(params) {
         if (params.id) {
             return $.ajax({

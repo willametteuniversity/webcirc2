@@ -58,6 +58,11 @@ class ItemBrandSerializer(serializers.ModelSerializer):
         model = ItemBrand
 
 
+class BuildingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Building
+
+
 class ActionTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActionType

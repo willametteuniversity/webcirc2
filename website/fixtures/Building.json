@@ -1,26 +1,18 @@
 [
-	{
+    {
         "model": "website.Building",
         "pk": 1,
         "fields": {
-            "BuildingCode" : 1,
-            "BuildingName" : "Building1",
-        }  
+            "BuildingCode": "SML",
+            "BuildingName": "Smullin"
+        }
     },
     {
         "model": "website.Building",
         "pk": 2,
         "fields": {
-            "BuildingCode" : 2,
-            "BuildingName" : "Building3",
-        }  
-    },
-    {
-        "model": "website.Building",
-        "pk": 3,
-        "fields": {
-            "BuildingCode" : 2,
-            "BuildingName" : "Building3",
-        }  
-    },
+            "BuildingCode": "MOH",
+            "BuildingName": "Hatfield Library"
+        }
+    }
 ]

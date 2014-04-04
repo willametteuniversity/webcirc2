@@ -10,6 +10,7 @@ urlpatterns = patterns('website.views',
                        url(r'^labels/$', 'views.labelList'),
                        url(r'^labels/(?P<pk>[0-9]+)$', 'views.labelDetail'),
                        url(r'^labels/(?P<ln>.+)$', 'views.labelDetail'),
+                       url(r'^labelsNotCategories/$', 'views.labelsNotCategories'),
                        url(r'^inventoryitems/$', 'views.inventoryItemList'),
                        url(r'^inventoryitems/(?P<pk>[0-9]+)$', 'views.inventoryItemDetail'),
                        url(r'^noninventoryitems/$', 'views.nonInventoryItemList'),
@@ -43,6 +44,3 @@ urlpatterns = patterns('website.views',
                        url(r'^autocomplete/', 'views.autocomplete'),
                        url(r'^itemHistory/(?P<fk>[0-9]+)$', 'views.itemHistoryDetail'),
                        url(r'^reservationHistory/(?P<fk>[0-9]+)$', 'views.reservationHistoryDetail'),)
-
-
-

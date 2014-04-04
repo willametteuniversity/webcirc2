@@ -24,7 +24,6 @@ urlpatterns = patterns('website.views',
                        url(r'^actions/$', 'actionTypeList'),
                        url(r'^actions/(?P<pk>[0-9]+)$', 'actionTypeDetail'),
                        url(r'^categoryHierarchy/', 'categoryHierarchy'),
-                       url(r'^addNewInventoryItemForm/', 'addNewInventoryItemForm'),
-                       url(r'^', include('website.urls.administerStatusesUrls'))
+                       url(r'^addNewInventoryItemForm/', 'addNewInventoryItemForm'),)
 
 urlpatterns = format_suffix_patterns(urlpatterns)
