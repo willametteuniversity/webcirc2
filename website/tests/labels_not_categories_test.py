@@ -19,10 +19,15 @@ class LabelNotCategoryTest(TestCase):
         pass
 
     def test_api_url_resolves_correctly(self):
-        pass
+        found = resolve(u'/labelsNotCategories/')
+        self.assertEqual(found.func, labelsNotCategories)
 
     def test_items_returned_not_parents(self):
-        pass
+        client = Client()
+        response = client.get(u'/labelsNotCategories/')
+        # get a list of all labels, make sure none of them have a parent in response
 
     def test_items_returned_not_children(self):
-        pass
+        client = Client()
+        response = client.get(u'/labelsNotCategories/')
+        # make sure each thing in response have a parent of None
