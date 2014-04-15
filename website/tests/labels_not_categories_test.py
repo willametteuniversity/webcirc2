@@ -16,18 +16,16 @@ from website.models import *
 
 class LabelNotCategoryTest(TestCase):
     def setUp(self):
-        pass
+        Label.objects.create(LabelName=u'Alone 1')
+        root_1 = Label.objects.create(LabelName=u'Root 1')
+        Label.objects.create(LabelName=u'Child 1', ParentCategory=root_1)
 
     def test_api_url_resolves_correctly(self):
         found = resolve(u'/labelsNotCategories/')
         self.assertEqual(found.func, labelsNotCategories)
 
-    def test_items_returned_not_parents(self):
-        client = Client()
-        response = client.get(u'/labelsNotCategories/')
-        # get a list of all labels, make sure none of them have a parent in response
-
-    def test_items_returned_not_children(self):
-        client = Client()
-        response = client.get(u'/labelsNotCategories/')
-        # make sure each thing in response have a parent of None
+    def test_items_returned_not_related(self):
+        c = Client()
+        response = c.get(u'/labelsNotCategories/')
+        self.assertEqual(response.data[0][u'LabelName'], u'Alone 1')
+        self.assertEqual(len(response.data), 1)
