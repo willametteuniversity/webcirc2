@@ -709,7 +709,7 @@ def labelsNotCategories(request):
             if label.ParentCategory == potential_parent:
                 labels_not_categories.remove(potential_parent)
     label_serializer = LabelSerializer(labels_not_categories, many=True)
-    return Response(label_serializer.data, status=201, content_type=u'application/json')
+    return Response(label_serializer.data, status=201)
 
 
 @api_view([u'GET', u'POST'])
