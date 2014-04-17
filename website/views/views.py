@@ -978,7 +978,7 @@ def addNewStatusForm(request):
     return render(request, u'forms/add_new_status_form.html', {})
 
 @csrf_exempt
-def chooseStatusesToEditForm(request):
+def chooseStatusToEditForm(request):
     '''
     This handles a request to display the edit form for statuses.
     '''
