@@ -53,6 +53,9 @@
             </div>
             <div class="panel-body">
                 <span id="newReservationActionsHelp" class="help-block">The actions you create appear below. Click the Del button to remove them.</span>
+                <div id="newReservationActions">
+
+                </div>
             </div>
         </div>
     </div>
@@ -71,7 +74,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label" for="actionType">Action Type:</label>
                         <div class="col-sm-8">
-                            <select class="form-control">
+                            <select class="form-control" id="actionType">
                                 <option value="pickup">Pickup</option>
                                 <option value="dropoff">Dropoff</option>
                             </select>
@@ -80,9 +83,9 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label" for="actionOperator">Operator:</label>
                         <div class="col-sm-8">
-                            <select class="form-control">
-                                <option value="pickup">Operator 1</option>
-                                <option value="dropoff">Operator 2</option>
+                            <select class="form-control" id="actionOperator">
+                                <option value="operator1">Operator 1</option>
+                                <option value="operator2">Operator 2</option>
                             </select>
                         </div>
                     </div>
@@ -90,7 +93,7 @@
                         <label class="col-sm-3 control-label" for="startDateTime">Start:</label>
                         <div class="col-sm-8">
                             <div class="input-group date" id="startDateTime">
-                                <input type='text' class="form-control" />
+                                <input type='text' class="form-control" id="startDateTime" />
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                             </div>
                         </div>
@@ -108,8 +111,8 @@
                         <label class="col-sm-3 control-label" for="actionOrigin">Origin:</label>
                         <div class="col-sm-8">
                             <select id="actionOrigin" class="form-control">
-                                <option value="pickup">Origin 1</option>
-                                <option value="dropoff">Origin 2</option>
+                                <option value="origin1">Origin 1</option>
+                                <option value="origin2">Origin 2</option>
                             </select>
                         </div>
                     </div>
@@ -117,8 +120,8 @@
                         <label class="col-sm-3 control-label" for="actionDestination">Destination:</label>
                         <div class="col-sm-8">
                             <select id="actionDestination" class="form-control">
-                                <option value="pickup">Destination 1</option>
-                                <option value="dropoff">Destination 2</option>
+                                <option value="destination1">Destination 1</option>
+                                <option value="destination2">Destination 2</option>
                             </select>
                         </div>
                     </div>

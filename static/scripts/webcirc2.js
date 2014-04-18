@@ -290,6 +290,7 @@ $(document).ready(function() {
             // This sets up the datepickers in the add action form
             $("#startDateTime").datetimepicker();
             $("#endDateTime").datetimepicker();
+            $("#newReservationActions").sortable();
         });
     });
 
