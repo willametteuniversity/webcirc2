@@ -181,7 +181,7 @@ class Collection(models.Model):
 
 
 class CustomerProfile(models.Model):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, primary_key=True)
     phoneNumber = models.IntegerField(max_length=15, blank=True, null=True)
     altPhoneNumber = models.IntegerField(max_length=15, blank=True, null=True)
     altEmail = models.EmailField(blank=True, null=True)
