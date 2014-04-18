@@ -1,5 +1,10 @@
 steal(function() {
     var populateInfo = function(result) {
+        /**
+         * This function handles populating the information into the form from a
+         * retrieved customer.
+         * @type {number}
+         */
         var numResults = 0;
         $.each(result, function(key) {
             if ($.isNumeric(key)) {
@@ -16,6 +21,10 @@ steal(function() {
     };
 
     $("#mainrow").on("click", "#newReservationFindCustomerBtn", function(event) {
+        /**
+         * This function handles trying to find a customer based on what they entered into
+         * the form.
+         */
         event.preventDefault();
         // Let's search by their e-mail first
 
@@ -42,11 +51,17 @@ steal(function() {
     });
 
     $("#mainrow").on("click", "#newReservationNewCustomerBtn", function(event) {
+        /**
+         * This function handles adding a new customer to the system.
+         */
         event.preventDefault();
         steal.dev.log("New Customer Btn clicked!");
     });
 
     $("#mainrow").on("click", "#addNewActionBtn", function(event) {
+        /**
+         * This function handles adding a new action to a reservation.
+         */
         event.preventDefault();
         steal.dev.log("Appending new action");
         var actionType = $("#actionType").val();
@@ -61,6 +76,9 @@ steal(function() {
     });
 
     $("#mainrow").on("click", ".del-action-btn", function(event) {
+        /**
+         * This function handles deleting an action from a reservation.
+         */
         steal.dev.log("Deleting an action");
         $(this).parent().remove();
     })
