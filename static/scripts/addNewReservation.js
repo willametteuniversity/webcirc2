@@ -47,10 +47,7 @@ steal(function() {
 
     $("#mainrow").on("click", "#addNewActionBtn", function(event) {
         event.preventDefault();
-        var existingActions = $(".reservationAction");
-        if (existingActions.length == 0) {
-            var startingPoint = $("#newReservationsActionsHelp").append()
-        }
+
     });
 
     var constructNewAction = function() {
