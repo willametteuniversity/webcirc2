@@ -4,35 +4,24 @@ html {
 body {
     height: 100%;
     margin: 0;
-    background-image: url('/static/images/blackfelt.png');
+    /*background-image: url('/static/images/blackfelt.png');*/
 }
 
 h1 {
     color: #999999;
 }
 .panel {
-    border-color: black;
-background: rgb(12,28,44); /* Old browsers */
-background: -moz-linear-gradient(top, rgba(12,28,44,1) 0%, rgba(12,28,44,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(12,28,44,1)), color-stop(100%,rgba(12,28,44,1))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, rgba(12,28,44,1) 0%,rgba(12,28,44,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, rgba(12,28,44,1) 0%,rgba(12,28,44,1) 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, rgba(12,28,44,1) 0%,rgba(12,28,44,1) 100%); /* IE10+ */
-background: linear-gradient(to bottom, rgba(12,28,44,1) 0%,rgba(12,28,44,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0c1c2c', endColorstr='#0c1c2c',GradientType=0 ); /* IE6-9 */
+
 }
 
 .panel-default > .panel-heading {
-    background-color: rgb(7,17,29);
-    border-color: black;
-    color: rgb(192, 162, 67);
+
 }
  .panel-default > .panel-body {
-     color: #999999;
+
  }
+
 label {
-    color: rgb(192, 162, 67);
-    font-weight: bold;
 }
 
 #mainblock {
@@ -40,7 +29,6 @@ label {
 }
 
 #signInOrRegisterText {
-    color: #cccccc;
     margin-left: 5px;
     margin-right: 5px;
 }
@@ -48,6 +36,10 @@ label {
 #registrationFormDiv {
     padding-top: 10px;
     margin-top: 150px;
+}
+
+#addEquipmentModal .modal-dialog {
+    width: 60%;
 }
 /* These are rules for the label management page */
 #labelListBox, #categoryListBox {

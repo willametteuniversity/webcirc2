@@ -81,5 +81,37 @@ steal(function() {
          */
         steal.dev.log("Deleting an action");
         $(this).parent().remove();
-    })
+    });
+
+    $("#mainrow").on("click", "#showAddEquipmentModalBtn", function(event) {
+        /**
+         * This button handles displaying the modal window to add new equipment to
+         * a reservation
+         */
+        steal.dev.log("Bringing up add equipment modal");
+        $("#addEquipmentModal").modal('show');
+    });
+
+    $("#mainrow").on("click", "#addEquipmentBtn", function(event) {
+        /**
+         * This button handles searching the server for an inventory item and adding it to
+         * a reservation.
+         */
+        var invItemId = $("#equipmentId").val();
+
+        steal.dev.log("Searching for equipment ID: "+invItemId);
+        InventoryItem.findOne({id: invItemId}, function(success) {
+            steal.dev.log("Found an item");
+            console.log(success);
+            $("#newReservationEquipment").append('<div class="equipmentEntry well">#'+success.ItemID+' '+success.Description+'' +
+                '</div>')
+            $("#addEquipmentModal").modal('hide');
+        }, function(error) {
+            $(".alert-equipment-not-found").hide();
+            $("#addEquipmentModalBody").prepend('<div class="alert alert-danger alert-dismissable alert-equipment-not-found">' +
+                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                '<strong>Error!</strong> An item with that ID was not found! Please try again.' +
+                '</div>');
+        });
+    });
 })
