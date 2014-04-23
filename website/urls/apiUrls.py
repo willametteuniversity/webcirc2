@@ -23,6 +23,9 @@ urlpatterns = patterns('website.views',
                        url(r'^models/(?P<pk>[0-9]+)$', 'views.itemModelDetail'),
                        url(r'^models/(?P<mn>.+)$', 'views.itemModelDetail'),
                        url(r'^reservations/$', 'views.reservationList'),
+                       url(r'^reservationOwner/$', 'views.reservationOwnerList'),
+
+                       # need to link all reservation regexes.
                        url(r'^users/$', 'views.userList'),
                        url(r'^users/(?P<pk>[0-9]+)$', 'views.userDetail'),
                        url(r'^users/(?P<em>.+@.+)$', 'views.userDetail'),

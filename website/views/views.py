@@ -353,21 +353,21 @@ def labelDetail(request, pk=None, ln=None, format=None):
         label.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-@api_view([u'GET', u'POST'])
-def reservationList(request, format=None):
-    '''
-    Retrieve a list of all Reservations
-    '''
-    if request.method == u'GET':
-        reservations = Reservation.objects.all()
-        serializer = ReservationSerializer(reservations, many=True)
-        return Response(serializer.data)
-    elif request.method == u'POST':
-        serializer = ReservationSerializer(data=request.DATA)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# @api_view([u'GET', u'POST'])
+# def reservationList(request, format=None):
+#     '''
+#     Retrieve a list of all Reservations
+#     '''
+#     if request.method == u'GET':
+#         reservations = Reservation.objects.all()
+#         serializer = ReservationSerializer(reservations, many=True)
+#         return Response(serializer.data)
+#     elif request.method == u'POST':
+#         serializer = ReservationSerializer(data=request.DATA)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view([u'GET', u'PUT', u'DELETE'])
 def reservationDetail(request, pk, format=None):
@@ -866,6 +866,21 @@ def itemHistoryDetail(request, fk):
         }
         all_history.append(values)
     return HttpResponse(json.dumps(all_history), status=201, content_type=u'application/json')
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def reservationLookup(request, pk=None, em=None, fn=None, n=None):
+    pass    # this should return all reservations, limited by the parameters
+
+
+@api_view(['GET'])
+def reservationOwnerLookup(request, pk=None, em=None, fn=None, n=None):
+    pass    # this should return all reservations, limited by the parameters
+
+
+@api_view(['GET'])
+def reservationManage(request):
+    pass
 
 
 @api_view(['GET'])

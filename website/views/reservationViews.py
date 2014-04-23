@@ -23,6 +23,8 @@ from rest_framework.response import Response
 from website.models import *
 from website.serializers import *
 
+
+
 @csrf_exempt
 def addNewReservation(request):
     '''
