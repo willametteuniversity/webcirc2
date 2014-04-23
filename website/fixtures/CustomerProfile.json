@@ -34,17 +34,5 @@
             "userDept": 1,
             "userNote": "This is a user note 3"
         }
-    },
-    {
-        "pk": 4,
-        "model": "website.CustomerProfile",
-        "fields": {
-            "user": 1,
-            "phoneNumber": "1234567899",
-            "altPhoneNumber": "9876543211",
-            "altEmail": "altemail12@invalid.com",
-            "userDept": 4,
-            "userNote": "This is a user note"
-        }
     }
 ]

@@ -114,7 +114,7 @@ steal(function() {
 
         });
     });
-    
+
     $("#mainrow").on("click", "#submitCreateNewStatusBtn", function(event) {
         /**
          * This function handles the pressing of the create new status button
