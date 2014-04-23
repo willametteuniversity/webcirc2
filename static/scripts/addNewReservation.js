@@ -70,8 +70,9 @@ steal(function() {
         var actionEnd = $("#endDateTime").data('date');
         var actionOrigin = $("#actionOrigin").val();
         var actionDestination = $("#actionDestination").val();
-        $("#newReservationActions").append('<div class="well"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn"><span class="glyphicon glyphicon-remove"></span></button><div>'+actionType+' by '+actionOperator+' from '+actionStart+' to '+actionEnd
-                                            +' origin '+actionOrigin+' to '+actionDestination+'</div></div>');
+        $("#newReservationActions").append('<div class="well reservationActionDiv"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn"><span class="glyphicon glyphicon-remove"></span></button><div>'+actionType+' by '+actionOperator+' from '+actionStart+' to '+actionEnd
+            +' origin '+actionOrigin+' to '+actionDestination+'</div>' +
+            '<div class="equipmentAssignedToActionDiv"></div></div>');
 
     });
 
@@ -103,8 +104,14 @@ steal(function() {
         InventoryItem.findOne({id: invItemId}, function(success) {
             steal.dev.log("Found an item");
             console.log(success);
-            $("#newReservationEquipment").append('<div class="equipmentEntry well">#'+success.ItemID+' '+success.Description+'' +
-                '</div>')
+            $("#newReservationEquipment").append('<div class="equipmentEntry well">#'+success.ItemID+' '+success.Description+'</div>');
+            $('.reservationActionDiv .equipmentAssignedToActionDiv').each(function(index) {
+                steal.dev.log('Appending equipment to Action');
+                $(this).append('<div class="equipmentForAction" id="equipmentForAction-'+success.ItemID+'">#'+success.ItemID+' '+success.Description +
+                    '<button type="button" class="removeEquipmentFromActionBtn btn btn-xs btn-danger pull-right">Remove</button>' +
+                    '</div>');
+            });
+
             $("#addEquipmentModal").modal('hide');
         }, function(error) {
             $(".alert-equipment-not-found").hide();

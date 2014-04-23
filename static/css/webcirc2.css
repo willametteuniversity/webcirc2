@@ -8,7 +8,7 @@ body {
 }
 
 h1 {
-    color: #999999;
+
 }
 .panel {
 
@@ -69,18 +69,15 @@ label {
 
 /* Begin section for site-wide nav-pills */
 .nav-pills > li.active > a {
-    background-color: #222222;
-    color: #999999;
+
 }
 
 .nav-pills > li.active > a:hover, .nav-pills > li > a:hover {
-    color: white;
-    background: #2e2e2e;
+
 
 }
 .nav-pills > li > a {
-    color: #999999;
-    background-color: #1D1D1D;
+
 }
 /* End site wide section for nav pills */
 
@@ -92,4 +89,8 @@ label {
 /* TODO: Figure out what this is necessary and get rid of it */
 #newCustomerFormBtns {
     margin-left: -6px;
+}
+
+.equipmentForAction {
+    margin-top: 10px;
 }
