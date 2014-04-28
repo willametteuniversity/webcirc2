@@ -912,20 +912,41 @@ def itemHistoryDetail(request, fk):
     return HttpResponse(json.dumps(all_history), status=201, content_type=u'application/json')
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def reservationLookup(request, pk=None, em=None, fn=None, n=None):
-    pass    # this should return all reservations, limited by the parameters
+@api_view(['GET'])
+def reservationLookup(request, pk=None, username=None, em=None, start_date=None, end_date=None):
+    if pk != None:
+        pass    # lookup the reservation, return it
+    # define a new query set as all reservations
+    if username is not None:
+        pass    # filter the query set
+    if (start_date is not None) and (end_date is not None):
+        pass     # filter the query set further by date
+    # return the query set
 
 
 @api_view(['GET'])
-def reservationOwnerLookup(request, pk=None, em=None, fn=None, n=None):
-    pass    # this should return all reservations, limited by the parameters
+def reservationOwnerLookup(request, username=None, em=None, start_date=None, end_date=None):
+    query = None
+    if username is not None:
+        pass    # define query as a new query set filtered by username
+    if em is not None:
+        pass    # define query as a new query set filtered by email
+    if query is None:
+        pass    # return we found nothing
+    if (start_date is not None) and (end_date is not None):
+        pass    # further filter query by the start and end dates
+    # return query
 
 
-@api_view(['GET'])
-def reservationManage(request):
-    pass
-
+@api_view(['POST', 'PUT', 'DELETE'])
+def reservationManage(request, pk=None, em=None, fn=None, n=None):
+    # TODO: Check the current user's permissions, ensure they can use reservationManage
+    if request.method == u'POST':
+        pass    # create a new reservation
+    elif request.method == u'PUT':
+        pass    # update the reservation with pk
+    elif request.method == u'DELETE':
+        pass    # delete the reservation with pk
 
 @api_view(['GET'])
 def reservationHistoryDetail(request, fk):
