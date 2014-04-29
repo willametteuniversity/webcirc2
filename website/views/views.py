@@ -914,14 +914,40 @@ def itemHistoryDetail(request, fk):
 
 @api_view(['GET'])
 def reservationLookup(request, pk=None, username=None, em=None, start_date=None, end_date=None):
-    if pk != None:
-        pass    # lookup the reservation, return it
-    # define a new query set as all reservations
+    if pk is not None:
+        try:
+            reservation = Reservation.objects.get(ReservationID=pk)
+            return Response(ReservationSerializer(reservation).data, status=200)
+        except Reservation.DoesNotExist:
+            return Response(status=404)
+    if em is not None:
+        try:
+            return Response(ReservationSerializer(Reservation.objects.filter(CustomerEmail=em), many=True).data, status=200)
+        except Reservation.DoesNotExist:
+            return Response(status=404)
     if username is not None:
-        pass    # filter the query set
+        try:
+            user_id = User.objects.get(username=username)
+            return Response(ReservationSerializer(Reservation.objects.filter(CustomerID=user_id), many=True).data, status=200)
+        except User.DoesNotExist:
+            return Response(status=404)
     if (start_date is not None) and (end_date is not None):
-        pass     # filter the query set further by date
-    # return the query set
+        try:
+            # get a lot of all the actions in that date range
+            all_actions = Action.objects.all()
+            for action in all_actions:
+                action_start = action.StartTime
+                action_end = action.EndTime
+
+            # get a list of all the reservations actions that those actions belong to
+
+            # return all the reservations from that reservation action list
+        except (Action.DoesNotExist, Reservation.DoesNotExist):
+            pass
+        # get all the actions in the date range
+        # get all the reservation actions with those actions
+        # return all the reservations in those actions
+    return Response(ReservationSerializer(Reservation.objects.all(), many=True).data, status=200)
 
 
 @api_view(['GET'])

@@ -11,5 +11,18 @@
             "ReservationNotes": "Don't forget this",
             "EventTitle": "Cool event"
         }
+    },
+    {
+        "model": "website.Reservation",
+        "pk": 2,
+        "fields": {
+            "CustomerID": 1,
+            "CustomerPhone": "5555555555",
+            "CustomerEmail": "sysadmin@willamette.edu",
+            "CustomerDept": "WITS",
+            "CustomerStatus": "Second reservation",
+            "ReservationNotes": "Don't forget this",
+            "EventTitle": "Cool event"
+        }
     }
 ]
