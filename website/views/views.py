@@ -969,6 +969,9 @@ def reservationManage(request, pk=None, em=None, fn=None, n=None):
     # TODO: Check the current user's permissions, ensure they can use reservationManage
     if request.method == u'POST':
         pass    # create a new reservation
+        # decode the json into a dictionary
+        # pass that into the serializer
+        # if valid, have serialzer save each
     elif request.method == u'PUT':
         pass    # update the reservation with pk
     elif request.method == u'DELETE':
