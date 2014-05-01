@@ -24,6 +24,7 @@ from rest_framework.response import Response
 from website.models import *
 from website.serializers import *
 
+from datetime import datetime
 
 def index(request):
     '''
@@ -918,36 +919,43 @@ def reservationLookup(request, pk=None, username=None, em=None, start_date=None,
         try:
             reservation = Reservation.objects.get(ReservationID=pk)
             return Response(ReservationSerializer(reservation).data, status=200)
+            #return Response(ReservationDetailSerializer(reservation).data, status=200)
         except Reservation.DoesNotExist:
             return Response(status=404)
     if em is not None:
         try:
             return Response(ReservationSerializer(Reservation.objects.filter(CustomerEmail=em), many=True).data, status=200)
+            #return Response(ReservationDetailSerializer(Reservation.objects.filter(CustomerEmail=em), many=True).data, status=200)
         except Reservation.DoesNotExist:
             return Response(status=404)
     if username is not None:
         try:
             user_id = User.objects.get(username=username)
-            return Response(ReservationSerializer(Reservation.objects.filter(CustomerID=user_id), many=True).data, status=200)
+            return Response(ReservationDetailSerializer(Reservation.objects.filter(CustomerID=user_id), many=True).data, status=200)
+            #return Response(ReservationSerializer(Reservation.objects.filter(CustomerID=user_id), many=True).data, status=200)
         except User.DoesNotExist:
             return Response(status=404)
     if (start_date is not None) and (end_date is not None):
         try:
-            # get a lot of all the actions in that date range
             all_actions = Action.objects.all()
             for action in all_actions:
-                action_start = action.StartTime
-                action_end = action.EndTime
+                start = action.StartTime
+                end = action.EndTime
+                action_start = datetime.strptime(start, '%m-%d-%y')
+                action_end = datetime.strptime(end, '%m-%d-%y')
+                search_start = datetime.strptime(start_date, '%m-%d-%y')
+                search_end = datetime.strptime(end_date, '%m-%d-%y')
+                if action_start > search_start and action_end < search_end:
+                    pass
+                    # we want this action to be returned
 
             # get a list of all the reservations actions that those actions belong to
 
             # return all the reservations from that reservation action list
-        except (Action.DoesNotExist, Reservation.DoesNotExist):
-            pass
-        # get all the actions in the date range
-        # get all the reservation actions with those actions
-        # return all the reservations in those actions
+        except (Action.DoesNotExist, Reservation.DoesNotExist, ReservationAction.DoesNotExist):
+            return Response(status=404)
     return Response(ReservationSerializer(Reservation.objects.all(), many=True).data, status=200)
+    #return Response(ReservationDetailSerializer(Reservation.objects.all(), many=True).data, status=200)
 
 
 @api_view(['GET'])

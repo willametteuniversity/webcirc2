@@ -98,7 +98,8 @@ class ReservationDetailSerializer(serializers.ModelSerializer):
     all_reservation_actions = []
 
     def restore_objects(self, dictionary, reservation=None):
-        if reservation is not None:
+        # TODO: Where do I need to check for many?  if many, dictionary is list of dictionaries?
+        if reservation is None:
             self.reservation = Reservation(dictionary)
         else:
             self.reservation = reservation
@@ -120,9 +121,8 @@ class ReservationDetailSerializer(serializers.ModelSerializer):
 
     def data(self, reservation):
         reservation_actions = ReservationAction.objects.all()
-        reservation_dictionary = None
+        reservation_dictionary = {}
         for reservation_action in reservation_actions:
             if reservation_action[u'Reservation'] is reservation:
-                pass
-                # append the action into reservation_dictionary
+                reservation_dictionary.update(reservation_action[u'Action'])
         # return the dictionary, turned into json.
