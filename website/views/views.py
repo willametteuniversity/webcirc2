@@ -23,6 +23,7 @@ from rest_framework.response import Response
 # Our application imports
 from website.models import *
 from website.serializers import *
+from django.core import serializers
 
 from datetime import datetime
 
@@ -892,25 +893,18 @@ def consumableItemDetail(request, pk):
 
 @api_view([u'GET'])
 def itemHistoryDetail(request, fk):
-    # TODO:
-    # Check if the item is real, if not return 404?
-    # If it is real, return the history, if there is no history return blank?
-    # What makes sense to me is have no history just return a blank history page,
-    # and have an incorrect model number return an error or some sort.
-    # Same question for reservation history.
-    history = ItemHistory.objects.filter(ItemID=fk).order_by(u"ChangeDateTime")
+    history = ItemHistory.objects.filter(ItemID=fk).order_by(u"ChangeDateTime").reverse()
     if len(history) is 0:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-    all_history = []
-    for item in history:
-        values = {
-            u'Username': item.OperatorID.username,
-            u'ItemID': item.ItemID.ItemID,
-            u'ChangeDescription': item.ChangeDescription,
-            u'ChangeDateTime': item.ChangeDateTime
-        }
-        all_history.append(values)
-    return HttpResponse(json.dumps(all_history), status=201, content_type=u'application/json')
+    return Response(ItemHistorySerializer(history, many=True).data, status=201)
+
+
+@api_view(['GET'])
+def reservationHistoryDetail(request, fk):
+    history = ReservationHistory.objects.filter(ReservationID=fk).order_by(u"ChangeDateTime").reverse()
+    if len(history) is 0:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    return Response(ItemHistorySerializer(history, many=True).data, status=201)
 
 
 @api_view(['GET'])
@@ -919,43 +913,26 @@ def reservationLookup(request, pk=None, username=None, em=None, start_date=None,
         try:
             reservation = Reservation.objects.get(ReservationID=pk)
             return Response(ReservationSerializer(reservation).data, status=200)
-            #return Response(ReservationDetailSerializer(reservation).data, status=200)
         except Reservation.DoesNotExist:
             return Response(status=404)
     if em is not None:
         try:
             return Response(ReservationSerializer(Reservation.objects.filter(CustomerEmail=em), many=True).data, status=200)
-            #return Response(ReservationDetailSerializer(Reservation.objects.filter(CustomerEmail=em), many=True).data, status=200)
         except Reservation.DoesNotExist:
             return Response(status=404)
     if username is not None:
         try:
             user_id = User.objects.get(username=username)
-            return Response(ReservationDetailSerializer(Reservation.objects.filter(CustomerID=user_id), many=True).data, status=200)
-            #return Response(ReservationSerializer(Reservation.objects.filter(CustomerID=user_id), many=True).data, status=200)
+            return Response(ReservationSerializer(Reservation.objects.filter(CustomerID=user_id), many=True).data, status=200)
         except User.DoesNotExist:
             return Response(status=404)
     if (start_date is not None) and (end_date is not None):
-        try:
-            all_actions = Action.objects.all()
-            for action in all_actions:
-                start = action.StartTime
-                end = action.EndTime
-                action_start = datetime.strptime(start, '%m-%d-%y')
-                action_end = datetime.strptime(end, '%m-%d-%y')
-                search_start = datetime.strptime(start_date, '%m-%d-%y')
-                search_end = datetime.strptime(end_date, '%m-%d-%y')
-                if action_start > search_start and action_end < search_end:
-                    pass
-                    # we want this action to be returned
-
-            # get a list of all the reservations actions that those actions belong to
-
-            # return all the reservations from that reservation action list
-        except (Action.DoesNotExist, Reservation.DoesNotExist, ReservationAction.DoesNotExist):
-            return Response(status=404)
-    return Response(ReservationSerializer(Reservation.objects.all(), many=True).data, status=200)
-    #return Response(ReservationDetailSerializer(Reservation.objects.all(), many=True).data, status=200)
+        pass
+        # return filtered by dates
+    #serialized = ReservationSerializer(Reservation.objects.all(), many=True).data
+    serialized = serializers.serialize('json', Reservation.objects.all(), indent=4, relations=('actions',))
+    print serialized
+    return Response(serialized, status=200)
 
 
 @api_view(['GET'])
@@ -966,7 +943,7 @@ def reservationOwnerLookup(request, username=None, em=None, start_date=None, end
     if em is not None:
         pass    # define query as a new query set filtered by email
     if query is None:
-        pass    # return we found nothing
+        return Response(status=404)
     if (start_date is not None) and (end_date is not None):
         pass    # further filter query by the start and end dates
     # return query
@@ -985,21 +962,6 @@ def reservationManage(request, pk=None, em=None, fn=None, n=None):
     elif request.method == u'DELETE':
         pass    # delete the reservation with pk
 
-@api_view(['GET'])
-def reservationHistoryDetail(request, fk):
-    history = ReservationHistory.objects.filter(ReservationID=fk).order_by(u"ChangeDateTime")
-    if len(history) is 0:
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-    all_history = []
-    for item in history:
-        values = {
-            u'Username': item.OperatorID.username,
-            u'ReservationID': item.ReservationID.ReservationID,
-            u'ChangeDescription': item.ChangeDescription,
-            u'ChangeDateTime': item.ChangeDateTime
-        }
-        all_history.append(values)
-    return HttpResponse(json.dumps(all_history), status=201, content_type=u'application/json')
 
 @api_view([u'GET'])
 def categoryHierarchy(request):
@@ -1023,6 +985,7 @@ def categoryHierarchy(request):
         tree = get_nodes(node=root)
 
         return HttpResponse(json.dumps(tree), content_type=u'application/json')
+
 
 def autocomplete(request):
     '''
@@ -1056,6 +1019,7 @@ def autocomplete(request):
 
     return HttpResponse(json.dumps(results), content_type=u'application/json')
 
+
 def checkAvailable(item, startTime, endTime):
     actionItems = ActionItem.objects.filter(InventoryItemID=item.pk)
     startDate = datetime.strptime(startTime, "%d-%m-%Y %H:%M:%S")
@@ -1080,6 +1044,7 @@ def checkAvailable(item, startTime, endTime):
 
         return true
 
+
 @csrf_exempt
 def administerStatuses(request):
     '''
@@ -1087,12 +1052,14 @@ def administerStatuses(request):
     '''
     return render(request, u'administer_statuses.html', {})
 
+
 @csrf_exempt
 def addNewStatusForm(request):
     '''
     This handles a request to display the adding a new status form.
     '''
     return render(request, u'forms/add_new_status_form.html', {})
+
 
 @csrf_exempt
 def chooseStatusToEditForm(request):

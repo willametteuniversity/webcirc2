@@ -144,9 +144,14 @@ class ReservationAction(models.Model):
     ActionID = models.ForeignKey(u'Action')
 
 
+class InstitutionalDepartment(models.Model):
+    DepartmentID = models.AutoField(primary_key=True)
+    DepartmentCode = models.CharField(max_length=50)
+    DepartmentName = models.CharField(max_length=500)
+
+
 class Action(models.Model):
     ActionID = models.AutoField(primary_key=True)
-    # TODO: What should this go to?
     AssignedOperatorID = models.ForeignKey(User)
     ActionTypeID = models.ForeignKey(u'ActionType')
     StartTime = models.CharField(max_length=500)
@@ -155,12 +160,6 @@ class Action(models.Model):
     Destination = models.ForeignKey(u'Location', related_name=u'action_destination')
     ActionStatus = models.CharField(max_length=500)
     ActionNotes = models.CharField(max_length=500)
-
-
-class InstitutionalDepartment(models.Model):
-    DepartmentID = models.AutoField(primary_key=True)
-    DepartmentCode = models.CharField(max_length=50)
-    DepartmentName = models.CharField(max_length=500)
 
 
 class Reservation(models.Model):
@@ -172,6 +171,7 @@ class Reservation(models.Model):
     CustomerStatus = models.CharField(max_length=500)
     ReservationNotes = models.CharField(max_length=500)
     EventTitle = models.CharField(max_length=500)
+    Action = models.ForeignKey(Action, related_name="actions")
 
 
 class Collection(models.Model):

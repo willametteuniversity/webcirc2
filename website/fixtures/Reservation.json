@@ -9,7 +9,8 @@
             "CustomerDept": "WITS",
             "CustomerStatus": "Not sure what this is",
             "ReservationNotes": "Don't forget this",
-            "EventTitle": "Cool event"
+            "EventTitle": "Cool event",
+            "Action": 1
         }
     },
     {
@@ -22,7 +23,8 @@
             "CustomerDept": "WITS",
             "CustomerStatus": "Second reservation",
             "ReservationNotes": "Don't forget this",
-            "EventTitle": "Cool event"
+            "EventTitle": "Cool event",
+            "Action": 1
         }
     }
 ]
