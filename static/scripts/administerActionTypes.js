@@ -23,7 +23,7 @@ steal(function() {
         // Here we are going to get the list of ActionTypes to populate
         $("#existingActionTypeNameSelect").empty();
         $("#existingActionTypeNameSelect").append("<option value='None' selected='selected'>Choose an ActionType...</option>");
-        $.getJSON("/actions/", function(data) {
+        $.getJSON("/actionTypes/", function(data) {
 
                 // This populates the dropdown to let people choose a ActionType to edit
                 $.each(data, function(key, value) {
@@ -51,7 +51,7 @@ steal(function() {
         }
         // When they choose an existing ActionType from the dropdown, we want to pre-populate the form
         // with existing values
-        var ActionType = $.getJSON("/actions/"+selectedActionTypeID, function(response) {
+        var ActionType = $.getJSON("/actionTypes/"+selectedActionTypeID, function(response) {
             updateEditActionTypeForm(response)
         });
     });

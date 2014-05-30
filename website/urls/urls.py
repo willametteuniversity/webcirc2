@@ -11,6 +11,8 @@ urlpatterns = patterns('website.views',
                         url(r'^', include('website.urls.newReservationUrls')),
                         url(r'^', include('website.urls.administerStatusesUrls')),
                         url(r'^', include('website.urls.administerLocationsUrls')),
+                        url(r'^', include('website.urls.reservationAPIUrls')),
+                        url(r'^', include('website.urls.actionAPIUrls')),
                         )
 
 urlpatterns = format_suffix_patterns(urlpatterns)
