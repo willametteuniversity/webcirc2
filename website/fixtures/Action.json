@@ -11,7 +11,8 @@
             "Origin": 1,
             "Destination": 2,
             "ActionStatus": "testing",
-            "ActionNotes": "Test fixture"
+            "ActionNotes": "Test fixture",
+            "Reservation": 1
         }
     },
     {
@@ -26,7 +27,8 @@
             "Origin": 1,
             "Destination": 2,
             "ActionStatus": "testing",
-            "ActionNotes": "Test fixture"
+            "ActionNotes": "Test fixture",
+            "Reservation": 1
         }
     }
 ]

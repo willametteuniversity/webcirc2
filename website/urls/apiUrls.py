@@ -57,4 +57,5 @@ urlpatterns = patterns('website.views',
                        url(r'^categoryHierarchy/', 'views.categoryHierarchy'),
                        url(r'^autocomplete/', 'views.autocomplete'),
                        url(r'^itemHistory/(?P<fk>[0-9]+)$', 'views.itemHistoryDetail'),
-                       url(r'^reservationHistory/(?P<fk>[0-9]+)$', 'views.reservationHistoryDetail'),)
+                       url(r'^reservationHistory/(?P<fk>[0-9]+)$', 'views.reservationHistoryDetail'),
+                       url(r'^reservationActions/(?P<pk>[0-9]+)$', 'views.reservationActions'),)

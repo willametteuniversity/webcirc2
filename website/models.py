@@ -39,42 +39,59 @@ class Status(models.Model):
     StatusDescription = models.CharField(max_length=500)
 
 
-class InventoryItem(models.Model):
+class Reservation(models.Model):
+    ReservationID = models.AutoField(primary_key=True)
+    CustomerID = models.ForeignKey(User)
+    CustomerPhone = models.CharField(max_length=500)
+    CustomerEmail = models.CharField(max_length=500)
+    CustomerDept = models.CharField(max_length=500)
+    CustomerStatus = models.CharField(max_length=500)
+    ReservationNotes = models.CharField(max_length=500)
+    EventTitle = models.CharField(max_length=500)
+
+
+class Action(models.Model):
+    ActionID = models.AutoField(primary_key=True)
+    AssignedOperatorID = models.ForeignKey(User)
+    ActionTypeID = models.ForeignKey(u'ActionType')
+    StartTime = models.CharField(max_length=500)
+    EndTime = models.CharField(max_length=500)
+    Origin = models.ForeignKey(u'Location', related_name=u'action_origin')
+    Destination = models.ForeignKey(u'Location', related_name=u'action_destination')
+    ActionStatus = models.CharField(max_length=500)
+    ActionNotes = models.CharField(max_length=500)
+    Reservation = models.ForeignKey(Reservation)
+
+
+class Item(models.Model):
     ItemID = models.AutoField(primary_key=True)
+    Description = models.CharField(max_length=500)
+    CategoryID = models.ForeignKey(u'Label')
+    StorageLocation = models.ForeignKey(u'Location')
+    CollectionID = models.ForeignKey(u'Collection')
+    Notes = models.CharField(max_length=500, null=True, blank=True)
+    Action = models.ForeignKey(Action)
+
+
+class InventoryItem(Item, models.Model):
     AlternateID = models.ForeignKey(u'InventoryWidget', blank=True, null=True)
     BrandID = models.ForeignKey(u'ItemBrand')
     ModelID = models.ForeignKey(u'ItemModel')
-    Description = models.CharField(max_length=500)
-    Notes = models.CharField(max_length=500, null=True, blank=True)
-    CategoryID = models.ForeignKey(u'Label')
     ParentItem = models.ForeignKey(u'InventoryItem', null=True, blank=True)
     StatusID = models.ForeignKey(u'Status')
-    StorageLocation = models.ForeignKey(u'Location')
-    CollectionID = models.ForeignKey(u'Collection')
 
 
-class NonInventoryItem(models.Model):
-    ItemID = models.AutoField(primary_key=True)
-    Description = models.CharField(max_length=500)
-    CategoryID = models.ForeignKey(u'Label')
-    StorageLocation = models.ForeignKey(u'Location')
-    CollectionID = models.ForeignKey(u'Collection')
-    Notes = models.CharField(max_length=500, null=True, blank=True)
+class NonInventoryItem(Item, models.Model):
     Quantity = models.IntegerField(default=0)
 
-class ConsumableItem(models.Model):
-    ItemID = models.AutoField(primary_key=True)
+
+class ConsumableItem(Item, models.Model):
     ItemName = models.CharField(max_length=100)
-    Description = models.CharField(max_length=500)
-    CategoryID = models.ForeignKey(u'Label')
-    StorageLocation = models.ForeignKey(u'Location')
-    Notes = models.CharField(max_length=500, null=True, blank=True)
     Quantity = models.IntegerField(default=0)
     # This is the quantity we want to always have on hand
     MinQuantity = models.IntegerField(default=0)
     # Cost per item
     Cost = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
-    CollectionID = models.ForeignKey(u'Collection')
 
 
 class InventoryWidget(models.Model):
@@ -129,9 +146,9 @@ class ReservationHistory(models.Model):
     ChangeDateTime = models.DateTimeField()
 
 
-class ActionItem(models.Model):
-    InventoryItemID = models.ForeignKey(u'InventoryItem')
-    ActionID = models.ForeignKey(u'Action')
+#class ActionItem(models.Model):
+#    InventoryItemID = models.ForeignKey(u'InventoryItem')
+#    ActionID = models.ForeignKey(u'Action')
 
 
 class ActionType(models.Model):
@@ -139,39 +156,15 @@ class ActionType(models.Model):
     ActionTypeName = models.CharField(max_length=500)
 
 
-class ReservationAction(models.Model):
-    ReservationID = models.ForeignKey(u'Reservation')
-    ActionID = models.ForeignKey(u'Action')
+#class ReservationAction(models.Model):
+#    ReservationID = models.ForeignKey(u'Reservation')
+#    ActionID = models.ForeignKey(u'Action')
 
 
 class InstitutionalDepartment(models.Model):
     DepartmentID = models.AutoField(primary_key=True)
     DepartmentCode = models.CharField(max_length=50)
     DepartmentName = models.CharField(max_length=500)
-
-
-class Action(models.Model):
-    ActionID = models.AutoField(primary_key=True)
-    AssignedOperatorID = models.ForeignKey(User)
-    ActionTypeID = models.ForeignKey(u'ActionType')
-    StartTime = models.CharField(max_length=500)
-    EndTime = models.CharField(max_length=500)
-    Origin = models.ForeignKey(u'Location', related_name=u'action_origin')
-    Destination = models.ForeignKey(u'Location', related_name=u'action_destination')
-    ActionStatus = models.CharField(max_length=500)
-    ActionNotes = models.CharField(max_length=500)
-
-
-class Reservation(models.Model):
-    ReservationID = models.AutoField(primary_key=True)
-    CustomerID = models.ForeignKey(User)
-    CustomerPhone = models.CharField(max_length=500)
-    CustomerEmail = models.CharField(max_length=500)
-    CustomerDept = models.CharField(max_length=500)
-    CustomerStatus = models.CharField(max_length=500)
-    ReservationNotes = models.CharField(max_length=500)
-    EventTitle = models.CharField(max_length=500)
-    Action = models.ForeignKey(Action, related_name="actions")
 
 
 class Collection(models.Model):

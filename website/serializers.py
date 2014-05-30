@@ -48,9 +48,9 @@ class ReservationSerializer(serializers.ModelSerializer):
         model = Reservation
 
 
-class ReservationActionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ReservationAction
+#class ReservationActionSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = ReservationAction
 
 
 class ItemModelSerializer(serializers.ModelSerializer):
@@ -87,10 +87,17 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
 
+
 class CustomerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerProfile
 
+
 class ItemHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = ItemHistory
+
+
+class ActionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Action

@@ -927,12 +927,20 @@ def reservationLookup(request, pk=None, username=None, em=None, start_date=None,
         except User.DoesNotExist:
             return Response(status=404)
     if (start_date is not None) and (end_date is not None):
-        pass
-        # return filtered by dates
-    #serialized = ReservationSerializer(Reservation.objects.all(), many=True).data
-    serialized = serializers.serialize('json', Reservation.objects.all(), indent=4, relations=('actions',))
-    print serialized
-    return Response(serialized, status=200)
+        pass    # return filtered by dates
+    serialized = serializers.serialize('json', Reservation.objects.all(), indent=4)
+    serialized2 = serializers.serialize('json', Reservation.objects.get(pk=1).action_set.all(), indent=4)
+    print serialized+serialized2
+    return Response(serialized+serialized2, status=200)
+
+
+@api_view(['Get'])
+def reservationActions(request, pk):
+    return Response(ActionSerializer(Reservation.objects.get(pk=pk).action_set.all()).data, status=200)
+
+@api_view(['POST', 'PUT', 'DELETE'])
+def actionManager():
+    pass
 
 
 @api_view(['GET'])
