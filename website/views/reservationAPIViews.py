@@ -24,7 +24,7 @@ def reservationLookup(request, pk=None, username=None, em=None, start_date=None,
             return Response(status=404)
     if (start_date is not None) and (end_date is not None):
         pass    # return filtered by dates
-    return Response(ReservationSerializer(Reservation.objects.all(),many=True).data, status=200)
+    return Response(ReservationSerializer(Reservation.objects.all(), many=True).data, status=200)
 
 
 @api_view(['GET'])
