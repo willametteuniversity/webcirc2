@@ -41,7 +41,8 @@ class Status(models.Model):
 
 class Reservation(models.Model):
     ReservationID = models.AutoField(primary_key=True)
-    CustomerID = models.ForeignKey(User)
+    CustomerID = models.ForeignKey(User, related_name='owner_set')
+    OwnerID = models.ForeignKey(User)
     CustomerPhone = models.CharField(max_length=500)
     CustomerEmail = models.CharField(max_length=500)
     CustomerDept = models.CharField(max_length=500)
@@ -54,8 +55,8 @@ class Action(models.Model):
     ActionID = models.AutoField(primary_key=True)
     AssignedOperatorID = models.ForeignKey(User)
     ActionTypeID = models.ForeignKey(u'ActionType')
-    StartTime = models.CharField(max_length=500)
-    EndTime = models.CharField(max_length=500)
+    StartTime = models.DateTimeField()
+    EndTime = models.DateTimeField()
     Origin = models.ForeignKey(u'Location', related_name=u'action_origin')
     Destination = models.ForeignKey(u'Location', related_name=u'action_destination')
     ActionStatus = models.CharField(max_length=500)

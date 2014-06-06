@@ -14,6 +14,7 @@ urlpatterns = patterns('website.views',
                         url(r'^', include('website.urls.reservationAPIUrls')),
                         url(r'^', include('website.urls.actionAPIUrls')),
                         url(r'^', include('website.urls.userAPIUrls')),
+                        url(r'^', include('website.urls.itemAPIUrls')),
                         )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

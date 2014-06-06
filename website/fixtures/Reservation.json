@@ -4,6 +4,7 @@
         "pk": 1,
         "fields": {
             "CustomerID": 1,
+            "OwnerID": 1,
             "CustomerPhone": "5555555555",
             "CustomerEmail": "wits@willamette.edu",
             "CustomerDept": "WITS",
@@ -17,6 +18,7 @@
         "pk": 2,
         "fields": {
             "CustomerID": 1,
+            "OwnerID": 1,
             "CustomerPhone": "5555555555",
             "CustomerEmail": "sysadmin@willamette.edu",
             "CustomerDept": "WITS",

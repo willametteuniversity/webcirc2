@@ -30,8 +30,7 @@ def actionList(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 def actionDetail(request, pk):
     try:
-        if pk is not None:
-            action = Action.objects.get(ActionID=pk)
+        action = Action.objects.get(ActionID=pk)
     except Action.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     if request.method == u'GET':

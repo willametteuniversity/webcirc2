@@ -12,7 +12,8 @@
             "ParentItem": null,
             "StatusID": 1,
             "StorageLocation": 1,
-            "CollectionID": 1
+            "CollectionID": 1,
+            "Action": 1
         }
     },
     {
@@ -28,7 +29,8 @@
             "ParentItem": null,
             "StatusID": 1,
             "StorageLocation": 1,
-            "CollectionID": 1
+            "CollectionID": 1,
+            "Action": 1
         }
     }
 ]
