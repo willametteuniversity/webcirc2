@@ -11,9 +11,6 @@ urlpatterns = patterns('website.views',
                        url(r'^labels/(?P<pk>[0-9]+)$', 'views.labelDetail'),
                        url(r'^labels/(?P<ln>.+)$', 'views.labelDetail'),
                        url(r'^labelsNotCategories/$', 'views.labelsNotCategories'),
-
-
-
                        url(r'^locations/$', 'views.locationList'),
                        url(r'^locations/(?P<pk>[0-9]+)$', 'views.locationDetail'),
                        url(r'^models/$', 'views.itemModelList'),

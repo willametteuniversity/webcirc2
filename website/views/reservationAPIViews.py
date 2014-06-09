@@ -2,13 +2,14 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from website.serializers import *
 from rest_framework import status
+from django.http import HttpResponse
 
 
 @api_view(['GET'])
-def reservationLookup(request, pk=None, username=None, em=None, start_date=None, end_date=None):
+def reservationSearch(request, pk=None, username=None, em=None, start_date=None, end_date=None):
     if pk is not None:
         try:
-            reservation = Reservation.objects.get(ReservationID=pk)
+            reservation = Reservation.objects.get(ReservationID=pk) # move this to reservationDetail
             return Response(ReservationSerializer(reservation).data, status=200)
         except Reservation.DoesNotExist:
             return Response(status=404)
@@ -30,7 +31,7 @@ def reservationLookup(request, pk=None, username=None, em=None, start_date=None,
 
 
 @api_view(['GET'])
-def reservationOwnerLookup(request, username=None, em=None, start_date=None, end_date=None):
+def reservationOwnerSearch(request, username=None, em=None, start_date=None, end_date=None):
     query = None
     owner = None
     try:
@@ -40,7 +41,6 @@ def reservationOwnerLookup(request, username=None, em=None, start_date=None, end
             owner = User.objects.get(email=em)
     except User.DoesNotExist:
         return Response(status=404)
-
     if username is not None:
         query = Reservation.objects.filter(OwnerID=owner)
     if em is not None:
@@ -48,28 +48,37 @@ def reservationOwnerLookup(request, username=None, em=None, start_date=None, end
     if query is None:
         return Response(status=404)
     if (start_date is not None) and (end_date is not None):
-        ## TODO: Improve this
-        # get all actions in that range
-        # for each action, if the reservation hasn't been seen yet, add it
-
-                       #url(r'^actions/$', 'actionAPIViews.actionList'),
-                       #url(r'^actions/(?P<pk>[0-9]+)$', 'actionAPIViews.actionDetail'),
         pass
-        #Action.objects.filter(StartTime)
+        ## TODO: filter query set by date
     return Response(ReservationSerializer(query, many=True).data, status=200)
 
 
-@api_view(['POST', 'PUT', 'DELETE'])
-def reservationManage(request, pk=None, em=None, fn=None, n=None):
-    # TODO: Check the current user's permissions, ensure they can use reservationManage
-    if request.method == u'POST':
+@api_view(['GET', 'POST'])
+def reservationList(request):
+    if request.method == u'GET':
+        return Response(ReservationSerializer(Reservation.objects.all(), many=True))
+    elif request.method == u'POST':
         serializer = ReservationSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def reservationDetail(request, pk):
+    try:
+        reservation = Reservation.objects.get(ReservationID=pk)
+    except Action.DoesNotExist:
+        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    if request.method == u'GET':
+        return Response(ReservationSerializer(reservation).data)
     elif request.method == u'PUT':
-        # lookup, ret 404 if not found
-        pass    # update the reservation with pk
+        serializer = ReservationSerializer(reservation, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == u'DELETE':
-        pass    # delete the reservation with pk
+        reservation.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
