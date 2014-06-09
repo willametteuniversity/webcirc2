@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from website.serializers import *
+from rest_framework import status
 
 
 @api_view(['GET'])
@@ -23,7 +24,8 @@ def reservationLookup(request, pk=None, username=None, em=None, start_date=None,
         except User.DoesNotExist:
             return Response(status=404)
     if (start_date is not None) and (end_date is not None):
-        pass    # return filtered by dates
+        pass
+        ## TODO: filter query set by date
     return Response(ReservationSerializer(Reservation.objects.all(), many=True).data, status=200)
 
 
@@ -50,6 +52,8 @@ def reservationOwnerLookup(request, username=None, em=None, start_date=None, end
         # get all actions in that range
         # for each action, if the reservation hasn't been seen yet, add it
 
+                       #url(r'^actions/$', 'actionAPIViews.actionList'),
+                       #url(r'^actions/(?P<pk>[0-9]+)$', 'actionAPIViews.actionDetail'),
         pass
         #Action.objects.filter(StartTime)
     return Response(ReservationSerializer(query, many=True).data, status=200)
@@ -59,8 +63,13 @@ def reservationOwnerLookup(request, username=None, em=None, start_date=None, end
 def reservationManage(request, pk=None, em=None, fn=None, n=None):
     # TODO: Check the current user's permissions, ensure they can use reservationManage
     if request.method == u'POST':
-        pass    # create a new reservation
+        serializer = ReservationSerializer(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == u'PUT':
+        # lookup, ret 404 if not found
         pass    # update the reservation with pk
     elif request.method == u'DELETE':
         pass    # delete the reservation with pk

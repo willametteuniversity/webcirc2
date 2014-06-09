@@ -1,0 +1,28 @@
+[
+    {
+        "model": "website.NonInventoryItem",
+        "pk": 1,
+        "fields": {
+            "Description": "Non inventory 1",
+            "CategoryID": 1,
+            "StorageLocation": 1,
+            "CollectionID": 1,
+            "Notes": "What a cool item",
+            "Action": 1,
+            "Quantity": 3
+        }
+    },
+    {
+        "model": "website.NonInventoryItem",
+        "pk": 2,
+        "fields": {
+            "Description": "Non inventory 2",
+            "CategoryID": 1,
+            "StorageLocation": 1,
+            "CollectionID": 1,
+            "Notes": "What a cool item",
+            "Action": 1,
+            "Quantity": 3
+        }
+    }
+]

@@ -4,6 +4,7 @@ from website.serializers import *
 from django.http import HttpResponse
 from rest_framework import status
 
+
 @api_view(['GET', 'POST'])
 def userList(request):
     '''

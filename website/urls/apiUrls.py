@@ -11,12 +11,9 @@ urlpatterns = patterns('website.views',
                        url(r'^labels/(?P<pk>[0-9]+)$', 'views.labelDetail'),
                        url(r'^labels/(?P<ln>.+)$', 'views.labelDetail'),
                        url(r'^labelsNotCategories/$', 'views.labelsNotCategories'),
-                       url(r'^inventoryitems/$', 'views.inventoryItemList'),
-                       url(r'^inventoryitems/(?P<pk>[0-9]+)$', 'views.inventoryItemDetail'),
-                       url(r'^noninventoryitems/$', 'views.nonInventoryItemList'),
-                       url(r'^noninventoryitems/(?P<pk>[0-9]+)$', 'views.nonInventoryItemDetail'),
-                       url(r'^consumableitems/$', 'views.consumableItemList'),
-                       url(r'^consumableitems/(?P<pk>[0-9]+)$', 'views.consumableItemDetail'),
+
+
+
                        url(r'^locations/$', 'views.locationList'),
                        url(r'^locations/(?P<pk>[0-9]+)$', 'views.locationDetail'),
                        url(r'^models/$', 'views.itemModelList'),

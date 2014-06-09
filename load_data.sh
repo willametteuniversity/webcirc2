@@ -15,3 +15,5 @@ python manage.py loaddata Collection
 python manage.py loaddata Building
 python manage.py loaddata ActionType
 python manage.py loaddata Action
+python manage.py loaddata NonInventoryItem
+python manage.py loaddata ConsumableItem
