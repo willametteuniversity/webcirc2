@@ -64,7 +64,7 @@ class Action(models.Model):
     Reservation = models.ForeignKey(Reservation)
 
 
-class Item(models.Model):
+class InventoryItem(models.Model):
     ItemID = models.AutoField(primary_key=True)
     Description = models.CharField(max_length=500)
     CategoryID = models.ForeignKey(u'Label')
@@ -72,9 +72,6 @@ class Item(models.Model):
     CollectionID = models.ForeignKey(u'Collection')
     Notes = models.CharField(max_length=500, null=True, blank=True)
     Action = models.ForeignKey(Action)
-
-
-class InventoryItem(Item, models.Model):
     AlternateID = models.ForeignKey(u'InventoryWidget', blank=True, null=True)
     BrandID = models.ForeignKey(u'ItemBrand')
     ModelID = models.ForeignKey(u'ItemModel')
@@ -82,16 +79,28 @@ class InventoryItem(Item, models.Model):
     StatusID = models.ForeignKey(u'Status')
 
 
-class NonInventoryItem(Item, models.Model):
+class NonInventoryItem(models.Model):
+    ItemID = models.AutoField(primary_key=True)
+    Description = models.CharField(max_length=500)
+    CategoryID = models.ForeignKey(u'Label')
+    StorageLocation = models.ForeignKey(u'Location')
+    CollectionID = models.ForeignKey(u'Collection')
+    Notes = models.CharField(max_length=500, null=True, blank=True)
+    Action = models.ForeignKey(Action)
     Quantity = models.IntegerField(default=0)
 
 
-class ConsumableItem(Item, models.Model):
+class ConsumableItem(models.Model):
+    ItemID = models.AutoField(primary_key=True)
+    Description = models.CharField(max_length=500)
+    CategoryID = models.ForeignKey(u'Label')
+    StorageLocation = models.ForeignKey(u'Location')
+    CollectionID = models.ForeignKey(u'Collection')
+    Notes = models.CharField(max_length=500, null=True, blank=True)
+    Action = models.ForeignKey(Action)
     ItemName = models.CharField(max_length=100)
     Quantity = models.IntegerField(default=0)
-    # This is the quantity we want to always have on hand
     MinQuantity = models.IntegerField(default=0)
-    # Cost per item
     Cost = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
 
 
@@ -147,19 +156,9 @@ class ReservationHistory(models.Model):
     ChangeDateTime = models.DateTimeField()
 
 
-#class ActionItem(models.Model):
-#    InventoryItemID = models.ForeignKey(u'InventoryItem')
-#    ActionID = models.ForeignKey(u'Action')
-
-
 class ActionType(models.Model):
     ActionTypeID = models.AutoField(primary_key=True)
     ActionTypeName = models.CharField(max_length=500)
-
-
-#class ReservationAction(models.Model):
-#    ReservationID = models.ForeignKey(u'Reservation')
-#    ActionID = models.ForeignKey(u'Action')
 
 
 class InstitutionalDepartment(models.Model):
