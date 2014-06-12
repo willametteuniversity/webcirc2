@@ -36,7 +36,7 @@ def reservationOwnerSearch(request, username=None, em=None, start_date=None, end
     owner = None
     try:
         if username is not None:
-            owner = User.objects.get(username=username)
+            owner = User.objects.get(username=username)  # Lookup pk of user, filter by OwnerID
         elif em is not None and owner is None:
             owner = User.objects.get(email=em)
     except User.DoesNotExist:
