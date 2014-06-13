@@ -4,7 +4,8 @@ html {
 body {
     height: 100%;
     margin: 0;
-    /*background-image: url('/static/images/blackfelt.png');*/
+/*    background-color: #E3E3D4; */
+    /*background-image: url('/static/images/blackfelt.png');  #A3A3C2;*/
 }
 
 h1 {
@@ -73,7 +74,7 @@ label {
 }
 
 .nav-pills > li.active > a:hover, .nav-pills > li > a:hover {
-
+/* color: #FFFFFF; */
 
 }
 .nav-pills > li > a {
@@ -93,4 +94,9 @@ label {
 
 .equipmentForAction {
     margin-top: 10px;
+}
+
+.navbar {
+/*    background: none repeat scroll 0 0 #A3A3C2;
+    border: none; */
 }
