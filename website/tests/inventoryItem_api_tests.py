@@ -130,63 +130,63 @@ class InventoryItemAPITest(TestCase):
         found = resolve(u'/consumableItems/1')
         self.assertEqual(found.func, consumableItemDetail)
 
-    def test_can_view_all_actions(self):
+    def test_can_view_all_inventory_items(self):
         client = Client()
-        response = client.get(u'/actions/')
-        self.assertEqual(1, response.data[0][u'ActionID'])
-        self.assertEqual(2, response.data[1][u'ActionID'])
+        response = client.get(u'/inventoryItems/')
+        self.assertEqual(1, response.data[0][u'ItemID'])
+        self.assertEqual(2, response.data[1][u'ItemID'])
 
-    def test_can_add_new_action(self):
+    def test_can_add_new_inventory_item(self):
         client = Client()
-        response = client.post(u'/actions/', {u'AssignedOperatorID': u'1',
-                                              u'ActionTypeID': u'1',
-                                              u'StartTime': u'2014-6-2T13:00',
-                                              u'EndTime': u'2014-6-2T15:00',
-                                              u'Origin': u'1',
-                                              u'Destination': u'1',
-                                              u'ActionStatus': u'Unit testing',
-                                              u'ActionNotes': u'Created by a unit test',
-                                              u'Reservation': u'1'})
-        self.assertEqual(3, response.data[u'ActionID'])
-        self.assertEqual(u'Created by a unit test', response.data[u'ActionNotes'])
+        response = client.post(u'/inventoryItems/', {u'Description': u'Item 3',
+                                                     u'CategoryID': u'1',
+                                                     u'StorageLocation': u'1',
+                                                     u'CollectionID': u'1',
+                                                     u'Notes': u'Created by a unit test',
+                                                     u'Action': u'1',
+                                                     u'BrandID': u'1',
+                                                     u'ModelID': u'1',
+                                                     u'StatusID': u'1'})
+        self.assertEqual(3, response.data[u'ItemID'])
+        self.assertEqual(u'Created by a unit test', response.data[u'Notes'])
         self.assertEqual(201, response.status_code)
 
-    def test_can_view_one_action(self):
+    def test_can_view_one_item(self):
         client = Client()
-        response = client.get(u'/actions/1')
-        self.assertEqual(1, response.data[u'ActionID'])
-        response = client.get(u'/actions/2')
-        self.assertEqual(2, response.data[u'ActionID'])
+        response = client.get(u'/inventoryItems/1')
+        self.assertEqual(1, response.data[u'ItemID'])
+        response = client.get(u'/inventoryItems/2')
+        self.assertEqual(2, response.data[u'ItemID'])
 
-    def test_can_edit_action(self):
+    def test_can_edit_inventory_item(self):
         client = Client()
-        response = client.put(u'/actions/2',
-                              data=json.dumps({u'AssignedOperatorID': u'1',
-                                              u'ActionTypeID': u'1',
-                                              u'StartTime': u'2014-6-2T13:00',
-                                              u'EndTime': u'2014-6-2T15:00',
-                                              u'Origin': u'1',
-                                              u'Destination': u'1',
-                                              u'ActionStatus': u'Unit testing',
-                                              u'ActionNotes': u'Edited by a unit test',
-                                              u'Reservation': u'2'}),
+        response = client.put(u'/inventoryItems/2',
+                              data=json.dumps({u'Description': u'Updated item 2',
+                                               u'CategoryID': u'1',
+                                               u'StorageLocation': u'1',
+                                               u'CollectionID': u'1',
+                                               u'Notes': u'Created by a unit test',
+                                               u'Action': u'2',
+                                               u'BrandID': u'1',
+                                               u'ModelID': u'1',
+                                               u'StatusID': u'1'}),
                               content_type='application/json')
         self.assertEqual(200, response.status_code)
-        response = client.get(u'/actions/2')
-        self.assertEqual(u'Edited by a unit test', response.data[u'ActionNotes'])
+        response = client.get(u'/inventoryItems/2')
+        self.assertEqual(u'Updated item 2', response.data[u'Description'])
 
     def test_cant_view_nonexistent_action(self):
         client = Client()
-        response = client.get(u'/actions/3')
+        response = client.get(u'/inventoryItems/3')
         self.assertEqual(404, response.status_code)
 
-    def test_can_actions_from_reservations(self):
+    def test_can_get_inventory_items_from_action(self):
         client = Client()
-        response = client.get(u'/reservationActions/1')
-        self.assertEqual(response.data[0][u'ActionNotes'], u'This is action 1')
-        response = client.get(u'/reservationActions/2')
-        self.assertEqual(response.data[0][u'ActionNotes'], u'This is action 2')
-        response = client.get(u'/reservationActions/3')
+        response = client.get(u'/actionInventoryItems/1')
+        self.assertEqual(response.data[0][u'Description'], u'Item 1')
+        response = client.get(u'/actionInventoryItems/2')
+        self.assertEqual(response.data[0][u'Description'], u'Item 2')
+        response = client.get(u'/actionInventoryItems/3')
         self.assertEqual(response.status_code, 404)
 
     def test_can_delete_action(self):
