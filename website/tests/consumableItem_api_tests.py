@@ -1,5 +1,5 @@
 '''
-This file will test the Inventory Item API
+This file will test the Consumable Item API
 '''
 
 from os.path import abspath, dirname
@@ -16,7 +16,7 @@ from datetime import datetime
 import json
 
 
-class InventoryItemAPITest(TestCase):
+class ConsumableItemAPITest(TestCase):
     def setUp(self):
         generic_user = User.objects.create(pk=1, username='Test User 1')
         generic_action_type = ActionType.objects.create(pk=1, ActionTypeName="Action 1")
@@ -75,109 +75,100 @@ class InventoryItemAPITest(TestCase):
                                                        CollectionName="Collection 1",
                                                        CollectionDescription="")
 
-        generic_item_brand = ItemBrand.objects.create(BrandID=1,
-                                                      BrandName="Unit test brand")
+        ConsumableItem.objects.create(ItemID=1,
+                                      Description="Item 1",
+                                      CategoryID=generic_category,
+                                      StorageLocation=generic_location,
+                                      CollectionID=generic_collection,
+                                      Notes="Created by unit test",
+                                      Action=first_action,
+                                      ItemName="Consumable Item 1",
+                                      Quantity="5",
+                                      MinQuantity="2",
+                                      Cost="1.00")
 
-        generic_model = ItemModel.objects.create(ModelID=1,
-                                                 ModelDesignation="Unit test model")
-
-        generic_status = Status.objects.create(StatusID=1,
-                                               StatusDescription="Unit test")
-
-        InventoryItem.objects.create(ItemID=1,
-                                     Description="Item 1",
-                                     CategoryID=generic_category,
-                                     StorageLocation=generic_location,
-                                     CollectionID=generic_collection,
-                                     Notes="Created by unit test",
-                                     Action=first_action,
-                                     AlternateID=None,
-                                     BrandID=generic_item_brand,
-                                     ModelID=generic_model,
-                                     ParentItem=None,
-                                     StatusID=generic_status)
-
-        InventoryItem.objects.create(ItemID=2,
-                                     Description="Item 2",
-                                     CategoryID=generic_category,
-                                     StorageLocation=generic_location,
-                                     CollectionID=generic_collection,
-                                     Notes="Created by unit test",
-                                     Action=second_action,
-                                     AlternateID=None,
-                                     BrandID=generic_item_brand,
-                                     ModelID=generic_model,
-                                     ParentItem=None,
-                                     StatusID=generic_status)
+        ConsumableItem.objects.create(ItemID=2,
+                                      Description="Item 2",
+                                      CategoryID=generic_category,
+                                      StorageLocation=generic_location,
+                                      CollectionID=generic_collection,
+                                      Notes="Created by unit test",
+                                      Action=second_action,
+                                      ItemName="Consumable Item 2",
+                                      Quantity="5",
+                                      MinQuantity="2",
+                                      Cost="1.00")
 
     def test_api_urls_resolve_correctly(self):
-        found = resolve(u'/actionInventoryItems/1')
-        self.assertEqual(found.func, actionInventoryItems)
-        found = resolve(u'/inventoryItems/')
-        self.assertEqual(found.func, inventoryItemList)
-        found = resolve(u'/inventoryItems/1')
-        self.assertEqual(found.func, inventoryItemDetail)
+        found = resolve(u'/actionConsumableItems/1')
+        self.assertEqual(found.func, actionConsumableItems)
+        found = resolve(u'/consumableItems/')
+        self.assertEqual(found.func, consumableItemList)
+        found = resolve(u'/consumableItems/1')
+        self.assertEqual(found.func, consumableItemDetail)
 
-    def test_can_view_all_inventory_items(self):
+    def test_can_view_all_consumable_items(self):
         client = Client()
-        response = client.get(u'/inventoryItems/')
+        response = client.get(u'/consumableItems/')
         self.assertEqual(1, response.data[0][u'ItemID'])
         self.assertEqual(2, response.data[1][u'ItemID'])
 
     def test_can_add_new_inventory_item(self):
         client = Client()
-        response = client.post(u'/inventoryItems/', {u'Description': u'Item 3',
-                                                     u'CategoryID': u'1',
-                                                     u'StorageLocation': u'1',
-                                                     u'CollectionID': u'1',
-                                                     u'Notes': u'Created by a unit test',
-                                                     u'Action': u'1',
-                                                     u'BrandID': u'1',
-                                                     u'ModelID': u'1',
-                                                     u'StatusID': u'1'})
+        response = client.post(u'/consumableItems/', {u'Description': u'Item 3',
+                                                      u'CategoryID': u'1',
+                                                      u'StorageLocation': u'1',
+                                                      u'CollectionID': u'1',
+                                                      u'Notes': u'Created by a unit test',
+                                                      u'Action': u'1',
+                                                      u'ItemName': u'Consumable Item 3',
+                                                      u'Quantity': u'5',
+                                                      u'MinQuantity': u'2',
+                                                      u'Cost': u'1.00'})
         self.assertEqual(3, response.data[u'ItemID'])
-        self.assertEqual(u'Created by a unit test', response.data[u'Notes'])
+        self.assertEqual(u'Consumable Item 3', response.data[u'ItemName'])
         self.assertEqual(201, response.status_code)
 
     def test_can_view_one_item(self):
         client = Client()
-        response = client.get(u'/inventoryItems/1')
+        response = client.get(u'/consumableItems/1')
         self.assertEqual(1, response.data[u'ItemID'])
-        response = client.get(u'/inventoryItems/2')
+        response = client.get(u'/consumableItems/2')
         self.assertEqual(2, response.data[u'ItemID'])
 
     def test_can_edit_inventory_item(self):
         client = Client()
-        response = client.put(u'/inventoryItems/2',
-                              data=json.dumps({u'Description': u'Updated item 2',
+        response = client.put(u'/consumableItems/2',
+                              data=json.dumps({u'Description': u'Item 2, updated',
                                                u'CategoryID': u'1',
                                                u'StorageLocation': u'1',
                                                u'CollectionID': u'1',
                                                u'Notes': u'Created by a unit test',
-                                               u'Action': u'2',
-                                               u'BrandID': u'1',
-                                               u'ModelID': u'1',
-                                               u'StatusID': u'1'}),
+                                               u'Action': u'1',
+                                               u'ItemName': u'Consumable Item 3',
+                                               u'Quantity': u'5',
+                                               u'MinQuantity': u'2',
+                                               u'Cost': u'1.00'}),
                               content_type='application/json')
         self.assertEqual(200, response.status_code)
-        response = client.get(u'/inventoryItems/2')
-        self.assertEqual(u'Updated item 2', response.data[u'Description'])
+        response = client.get(u'/consumableItems/2')
+        self.assertEqual(u'Item 2, updated', response.data[u'Description'])
 
     def test_cant_view_nonexistent_action(self):
         client = Client()
-        response = client.get(u'/inventoryItems/3')
+        response = client.get(u'/consumableItems/3')
         self.assertEqual(404, response.status_code)
 
-    def test_can_get_inventory_items_from_action(self):
+    def test_can_get_consumable_items_from_action(self):
         client = Client()
-        response = client.get(u'/actionInventoryItems/1')
-        self.assertEqual(response.data[0][u'Description'], u'Item 1')
-        response = client.get(u'/actionInventoryItems/2')
-        self.assertEqual(response.data[0][u'Description'], u'Item 2')
-        response = client.get(u'/actionInventoryItems/3')
+        response = client.get(u'/actionConsumableItems/1')
+        self.assertEqual(response.data[0][u'ItemName'], u'Consumable Item 1')
+        response = client.get(u'/actionConsumableItems/2')
+        self.assertEqual(response.data[0][u'ItemName'], u'Consumable Item 2')
+        response = client.get(u'/actionConsumableItems/3')
         self.assertEqual(response.status_code, 404)
 
     def test_can_delete_action(self):
         client = Client()
-        response = client.delete(u'/inventoryItems/2')
+        response = client.delete(u'/consumableItems/2')
         self.assertEqual(204, response.status_code)
