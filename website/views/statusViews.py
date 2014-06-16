@@ -81,3 +81,20 @@ def statusDetail(request, pk, format=None):
     elif request.method == u'DELETE':
         status.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view([u'GET', u'POST'])
+def statusList(request, format=None):
+    '''
+    Retrieve a list of all Label Notes
+    '''
+    if request.method == u'GET':
+        states = Status.objects.all()
+        serializer = StatusSerializer(states, many=True)
+        return Response(serializer.data)
+    elif request.method == u'POST':
+        serializer = StatusSerializer(data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
