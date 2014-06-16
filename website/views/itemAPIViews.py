@@ -104,7 +104,7 @@ def consumableItemDetail(request, pk):
 
 
 @api_view([u'GET', u'POST'])
-def nonInventoryItemList(request, format=None):
+def nonInventoryItemList(request):
     '''
     Retrieve a list of all non Inventory items
     '''
@@ -121,7 +121,7 @@ def nonInventoryItemList(request, format=None):
 
 
 @api_view([u'GET', u'PUT', u'DELETE'])
-def nonInventoryItemDetail(request, pk, format=None):
+def nonInventoryItemDetail(request, pk):
     '''
     Retrieve, update or delete a non Inventory Item.
     '''
@@ -133,7 +133,7 @@ def nonInventoryItemDetail(request, pk, format=None):
         serializer = NonInventoryItemSerializer(nonInventoryItem)
         return Response(serializer.data)
     elif request.method == u'PUT':
-        serializer = InventoryItemSerializer(nonInventoryItem, data=request.DATA)
+        serializer = NonInventoryItemSerializer(nonInventoryItem, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
