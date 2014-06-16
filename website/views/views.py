@@ -278,38 +278,15 @@ def collectionList(request, format=None):
     '''
     Lists all Collections
     '''
-    # This checks if the method of a request is GET. Remember that
-    # when you want to retrieve data from the server, you use
-    # GET. When you just visit a website, that's a GET, for
-    # example. You can always check the "method" attribute of
-    # a request object in Django to get the type of request.
     if request.method == u'GET':
-        # Here we retrieve all of our Collection instances.
         collections = Collection.objects.all()
-        # Here we instantiate our CollectionSerializer. Note that
-        # we feed it many=True, so that it knows we are giving it
-        # more than one. all() returns a QuerySet object, not just
-        # a single instance.
         serializer = CollectionSerializer(collections, many=True)
-        # And here we return the serializer's data as JSON. See
-        # the JSONResponse function in views.py.
         return Response(serializer.data)
-    # If the method is POST...remember, we use POST for creating
-    # things on the server.
     elif request.method == u'POST':
-        # Create a serializer. Note that we are giving
-        # it the data, in JSON format.
         serializer = CollectionSerializer(data=request.DATA)
-        # We check if they sent us a valid Collection
-        # object.
         if serializer.is_valid():
-            # If so, save it to the DB
             serializer.save()
-            # Return the object they just sent, along with
-            # an appropriate HTTP status code.
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        # If it WASN'T a valid Collection they sent us, return
-        # an HTTP error code.
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view([u'GET', u'POST'])
@@ -355,21 +332,6 @@ def labelDetail(request, pk=None, ln=None, format=None):
         label.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-# @api_view([u'GET', u'POST'])
-# def reservationList(request, format=None):
-#     '''
-#     Retrieve a list of all Reservations
-#     '''
-#     if request.method == u'GET':
-#         reservations = Reservation.objects.all()
-#         serializer = ReservationSerializer(reservations, many=True)
-#         return Response(serializer.data)
-#     elif request.method == u'POST':
-#         serializer = ReservationSerializer(data=request.DATA)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view([u'GET', u'PUT', u'DELETE'])
 def reservationDetail(request, pk, format=None):
@@ -487,36 +449,6 @@ def statusList(request, format=None):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view([u'GET', u'PUT', u'DELETE'])
-def statusDetail(request, pk, format=None):
-    '''
-    Retrieve, update or delete a Status.
-    '''
-    # We will use try/except. If Django cannot find an object
-    # with the primary key or provided status name we give it using get(), it throws
-    # an error.
-    try:
-        if pk is not None:
-            status = Status.objects.get(StatusID=pk)
-        elif cn is not None:
-            status = Status.objects.get(StatusName=cn)
-    except Status.DoesNotExist:
-        # If we didn't find it, return a HTTP code of 404
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == u'GET':
-        serializer = StatusSerializer(status)
-        return Response(serializer.data)
-    elif request.method == u'PUT':
-        serializer = StatusSerializer(status, data=request.DATA)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == u'DELETE':
-        status.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @api_view([u'GET', u'POST'])
 def itemModelList(request):
@@ -717,43 +649,6 @@ def customerProfileDetail(request, uid=None):
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
-
-@api_view(['GET', 'POST'])
-def consumableItemList(request):
-    '''
-    This function handles retrieving a list of consumable items
-    or of creating a new one
-    '''
-    if request.method == u'GET':
-        all_items = ConsumableItem.objects.all()
-        serializer = ConsumableItemSerializer(all_items, many=True)
-        return Response(serializer.data)
-    elif request.method == u'POST':
-        serializer = ConsumableItemSerializer(data=request.DATA)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view([u'GET', u'PUT', u'DELETE'])
-def consumableItemDetail(request, pk):
-    try:
-        current_model = ConsumableItem.objects.get(ItemID=pk)
-    except ConsumableItem.DoesNotExist:
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-    if request.method == u'GET':
-        serializer = ConsumableItemSerializer(current_model)
-        return Response(serializer.data)
-    elif request.method == u'PUT':
-        serializer = ConsumableItemSerializer(current_model, data=request.DATA)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == u'DELETE':
-        current_model.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-
 @api_view([u'GET'])
 def itemHistoryDetail(request, fk):
     history = ItemHistory.objects.filter(ItemID=fk).order_by(u"ChangeDateTime").reverse()
@@ -772,9 +667,7 @@ def reservationHistoryDetail(request, fk):
 
 @api_view([u'GET'])
 def categoryHierarchy(request):
-
     #retrive a list of categories in a hierarchy structure
-
     if request.method == u'GET':
         root = Label.objects.get(pk=1)
 
@@ -790,7 +683,6 @@ def categoryHierarchy(request):
             return Label.objects.filter(ParentCategory=node.pk)
 
         tree = get_nodes(node=root)
-
         return HttpResponse(json.dumps(tree), content_type=u'application/json')
 
 
@@ -807,22 +699,22 @@ def autocomplete(request):
     elif request.GET[u'model'].lower() == u'model':
         r = ItemModel.objects.filter(ModelDesignation__icontains = request.GET[u'term'])
         for eachResult in r:
-            results.append({u'ModelID':eachResult.ModelID, u'ModelDesignation':eachResult.ModelDesignation})
+            results.append({u'ModelID': eachResult.ModelID, u'ModelDesignation':eachResult.ModelDesignation})
 
     elif request.GET[u'model'].lower() == u'collection':
         r = Collection.objects.filter(CollectionName__icontains = request.GET[u'term'])
         for eachResult in r:
-            results.append({u'CollectionID':eachResult.CollectionID, u'CollectionName': eachResult.CollectionName})
+            results.append({u'CollectionID': eachResult.CollectionID, u'CollectionName': eachResult.CollectionName})
 
     elif request.GET[u'model'].lower() == u'category':
         r = Label.objects.filter(LabelName__icontains = request.GET[u'term']).exclude(ParentCategory = None)
         for eachResult in r:
-            results.append({u'LabelID':eachResult.LabelID, u'LabelName': eachResult.LabelName})
+            results.append({u'LabelID': eachResult.LabelID, u'LabelName': eachResult.LabelName})
 
     elif request.GET[u'model'].lower() == u'collection':
         r = Label.objects.filter(CollectionName__icontains = request.GET[u'term'])
         for eachResult in r:
-            results.append({u'CollectionID':eachResult.CollectionID, u'CollectionName': eachResult.CollectionName})
+            results.append({u'CollectionID': eachResult.CollectionID, u'CollectionName': eachResult.CollectionName})
 
     return HttpResponse(json.dumps(results), content_type=u'application/json')
 
@@ -835,7 +727,6 @@ def checkAvailable(item, startTime, endTime):
         return true
     else:
         actions = Action.objects.filter(ActionID=[x.ActionID for x in actionItems])
-
         for action in actions:
             actionStartDate = datetime.strptime(action.startTime, "%d-%m-%Y %H:%M:%S")
             actionEndDate = datetime.strptime(action.endTime, "%d-%m-%Y %H:%M:%S")
@@ -848,29 +739,4 @@ def checkAvailable(item, startTime, endTime):
                 return false
             elif actionStartDate <= startDate and actionEndDate >= endDate:
                 return false
-
         return true
-
-
-@csrf_exempt
-def administerStatuses(request):
-    '''
-    This handles a request to display the form for administering statuses.
-    '''
-    return render(request, u'administer_statuses.html', {})
-
-
-@csrf_exempt
-def addNewStatusForm(request):
-    '''
-    This handles a request to display the adding a new status form.
-    '''
-    return render(request, u'forms/add_new_status_form.html', {})
-
-
-@csrf_exempt
-def chooseStatusToEditForm(request):
-    '''
-    This handles a request to display the edit form for statuses.
-    '''
-    return render(request, u'forms/choose_status_to_edit_form.html', {})

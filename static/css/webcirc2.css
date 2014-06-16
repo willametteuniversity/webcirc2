@@ -23,6 +23,7 @@ h1 {
  }
 
 label {
+
 }
 
 #mainblock {
@@ -96,7 +97,7 @@ label {
     margin-top: 10px;
 }
 
-.navbar {
-/*    background: none repeat scroll 0 0 #A3A3C2;
-    border: none; */
-}
+/* .navbar {
+    background: none repeat scroll 0 0 #333;
+    border: none;
+} */

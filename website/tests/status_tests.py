@@ -7,11 +7,12 @@ from django.test import TestCase
 from django.test.client import Client
 from django.http import HttpRequest
 # Import all of our views for testing
-from website.views.views import *
+from website.views.statusViews import *
 # Same for models
 from website.models import *
 from django.contrib.auth.models import User
- 
+
+
 class StatusAPITests(TestCase):
 
     def setUp(self):
@@ -23,7 +24,7 @@ class StatusAPITests(TestCase):
         response = c.get(u'/statuses/')
 
         self.assertEqual(u'Status1', response.data[0]['StatusDescription'])
-    	self.assertEqual(u'Status2', response.data[1]['StatusDescription'])
+        self.assertEqual(u'Status2', response.data[1]['StatusDescription'])
 
         found = resolve(u'/statuses/')
         self.assertEqual(found.func, statusList)
