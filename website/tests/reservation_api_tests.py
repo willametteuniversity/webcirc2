@@ -67,14 +67,35 @@ class ActionAPITest(TestCase):
                               ActionNotes="This is action 2",
                               Reservation=second_reservation)
 
-# test can get all reservations
-# test can get one reservation
-# test can create reservation
-# test can delete reservation
-# test can edit reservation
-# test can lookup by username
-# test can lookup by email
-# test can filter lookup by date
-# test can lookup owner by username
-# test can lookup owner by date
-# test can filter owner lookup by date
+    def test_can_get_all_reservations(self):
+        pass
+
+    def test_can_get_one_reservation(self):
+        pass
+
+    def test_can_create_reservation(self):
+        pass
+
+    def test_can_delete_reservation(self):
+        pass
+
+    def test_can_edit_reservation(self):
+        pass
+
+    def test_can_lookup_by_username(self):
+        pass
+
+    def test_can_lookup_by_email(self):
+        pass
+
+    def test_can_filter_lookup_by_date(self):
+        pass
+
+    def test_can_lookup_by_owner_email(self):
+        pass
+
+    def test_can_lookup_by_owner_username(self):
+        pass
+
+    def test_can_filter_owner_lookup_by_date(self):
+        pass
