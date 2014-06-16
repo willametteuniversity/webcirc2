@@ -4,7 +4,7 @@ html {
 body {
     height: 100%;
     margin: 0;
-/*    background-color: #E3E3D4; */
+    background-color: #C4BBBB
     /*background-image: url('/static/images/blackfelt.png');  #A3A3C2;*/
 }
 
@@ -16,11 +16,19 @@ h1 {
 }
 
 .panel-default > .panel-heading {
-
+    color: #AAAAAA;
+   /* color: #660000; */
+    background-color: #333333;
 }
- .panel-default > .panel-body {
 
- }
+.panel-default > .panel-body {
+    color: #090040;
+    background-color: #E8E1E1;
+}
+
+.help-block {
+    color: #333333;
+}
 
 label {
 
@@ -71,16 +79,16 @@ label {
 
 /* Begin section for site-wide nav-pills */
 .nav-pills > li.active > a {
-
+    background-color: #7D7575;
 }
 
 .nav-pills > li.active > a:hover, .nav-pills > li > a:hover {
-/* color: #FFFFFF; */
-
+   background-color: #7D7575;
 }
 .nav-pills > li > a {
-
+    color: #660000;
 }
+
 /* End site wide section for nav pills */
 
 /* This removes the annoying padding from around panel headers */

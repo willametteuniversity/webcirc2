@@ -6,13 +6,7 @@ from django.http import HttpResponse
 
 
 @api_view(['GET'])
-def reservationSearch(request, pk=None, username=None, em=None, start_date=None, end_date=None):
-    if pk is not None:
-        try:
-            reservation = Reservation.objects.get(ReservationID=pk) # move this to reservationDetail
-            return Response(ReservationSerializer(reservation).data, status=200)
-        except Reservation.DoesNotExist:
-            return Response(status=404)
+def reservationSearch(request, username=None, em=None, start_date=None, end_date=None):
     if em is not None:
         try:
             return Response(ReservationSerializer(Reservation.objects.filter(CustomerEmail=em), many=True).data, status=200)
@@ -59,6 +53,7 @@ def reservationList(request):
         return Response(ReservationSerializer(Reservation.objects.all(), many=True))
     elif request.method == u'POST':
         serializer = ReservationSerializer(data=request.DATA)
+        ## TODO: check if this reservation conflicts with building / item usage.
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
