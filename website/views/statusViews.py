@@ -53,33 +53,25 @@ def chooseStatusToEditForm(request):
 
 
 @api_view([u'GET', u'PUT', u'DELETE'])
-def statusDetail(request, pk, format=None):
+def statusDetail(request, pk):
     '''
     Retrieve, update or delete a Status.
     '''
-    # We will use try/except. If Django cannot find an object
-    # with the primary key or provided status name we give it using get(), it throws
-    # an error.
     try:
-        if pk is not None:
-            status = Status.objects.get(StatusID=pk)
-        elif cn is not None:
-            status = Status.objects.get(StatusName=cn)
+        current_status = Status.objects.get(StatusID=pk)
     except Status.DoesNotExist:
-        # If we didn't find it, return a HTTP code of 404
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
-
     if request.method == u'GET':
-        serializer = StatusSerializer(status)
+        serializer = StatusSerializer(current_status)
         return Response(serializer.data)
     elif request.method == u'PUT':
-        serializer = StatusSerializer(status, data=request.DATA)
+        serializer = StatusSerializer(current_status, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == u'DELETE':
-        status.delete()
+        current_status.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -93,6 +85,7 @@ def statusList(request, format=None):
         serializer = StatusSerializer(states, many=True)
         return Response(serializer.data)
     elif request.method == u'POST':
+        print request.DATA
         serializer = StatusSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()

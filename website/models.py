@@ -36,6 +36,7 @@ class Image(models.Model):
 
 class Status(models.Model):
     StatusID = models.AutoField(primary_key=True)
+    StatusName = models.CharField(max_length=500)
     StatusDescription = models.CharField(max_length=500)
 
 

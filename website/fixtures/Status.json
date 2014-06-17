@@ -4,21 +4,24 @@
         "model": "website.Status",
         "pk": 1,
         "fields": {
-            "StatusDescription" : "Status1"
+            "StatusName": "Status 1",
+            "StatusDescription" : "First Status"
         }  
     },
     {
         "model": "website.Status",
         "pk": 2,
         "fields": {
-            "StatusDescription" : "Status2"
+            "StatusName": "Status 2",
+            "StatusDescription" : "Second Status"
         }  
     },
     {
         "model": "website.Status",
         "pk": 3,
         "fields": {
-            "StatusDescription" : "Status3"
+            "StatusName": "Status 3",
+            "StatusDescription" : "Third status"
         }  
     }
 ]

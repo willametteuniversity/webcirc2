@@ -59,12 +59,23 @@ class ActionAPITest(TestCase):
         Action.objects.create(ActionID=2,
                               AssignedOperatorID=generic_user,
                               ActionTypeID=generic_action_type,
-                              StartTime=datetime.strptime('Jun 1 2014 1:00PM', '%b %d %Y %I:%M%p'),
-                              EndTime=datetime.strptime('Jun 1 2014 3:00PM', '%b %d %Y %I:%M%p'),
+                              StartTime=datetime.strptime('Jun 3 2014 1:00PM', '%b %d %Y %I:%M%p'),
+                              EndTime=datetime.strptime('Jun 3 2014 3:00PM', '%b %d %Y %I:%M%p'),
                               Origin=generic_location,
                               Destination=generic_location,
                               ActionStatus="",
                               ActionNotes="This is action 2",
+                              Reservation=second_reservation)
+
+        Action.objects.create(ActionID=3,
+                              AssignedOperatorID=generic_user,
+                              ActionTypeID=generic_action_type,
+                              StartTime=datetime.strptime('Jun 7 2014 1:00PM', '%b %d %Y %I:%M%p'),
+                              EndTime=datetime.strptime('Jun 7 2014 3:00PM', '%b %d %Y %I:%M%p'),
+                              Origin=generic_location,
+                              Destination=generic_location,
+                              ActionStatus="",
+                              ActionNotes="This is action 3",
                               Reservation=second_reservation)
 
     def test_can_get_all_reservations(self):
