@@ -45,3 +45,11 @@ def actionDetail(request, pk):
     elif request.method == u'DELETE':
         action.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+# TODO: add views to add / remove action from resevation.
+# Then, building things from the client goes like this:
+# 1) look up the inv item's pks
+# 2) create new action objects
+# 3) add the items pks to those actions
+# 4) create the final reservation object
+# 5) add in all the actions

@@ -6,8 +6,6 @@ python manage.py loaddata Reservation
 python manage.py loaddata Location
 python manage.py loaddata Label
 python manage.py loaddata ItemModel
-python manage.py loaddata InventoryItem
-python manage.py loaddata ItemHistory
 python manage.py loaddata ItemBrand
 python manage.py loaddata InstitutionalDepartment
 python manage.py loaddata CustomerProfile
@@ -17,3 +15,5 @@ python manage.py loaddata ActionType
 python manage.py loaddata Action
 python manage.py loaddata NonInventoryItem
 python manage.py loaddata ConsumableItem
+python manage.py loaddata InventoryItem
+python manage.py loaddata ItemHistory

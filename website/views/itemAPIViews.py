@@ -5,7 +5,7 @@ from rest_framework import status
 from django.http import HttpResponse
 
 
-@api_view(['Get'])
+@api_view([u'GET'])
 def actionInventoryItems(request, pk):
     try:
         return Response(InventoryItemSerializer(Action.objects.get(ActionID=pk).inventoryitem_set.all(), many=True).data, status=200)
@@ -13,7 +13,35 @@ def actionInventoryItems(request, pk):
         return Response(status=404)
 
 
-@api_view(['Get'])
+@api_view([u'POST'])
+def addInventoryItemtoAction(request, pk):
+    try:
+        item = InventoryItem.objects.get(pk=pk)
+        action = Action.objects.get(pk=request.POST['action'])
+    except (InventoryItem.DoesNotExist, Action.DoesNotExist):
+        return Response(status=404)
+    try:
+        action.inventoryitem_set.add(item)
+    except:
+        return Response(status=500)
+    return Response(status=201)
+
+
+@api_view([u'POST'])
+def removeInventoryItemfromAction(request, pk):
+    try:
+        item = InventoryItem.objects.get(pk=pk)
+        action = Action.objects.get(pk=request.POST['action'])
+    except (InventoryItem.DoesNotExist, Action.DoesNotExist):
+        return Response(status=404)
+    try:
+        action.inventoryitem_set.remove(item)
+    except:
+        return Response(status=500)
+    return Response(status=201)
+
+
+@api_view([u'GET'])
 def actionConsumableItems(request, pk):
     try:
         return Response(ConsumableItemSerializer(Action.objects.get(ActionID=pk).consumableitem_set.all(), many=True).data, status=200)
@@ -21,12 +49,68 @@ def actionConsumableItems(request, pk):
         return Response(status=404)
 
 
-@api_view(['Get'])
+@api_view([u'POST'])
+def addConsumableItemtoAction(request, pk):
+    try:
+        item = ConsumableItem.objects.get(pk=pk)
+        action = Action.objects.get(pk=request.POST['action'])
+    except (ConsumableItem.DoesNotExist, Action.DoesNotExist):
+        return Response(status=404)
+    try:
+        action.inventoryitem_set.add(item)
+    except:
+        return Response(status=500)
+    return Response(status=201)
+
+
+@api_view([u'POST'])
+def removeConsumableItemfromAction(request, pk):
+    try:
+        item = ConsumableItem.objects.get(pk=pk)
+        action = Action.objects.get(pk=request.POST['action'])
+    except (ConsumableItem.DoesNotExist, Action.DoesNotExist):
+        return Response(status=404)
+    try:
+        action.inventoryitem_set.remove(item)
+    except:
+        return Response(status=500)
+    return Response(status=201)
+
+
+@api_view([u'GET'])
 def actionNonInventoryItems(request, pk):
     try:
         return Response(NonInventoryItemSerializer(Action.objects.get(ActionID=pk).noninventoryitem_set.all(), many=True).data, status=200)
     except Action.DoesNotExist:
         return Response(status=404)
+
+
+@api_view([u'POST'])
+def addNonInventoryItemtoAction(request, pk):
+    try:
+        item = NonInventoryItem.objects.get(pk=pk)
+        action = Action.objects.get(pk=request.POST['action'])
+    except (NonInventoryItem.DoesNotExist, Action.DoesNotExist):
+        return Response(status=404)
+    try:
+        action.inventoryitem_set.add(item)
+    except:
+        return Response(status=500)
+    return Response(status=201)
+
+
+@api_view([u'POST'])
+def removeNonInventoryItemfromAction(request, pk):
+    try:
+        item = NonInventoryItem.objects.get(pk=pk)
+        action = Action.objects.get(pk=request.POST['action'])
+    except (NonInventoryItem.DoesNotExist, Action.DoesNotExist):
+        return Response(status=404)
+    try:
+        action.inventoryitem_set.remove(item)
+    except:
+        return Response(status=500)
+    return Response(status=201)
 
 
 @api_view([u'GET', u'POST'])

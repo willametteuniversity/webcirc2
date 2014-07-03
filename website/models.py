@@ -72,12 +72,12 @@ class InventoryItem(models.Model):
     StorageLocation = models.ForeignKey(u'Location')
     CollectionID = models.ForeignKey(u'Collection')
     Notes = models.CharField(max_length=500, null=True, blank=True)
-    Action = models.ForeignKey(Action)
+    Action = models.ManyToManyField(Action, blank=True)
     AlternateID = models.ForeignKey(u'InventoryWidget', blank=True, null=True)
     BrandID = models.ForeignKey(u'ItemBrand')
     ModelID = models.ForeignKey(u'ItemModel')
     ParentItem = models.ForeignKey(u'InventoryItem', null=True, blank=True)
-    StatusID = models.ForeignKey(u'Status')
+    StatusID = models.ForeignKey(u'Status', null=True)
 
 
 class NonInventoryItem(models.Model):
@@ -87,7 +87,7 @@ class NonInventoryItem(models.Model):
     StorageLocation = models.ForeignKey(u'Location')
     CollectionID = models.ForeignKey(u'Collection')
     Notes = models.CharField(max_length=500, null=True, blank=True)
-    Action = models.ForeignKey(Action)
+    Action = models.ManyToManyField(Action, blank=True)
     Quantity = models.IntegerField(default=0)
 
 
@@ -98,7 +98,7 @@ class ConsumableItem(models.Model):
     StorageLocation = models.ForeignKey(u'Location')
     CollectionID = models.ForeignKey(u'Collection')
     Notes = models.CharField(max_length=500, null=True, blank=True)
-    Action = models.ForeignKey(Action)
+    Action = models.ManyToManyField(Action, blank=True)
     ItemName = models.CharField(max_length=100)
     Quantity = models.IntegerField(default=0)
     MinQuantity = models.IntegerField(default=0)

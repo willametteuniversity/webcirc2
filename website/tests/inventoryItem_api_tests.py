@@ -84,31 +84,35 @@ class InventoryItemAPITest(TestCase):
         generic_status = Status.objects.create(StatusID=1,
                                                StatusDescription="Unit test")
 
-        InventoryItem.objects.create(ItemID=1,
-                                     Description="Item 1",
-                                     CategoryID=generic_category,
-                                     StorageLocation=generic_location,
-                                     CollectionID=generic_collection,
-                                     Notes="Created by unit test",
-                                     Action=first_action,
-                                     AlternateID=None,
-                                     BrandID=generic_item_brand,
-                                     ModelID=generic_model,
-                                     ParentItem=None,
-                                     StatusID=generic_status)
+        item1 = InventoryItem.objects.create(ItemID=1,
+                                             Description="Item 1",
+                                             CategoryID=generic_category,
+                                             StorageLocation=generic_location,
+                                             CollectionID=generic_collection,
+                                             Notes="Created by unit test",
+                                             #Action=None,
+                                             AlternateID=None,
+                                             BrandID=generic_item_brand,
+                                             ModelID=generic_model,
+                                             ParentItem=None,
+                                             StatusID=generic_status)
 
-        InventoryItem.objects.create(ItemID=2,
-                                     Description="Item 2",
-                                     CategoryID=generic_category,
-                                     StorageLocation=generic_location,
-                                     CollectionID=generic_collection,
-                                     Notes="Created by unit test",
-                                     Action=second_action,
-                                     AlternateID=None,
-                                     BrandID=generic_item_brand,
-                                     ModelID=generic_model,
-                                     ParentItem=None,
-                                     StatusID=generic_status)
+        item2 = InventoryItem.objects.create(ItemID=2,
+                                             Description="Item 2",
+                                             CategoryID=generic_category,
+                                             StorageLocation=generic_location,
+                                             CollectionID=generic_collection,
+                                             Notes="Created by unit test",
+                                           #  Action=None,
+                                             AlternateID=None,
+                                             BrandID=generic_item_brand,
+                                             ModelID=generic_model,
+                                             ParentItem=None,
+                                             StatusID=generic_status)
+
+        first_action.inventoryitem_set.add(item1)
+        first_action.inventoryitem_set.add(item2)
+        second_action.inventoryitem_set.add(item1)
 
     def test_api_urls_resolve_correctly(self):
         found = resolve(u'/actionInventoryItems/1')
@@ -172,8 +176,9 @@ class InventoryItemAPITest(TestCase):
         client = Client()
         response = client.get(u'/actionInventoryItems/1')
         self.assertEqual(response.data[0][u'Description'], u'Item 1')
+        self.assertEqual(response.data[1][u'Description'], u'Item 2')
         response = client.get(u'/actionInventoryItems/2')
-        self.assertEqual(response.data[0][u'Description'], u'Item 2')
+        self.assertEqual(response.data[0][u'Description'], u'Item 1')
         response = client.get(u'/actionInventoryItems/3')
         self.assertEqual(response.status_code, 404)
 
@@ -181,3 +186,13 @@ class InventoryItemAPITest(TestCase):
         client = Client()
         response = client.delete(u'/inventoryItems/2')
         self.assertEqual(204, response.status_code)
+
+    def test_can_add_item_to_action(self):
+        pass
+        # add item 2 to action 2
+        # check action 2 has both items
+
+    def test_can_remove_item_from_action(self):
+        pass
+        # remove item 1 from action 2
+        # check that action 2 only has item 2

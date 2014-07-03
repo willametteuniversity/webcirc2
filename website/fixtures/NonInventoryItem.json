@@ -8,7 +8,7 @@
             "StorageLocation": 1,
             "CollectionID": 1,
             "Notes": "What a cool item",
-            "Action": 1,
+            "Action": [1],
             "Quantity": 3
         }
     },
@@ -21,7 +21,7 @@
             "StorageLocation": 1,
             "CollectionID": 1,
             "Notes": "What a cool item",
-            "Action": 1,
+            "Action": [1],
             "Quantity": 3
         }
     }
