@@ -188,11 +188,16 @@ class InventoryItemAPITest(TestCase):
         self.assertEqual(204, response.status_code)
 
     def test_can_add_item_to_action(self):
-        pass
-        # add item 2 to action 2
-        # check action 2 has both items
+        client = Client()
+        response = client.post(u'/addInventoryItemtoAction/2', {u'action': u'2'})
+        self.assertEqual(201, response.status_code)
+        response = client.get(u'/actionInventoryItems/2')
+        self.assertEqual(response.data[0][u'Description'], u'Item 1')
+        self.assertEqual(response.data[1][u'Description'], u'Item 2')
 
     def test_can_remove_item_from_action(self):
-        pass
-        # remove item 1 from action 2
-        # check that action 2 only has item 2
+        client = Client()
+        response = client.post(u'/removeInventoryItemfromAction/1', {u'action': u'1'})
+        self.assertEqual(200, response.status_code)
+        response = client.get(u'/actionInventoryItems/1')
+        self.assertEqual(response.data[0][u'Description'], u'Item 2')

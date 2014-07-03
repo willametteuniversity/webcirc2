@@ -26,6 +26,7 @@ def addInventoryItemtoAction(request, pk):
         return Response(status=500)
     return Response(status=201)
 
+# TODO: make sure to call .save() after every db change?
 
 @api_view([u'POST'])
 def removeInventoryItemfromAction(request, pk):
@@ -38,7 +39,7 @@ def removeInventoryItemfromAction(request, pk):
         action.inventoryitem_set.remove(item)
     except:
         return Response(status=500)
-    return Response(status=201)
+    return Response(status=200)
 
 
 @api_view([u'GET'])
@@ -74,7 +75,7 @@ def removeConsumableItemfromAction(request, pk):
         action.inventoryitem_set.remove(item)
     except:
         return Response(status=500)
-    return Response(status=201)
+    return Response(status=200)
 
 
 @api_view([u'GET'])
@@ -110,7 +111,7 @@ def removeNonInventoryItemfromAction(request, pk):
         action.inventoryitem_set.remove(item)
     except:
         return Response(status=500)
-    return Response(status=201)
+    return Response(status=200)
 
 
 @api_view([u'GET', u'POST'])
