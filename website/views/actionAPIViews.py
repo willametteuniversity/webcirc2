@@ -13,6 +13,34 @@ def reservationActions(request, pk):
         return Response(status=404)
 
 
+@api_view(['POST'])
+def addActionToReservation(request, pk):
+    try:
+        action = Action.objects.get(pk=pk)
+        reservation = Reservation.objects.get(pk=request.POST['reservation'])
+    except (Action.DoesNotExist, Reservation.DoesNotExist):
+        return Response(status=404)
+    try:
+        reservation.action_set.add(action)
+    except:
+        return Response(status=500)
+    return Response(status=201)
+
+
+@api_view(['POST'])
+def removeActionFromReservation(request, pk):
+    try:
+        action = Action.objects.get(pk=pk)
+        reservation = Reservation.objects.get(pk=request.POST['reservation'])
+    except (Action.DoesNotExist, Reservation.DoesNotExist):
+        return Response(status=404)
+    try:
+        reservation.action_set.remove(action)
+    except:
+        return Response(status=500)
+    return Response(status=200)
+
+
 @api_view(['Get', 'POST'])
 def actionList(request):
     if request.method == u'GET':
@@ -46,10 +74,10 @@ def actionDetail(request, pk):
         action.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-# TODO: add views to add / remove action from resevation.
-# Then, building things from the client goes like this:
-# 1) look up the inv item's pks
-# 2) create new action objects
-# 3) add the items pks to those actions
-# 4) create the final reservation object
-# 5) add in all the actions
+# TODO: how to add form the client
+# Create the reservation, getting its pk
+#     for each action in the client
+#         create the action, getting its pk
+#         for each item attached
+#             add item to action
+#         add the action to the reservation

@@ -62,7 +62,7 @@ class Action(models.Model):
     Destination = models.ForeignKey(u'Location', related_name=u'action_destination')
     ActionStatus = models.CharField(max_length=500)
     ActionNotes = models.CharField(max_length=500)
-    Reservation = models.ForeignKey(Reservation)
+    Reservation = models.ManyToManyField(Reservation, blank=True)
 
 
 class InventoryItem(models.Model):

@@ -1,7 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from website.serializers import *
-from rest_framework import status
 from django.http import HttpResponse
 
 
@@ -50,14 +49,13 @@ def reservationOwnerSearch(request, username=None, em=None, start_date=None, end
 @api_view(['GET', 'POST'])
 def reservationList(request):
     if request.method == u'GET':
-        return Response(ReservationSerializer(Reservation.objects.all(), many=True))
+        return Response(ReservationSerializer(Reservation.objects.all(), many=True).data)
     elif request.method == u'POST':
         serializer = ReservationSerializer(data=request.DATA)
-        ## TODO: check if this reservation conflicts with building / item usage.
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=404)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -65,7 +63,7 @@ def reservationDetail(request, pk):
     try:
         reservation = Reservation.objects.get(ReservationID=pk)
     except Action.DoesNotExist:
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        return HttpResponse(status=404)
     if request.method == u'GET':
         return Response(ReservationSerializer(reservation).data)
     elif request.method == u'PUT':
@@ -73,7 +71,7 @@ def reservationDetail(request, pk):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=400)
     elif request.method == u'DELETE':
         reservation.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        return HttpResponse(status=204)

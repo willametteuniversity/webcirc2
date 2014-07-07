@@ -75,23 +75,25 @@ class NonInventoryItemAPITest(TestCase):
                                                        CollectionName="Collection 1",
                                                        CollectionDescription="")
 
-        NonInventoryItem.objects.create(ItemID=1,
+        item1 = NonInventoryItem.objects.create(ItemID=1,
                                         Description="Item 1",
                                         CategoryID=generic_category,
                                         StorageLocation=generic_location,
                                         CollectionID=generic_collection,
                                         Notes="Created by unit test",
-                                        Action=first_action,
                                         Quantity="5")
 
-        NonInventoryItem.objects.create(ItemID=2,
+        item2 = NonInventoryItem.objects.create(ItemID=2,
                                       Description="Item 2",
                                       CategoryID=generic_category,
                                       StorageLocation=generic_location,
                                       CollectionID=generic_collection,
                                       Notes="Created by unit test",
-                                      Action=second_action,
                                       Quantity="5")
+
+        first_action.noninventoryitem_set.add(item1)
+        first_action.noninventoryitem_set.add(item2)
+        second_action.noninventoryitem_set.add(item1)
 
     def test_api_urls_resolve_correctly(self):
         found = resolve(u'/actionNonInventoryItems/1')
@@ -142,7 +144,7 @@ class NonInventoryItemAPITest(TestCase):
         response = client.get(u'/nonInventoryItems/2')
         self.assertEqual(u'Item 2, updated', response.data[u'Description'])
 
-    def test_cant_view_nonexistent_action(self):
+    def test_cant_view_nonexistent_item(self):
         client = Client()
         response = client.get(u'/nonInventoryItems/3')
         self.assertEqual(404, response.status_code)
@@ -151,12 +153,28 @@ class NonInventoryItemAPITest(TestCase):
         client = Client()
         response = client.get(u'/actionNonInventoryItems/1')
         self.assertEqual(response.data[0][u'Description'], u'Item 1')
+        self.assertEqual(response.data[1][u'Description'], u'Item 2')
         response = client.get(u'/actionNonInventoryItems/2')
-        self.assertEqual(response.data[0][u'Description'], u'Item 2')
+        self.assertEqual(response.data[0][u'Description'], u'Item 1')
         response = client.get(u'/actionNonInventoryItems/3')
         self.assertEqual(response.status_code, 404)
 
-    def test_can_delete_action(self):
+    def test_can_delete_item(self):
         client = Client()
         response = client.delete(u'/nonInventoryItems/2')
         self.assertEqual(204, response.status_code)
+
+    def test_can_add_item_to_action(self):
+        client = Client()
+        response = client.post(u'/addNonInventoryItemtoAction/2', {u'action': u'2'})
+        self.assertEqual(201, response.status_code)
+        response = client.get(u'/actionNonInventoryItems/2')
+        self.assertEqual(response.data[0][u'Description'], u'Item 1')
+        self.assertEqual(response.data[1][u'Description'], u'Item 2')
+
+    def test_can_remove_item_from_action(self):
+        client = Client()
+        response = client.post(u'/removeNonInventoryItemfromAction/1', {u'action': u'1'})
+        self.assertEqual(200, response.status_code)
+        response = client.get(u'/actionNonInventoryItems/1')
+        self.assertEqual(response.data[0][u'Description'], u'Item 1')

@@ -15,6 +15,7 @@ def actionInventoryItems(request, pk):
 
 @api_view([u'POST'])
 def addInventoryItemtoAction(request, pk):
+    ## TODO: Make sure the item doesn't conflict
     try:
         item = InventoryItem.objects.get(pk=pk)
         action = Action.objects.get(pk=request.POST['action'])
@@ -58,7 +59,7 @@ def addConsumableItemtoAction(request, pk):
     except (ConsumableItem.DoesNotExist, Action.DoesNotExist):
         return Response(status=404)
     try:
-        action.inventoryitem_set.add(item)
+        action.consumableitem_set.add(item)
     except:
         return Response(status=500)
     return Response(status=201)
@@ -94,7 +95,7 @@ def addNonInventoryItemtoAction(request, pk):
     except (NonInventoryItem.DoesNotExist, Action.DoesNotExist):
         return Response(status=404)
     try:
-        action.inventoryitem_set.add(item)
+        action.noninventoryitem_set.add(item)
     except:
         return Response(status=500)
     return Response(status=201)

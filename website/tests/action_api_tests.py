@@ -44,7 +44,7 @@ class ActionAPITest(TestCase):
                                                         ReservationNotes="",
                                                         EventTitle="")
 
-        Action.objects.create(ActionID=1,
+        action1 = Action.objects.create(ActionID=1,
                               AssignedOperatorID=generic_user,
                               ActionTypeID=generic_action_type,
                               StartTime=datetime.strptime('Jun 1 2014 1:00PM', '%b %d %Y %I:%M%p'),
@@ -52,10 +52,9 @@ class ActionAPITest(TestCase):
                               Origin=generic_location,
                               Destination=generic_location,
                               ActionStatus="",
-                              ActionNotes="This is action 1",
-                              Reservation=first_reservation)
+                              ActionNotes="This is action 1")
 
-        Action.objects.create(ActionID=2,
+        action2 = Action.objects.create(ActionID=2,
                               AssignedOperatorID=generic_user,
                               ActionTypeID=generic_action_type,
                               StartTime=datetime.strptime('Jun 1 2014 1:00PM', '%b %d %Y %I:%M%p'),
@@ -63,8 +62,10 @@ class ActionAPITest(TestCase):
                               Origin=generic_location,
                               Destination=generic_location,
                               ActionStatus="",
-                              ActionNotes="This is action 2",
-                              Reservation=second_reservation)
+                              ActionNotes="This is action 2")
+
+        first_reservation.action_set.add(action1)
+        second_reservation.action_set.add(action2)
 
     def test_api_urls_resolve_correctly(self):
         found = resolve(u'/actions/')
@@ -137,3 +138,20 @@ class ActionAPITest(TestCase):
         client = Client()
         response = client.delete(u'/actions/2')
         self.assertEqual(204, response.status_code)
+
+    def test_can_add_action_to_reservation(self):
+        client = Client()
+        response = client.post(u'/addActionToReservation/2', {u'reservation': u'1'})
+        self.assertEqual(201, response.status_code)
+        response = client.get(u'/reservationActions/1')
+        self.assertEqual(response.data[0][u'ActionNotes'], u'This is action 1')
+        self.assertEqual(response.data[1][u'ActionNotes'], u'This is action 2')
+
+    def test_can_remove_action_from_reservation(self):
+        client = Client()
+        response = client.post(u'/addActionToReservation/2', {u'reservation': u'1'})
+        self.assertEqual(201, response.status_code)
+        response = client.post(u'/removeActionFromReservation/1', {u'reservation': u'1'})
+        self.assertEqual(200, response.status_code)
+        response = client.get(u'/reservationActions/1')
+        self.assertEqual(response.data[0][u'ActionNotes'], u'This is action 2')

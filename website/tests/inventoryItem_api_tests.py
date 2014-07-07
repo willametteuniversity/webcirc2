@@ -90,7 +90,6 @@ class InventoryItemAPITest(TestCase):
                                              StorageLocation=generic_location,
                                              CollectionID=generic_collection,
                                              Notes="Created by unit test",
-                                             #Action=None,
                                              AlternateID=None,
                                              BrandID=generic_item_brand,
                                              ModelID=generic_model,
@@ -103,7 +102,6 @@ class InventoryItemAPITest(TestCase):
                                              StorageLocation=generic_location,
                                              CollectionID=generic_collection,
                                              Notes="Created by unit test",
-                                           #  Action=None,
                                              AlternateID=None,
                                              BrandID=generic_item_brand,
                                              ModelID=generic_model,
@@ -167,7 +165,7 @@ class InventoryItemAPITest(TestCase):
         response = client.get(u'/inventoryItems/2')
         self.assertEqual(u'Updated item 2', response.data[u'Description'])
 
-    def test_cant_view_nonexistent_action(self):
+    def test_cant_view_nonexistent_item(self):
         client = Client()
         response = client.get(u'/inventoryItems/3')
         self.assertEqual(404, response.status_code)
@@ -182,7 +180,7 @@ class InventoryItemAPITest(TestCase):
         response = client.get(u'/actionInventoryItems/3')
         self.assertEqual(response.status_code, 404)
 
-    def test_can_delete_action(self):
+    def test_can_delete_item(self):
         client = Client()
         response = client.delete(u'/inventoryItems/2')
         self.assertEqual(204, response.status_code)

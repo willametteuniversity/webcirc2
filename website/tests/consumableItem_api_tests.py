@@ -75,29 +75,31 @@ class ConsumableItemAPITest(TestCase):
                                                        CollectionName="Collection 1",
                                                        CollectionDescription="")
 
-        ConsumableItem.objects.create(ItemID=1,
+        item1 = ConsumableItem.objects.create(ItemID=1,
                                       Description="Item 1",
                                       CategoryID=generic_category,
                                       StorageLocation=generic_location,
                                       CollectionID=generic_collection,
                                       Notes="Created by unit test",
-                                      Action=first_action,
                                       ItemName="Consumable Item 1",
                                       Quantity="5",
                                       MinQuantity="2",
                                       Cost="1.00")
 
-        ConsumableItem.objects.create(ItemID=2,
+        item2 = ConsumableItem.objects.create(ItemID=2,
                                       Description="Item 2",
                                       CategoryID=generic_category,
                                       StorageLocation=generic_location,
                                       CollectionID=generic_collection,
                                       Notes="Created by unit test",
-                                      Action=second_action,
                                       ItemName="Consumable Item 2",
                                       Quantity="5",
                                       MinQuantity="2",
                                       Cost="1.00")
+
+        first_action.consumableitem_set.add(item1)
+        first_action.consumableitem_set.add(item2)
+        second_action.consumableitem_set.add(item1)
 
     def test_api_urls_resolve_correctly(self):
         found = resolve(u'/actionConsumableItems/1')
@@ -163,8 +165,9 @@ class ConsumableItemAPITest(TestCase):
         client = Client()
         response = client.get(u'/actionConsumableItems/1')
         self.assertEqual(response.data[0][u'ItemName'], u'Consumable Item 1')
+        self.assertEqual(response.data[1][u'ItemName'], u'Consumable Item 2')
         response = client.get(u'/actionConsumableItems/2')
-        self.assertEqual(response.data[0][u'ItemName'], u'Consumable Item 2')
+        self.assertEqual(response.data[0][u'ItemName'], u'Consumable Item 1')
         response = client.get(u'/actionConsumableItems/3')
         self.assertEqual(response.status_code, 404)
 
@@ -172,3 +175,18 @@ class ConsumableItemAPITest(TestCase):
         client = Client()
         response = client.delete(u'/consumableItems/2')
         self.assertEqual(204, response.status_code)
+
+    def test_can_add_item_to_action(self):
+        client = Client()
+        response = client.post(u'/addConsumableItemtoAction/2', {u'action': u'2'})
+        self.assertEqual(201, response.status_code)
+        response = client.get(u'/actionConsumableItems/2')
+        self.assertEqual(response.data[0][u'Description'], u'Item 1')
+        self.assertEqual(response.data[1][u'Description'], u'Item 2')
+
+    def test_can_remove_item_from_action(self):
+        client = Client()
+        response = client.post(u'/removeConsumableItemfromAction/1', {u'action': u'1'})
+        self.assertEqual(200, response.status_code)
+        response = client.get(u'/actionConsumableItems/1')
+        self.assertEqual(response.data[0][u'Description'], u'Item 1')
