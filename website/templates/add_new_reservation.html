@@ -82,32 +82,20 @@
             <div id="newReservationNewActionDiv" class="panel panel-default">
                 <div class="panel-heading">
                     <h2 class="panel-title">
-                        Add Actions
+                        New Action
                     </h2>
                 </div>
                 <div class="panel-body">
-                    <span class="help-block">Here you can add actions to reservation.</span>
                     <form role="form" class="form-horizontal">
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="actionType">Action Type:</label>
                             <div class="col-sm-8">
                                 <select class="form-control" id="actionType">
-                                    <option value="pickup">Pickup</option>
-                                    <option value="dropoff">Dropoff</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="actionOperator">Operator:</label>
-                            <div class="col-sm-8">
-                                <select class="form-control" id="actionOperator">
-                                    <option value="operator1">Operator 1</option>
-                                    <option value="operator2">Operator 2</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="startDateTime">Start:</label>
+                            <label class="col-sm-3 control-label" for="startDateTime">Earliest:</label>
                             <div class="col-sm-8">
                                 <div class="input-group date" id="startDateTime">
                                     <input type='text' class="form-control" id="startDateTime" />
@@ -116,7 +104,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="endDateTime">End:</label>
+                            <label class="col-sm-3 control-label" for="endDateTime">Latest:</label>
                             <div class="col-sm-8">
                                 <div class="input-group date" id="endDateTime">
                                     <input type='text' class="form-control" />
@@ -128,8 +116,6 @@
                             <label class="col-sm-3 control-label" for="actionOrigin">Origin:</label>
                             <div class="col-sm-8">
                                 <select id="actionOrigin" class="form-control">
-                                    <option value="origin1">Origin 1</option>
-                                    <option value="origin2">Origin 2</option>
                                 </select>
                             </div>
                         </div>
@@ -137,8 +123,6 @@
                             <label class="col-sm-3 control-label" for="actionDestination">Destination:</label>
                             <div class="col-sm-8">
                                 <select id="actionDestination" class="form-control">
-                                    <option value="destination1">Destination 1</option>
-                                    <option value="destination2">Destination 2</option>
                                 </select>
                             </div>
                         </div>
@@ -157,21 +141,12 @@
                     <h2 class="panel-title">View/Remove Actions from the Reservation</h2>
                 </div>
                 <div class="panel-body">
-                    <span id="newReservationActionsHelp" class="help-block">The actions you create appear below. Click the Del button to remove them.</span>
+                    <span id="actionHelpText" class="help-block">Actions will appear here when you create them</span>
                     <div id="newReservationActions">
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div id="newReservationEquipmentDiv" class="panel panel-default">
-                <div class="panel-heading">
-                    <h2 class="panel-title">Equipment In This Reservation</h2>
-                </div>
-                <div class="panel-body">
-                    <div id="newReservationEquipment"></div>
-                    <div id="newReservationEquipmentBtns" class="col-sm-5">
-                        <button id="showAddEquipmentModalBtn" type="button" class="btn btn-default">Add Equipment</button>
+                    <div id="newReservationActionsBtns">
+                        <button id="showAddEquipmentModalBtn" type="button" class="btn btn-default pull-left">Add Equipment</button>
+                        <button id="createReservationBtn" type="button" class="btn btn-default pull-right">Create Reservation</button>
                     </div>
                 </div>
             </div>

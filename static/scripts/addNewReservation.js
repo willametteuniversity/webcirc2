@@ -46,8 +46,6 @@ steal(function() {
                 populateInfo(User);
             });
         }
-
-
     });
 
     $("#mainrow").on("click", "#newReservationNewCustomerBtn", function(event) {
@@ -70,11 +68,20 @@ steal(function() {
         var actionEnd = $("#endDateTime").data('date');
         var actionOrigin = $("#actionOrigin").val();
         var actionDestination = $("#actionDestination").val();
-        $("#newReservationActions").append('<div class="well reservationActionDiv"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn"><span class="glyphicon glyphicon-remove"></span></button><div>'+actionType+' by '+actionOperator+' from '+actionStart+' to '+actionEnd
-            +' origin '+actionOrigin+' to '+actionDestination+'</div>' +
-            '<div class="equipmentAssignedToActionDiv"></div></div>');
 
+
+        $("#newReservationActions").append('<div class="well reservationActionDiv" data-actiontype="'+actionType+'"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn"><span class="glyphicon glyphicon-remove"></span></button><div><font size=6>'+actionType+'</font><br /><font size=2>Between '+actionStart+' and '+actionEnd+'</font><br /><font size=4>From '+actionOrigin+' to '+actionDestination+'</font><br />Equipment:</font><br /><ul><li>Item 1</li></ul></div>' +'<div class="equipmentAssignedToActionDiv"></div></div>');
     });
+
+/*
+* TODO: how to add form the client
+* Create the reservation, getting its pk
+*     for each action in $("#newReservationActions")
+*         create the action, getting its pk
+*         for each item attached
+*             add item to action
+*         add the action to the reservation
+*/
 
     $("#mainrow").on("click", ".del-action-btn", function(event) {
         /**

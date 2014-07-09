@@ -119,18 +119,18 @@ class ItemModel(models.Model):
     ModelDesignation = models.CharField(max_length=500)
 
 
-class Location(models.Model):
-    LocationID = models.AutoField(primary_key=True)
-    BuildingID = models.ForeignKey(u'Building')
-    RoomNumber = models.CharField(max_length=500)
-    LocationDescription = models.CharField(max_length=500)
-
-
 class Building(models.Model):
     BuildingID = models.AutoField(primary_key=True)
     BuildingCode = models.CharField(max_length=20)
     # Alternate Key
     BuildingName = models.CharField(max_length=500)
+
+
+class Location(models.Model):
+    LocationID = models.AutoField(primary_key=True)
+    BuildingID = models.ForeignKey(Building)
+    RoomNumber = models.CharField(max_length=500)
+    LocationDescription = models.CharField(max_length=500)
 
 
 class Restriction(models.Model):

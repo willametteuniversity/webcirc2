@@ -73,11 +73,3 @@ def actionDetail(request, pk):
     elif request.method == u'DELETE':
         action.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-
-# TODO: how to add form the client
-# Create the reservation, getting its pk
-#     for each action in the client
-#         create the action, getting its pk
-#         for each item attached
-#             add item to action
-#         add the action to the reservation

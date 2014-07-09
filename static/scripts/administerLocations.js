@@ -28,14 +28,6 @@ steal(function() {
         });
     }
 
-    var findBuildingByID = function(all_buildings, id) {
-        for (var i=0 ; i < all_buildings.length ; i++) {
-            if (all_buildings[i].BuildingID == id) {
-                return all_buildings[i].BuildingName
-            }
-        }
-    }
-
     var updateLocationSelect = function() {
         $("#existingLocationNameSelect").empty();
         $("#existingLocationNameSelect").append("<option value='None' selected='selected'>Choose a Location...</option>");

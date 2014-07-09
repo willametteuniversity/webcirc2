@@ -16,7 +16,7 @@ from datetime import datetime
 import json
 
 
-class ActionAPITest(TestCase):
+class ReservationAPITest(TestCase):
     def setUp(self):
         generic_user = User.objects.create(pk=1, username='Test User 1')
         generic_action_type = ActionType.objects.create(pk=1, ActionTypeName="Action 1")
@@ -130,7 +130,9 @@ class ActionAPITest(TestCase):
                               content_type='application/json')
         self.assertEqual(200, response.status_code)
         response = client.get(u'/reservations/2')
-        self.assertEqual(u'Test, edited', response.data[u'ReservationNotes'])
+        self.assertEqual(u'Test, edited', response.data[u'ReservationNotes'])\
+
+    # Todo: Create lookup views
     # Lookup views:
 
     def test_can_lookup_by_username(self):
