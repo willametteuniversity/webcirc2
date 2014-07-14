@@ -63,14 +63,16 @@ steal(function() {
         event.preventDefault();
         steal.dev.log("Appending new action");
         var actionType = $("#actionType").val();
+        var actionTypeName = $("#actionType option:selected").text();
         var actionOperator = $("#actionOperator").val();
         var actionStart = $("#startDateTime").data('date');
         var actionEnd = $("#endDateTime").data('date');
         var actionOrigin = $("#actionOrigin").val();
+        var actionOriginName = $("#actionOrigin option:selected").text();
         var actionDestination = $("#actionDestination").val();
+        var actionDestinationName = $("#actionDestination option:selected").text();
 
-
-        $("#newReservationActions").append('<div class="well reservationActionDiv" data-actiontype="'+actionType+'"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn"><span class="glyphicon glyphicon-remove"></span></button><div><font size=6>'+actionType+'</font><br /><font size=2>Between '+actionStart+' and '+actionEnd+'</font><br /><font size=4>From '+actionOrigin+' to '+actionDestination+'</font><br />Equipment:</font><br /><ul><li>Item 1</li></ul></div>' +'<div class="equipmentAssignedToActionDiv"></div></div>');
+        $("#newReservationActions").append('<div id="individualAction" class="well reservationActionDiv" data-actiontype="'+actionType+'" data-origin="'+actionOrigin+'" data-destination="'+actionDestination+'" data-start="'+actionStart+'" data-end="'+actionEnd+'"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn"><span class="glyphicon glyphicon-remove"></span></button><div><font size=6>'+actionTypeName+'</font><br /><font size=2>Between '+actionStart+' and '+actionEnd+'</font><br /><font size=4>From '+actionOriginName+' to '+actionDestinationName+'<br />Equipment:</font><br /><ul id="equipmentList"><li>Item 1</li></ul></div>' +'<div class="equipmentAssignedToActionDiv"></div></div>');
     });
 
 /*
@@ -98,6 +100,10 @@ steal(function() {
          */
         steal.dev.log("Bringing up add equipment modal");
         $("#addEquipmentModal").modal('show');
+        $("#newReservationActions").children("#individualAction").each( function () {
+            steal.dev.log(jQuery.data($(this),"actiontype"));
+        });
+        $("#applyToAllActionsChkDiv").append('<br /><input type="checkbox" id="testActionBox" value="applyToTestAction" checked/>Test action')
     });
 
     $("#mainrow").on("click", "#addEquipmentBtn", function(event) {

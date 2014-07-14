@@ -54,7 +54,7 @@ class Reservation(models.Model):
 
 class Action(models.Model):
     ActionID = models.AutoField(primary_key=True)
-    AssignedOperatorID = models.ForeignKey(User)
+    AssignedOperatorID = models.ForeignKey(User)    # User who created the reservation
     ActionTypeID = models.ForeignKey(u'ActionType')
     StartTime = models.DateTimeField()
     EndTime = models.DateTimeField()
