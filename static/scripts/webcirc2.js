@@ -291,6 +291,7 @@ $(document).ready(function() {
             $("#startDateTime").datetimepicker();
             $("#endDateTime").datetimepicker();
             $("#newReservationActions").sortable();
+
             fillNewReservation();
         });
     });

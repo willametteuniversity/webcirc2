@@ -11,10 +11,25 @@ steal(function() {
                 numResults += 1;
             }
         });
-        if (numResults > 0) {
+        if (numResults > 1) {
+            $("#multiUsersFoundModal").show();
             for (var x = 0; x < numResults; x++) {
+                $("#multiUsersFoundTable > tbody:last").append("<tr class=\"multiUserFoundResult\"><td>"+result[x].first_name+"</td><td>"+
+                result[x].last_name+"</td><td>"+result[x].email+"</td></tr>");
+
                 console.log(result[x]);
             }
+
+            $(".multiUserFoundResult").click(function(event) {
+                console.log($(event.target).parent());
+                var firstName  = $(event.target).parent().children('td').eq(0).html();
+                var lastName   = $(event.target).parent().children('td').eq(1).html();
+                var email      = $(event.target).parent().children('td').eq(2).html();
+                $("#customerFirstName").val(firstName);
+                $("#customerLastName").val(lastName);
+                $("#customerEmail").val(email);
+                $("#multiUsersFoundModal").hide();
+            });
         } else {
             console.log(result);
         }
@@ -32,10 +47,12 @@ steal(function() {
             User.findOne({id: $("#customerEmail").val()}, function(User) {
                 populateInfo(User);
             });
+        // If no e-mail was entered, let's search by first and last name if they entered both
         } else if ($("#customerFirstName").val() && $("#customerLastName").val()) {
             User.findOne({FullName: $("#customerFirstName").val()+" "+$("#customerLastName").val()}, function(User) {
                 populateInfo(User);
             });
+        // Finally, let's search by first name or last name if they only entered one
         } else if (($("#customerFirstName").val() || $("#customerLastName").val())) {
             if ($("#customerFirstName").val()) {
                 oneName = $("#customerFirstName").val();
