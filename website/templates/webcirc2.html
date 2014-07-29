@@ -78,6 +78,56 @@
             </div>
         </div>
     </div>
+    <!-- This is the modal for if a user is not found -->
+    <div class="modal" id="userNotFoundModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">No User Found</h4>
+                </div>
+                <div class="modal-body" id="noUserFoundDiv">
+                    <p>No User was found! Please create them or search with different parameters.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="userNotFoundModalClose" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End user not found modal -->
+
+    <!-- This is the modal for adding a new customer -->
+    <div class="modal" id="newCustomerModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Customer</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="newCustomerFirstNameInputLabel">First Name:</label>
+                            <input type="text" class="form-control" id="newCustomerFirstNameInput" placeholder="Enter first name" />
+                        </div>
+                        <div class="form-group">
+                            <label for="newCustomerLastNameInputLabel">Last Name:</label>
+                            <input type="text" class="form-control" id="newCustomerLastNameInput" placeholder="Enter last name" />
+                        </div>
+                        <div class="form-group">
+                            <label for="newCustomerEmailInputLabel">E-Mail:</label>
+                            <input type="email" class="form-control" id="newCustomerEmailInput" placeholder="Enter e-mail" />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="newCustomerModalClose" class="btn btn-default" data-dimiss="modal">Close</button>
+                    <button type="button" id="newCustomerModalCreate" class="btn btn-default">Add Customer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End new customer modal -->
+
     <!-- End Modal Forms -->
 
     <div class="navbar navbar-inverse navbar-fixed-top">

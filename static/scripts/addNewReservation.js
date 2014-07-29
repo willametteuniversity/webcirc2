@@ -30,10 +30,25 @@ steal(function() {
                 $("#customerEmail").val(email);
                 $("#multiUsersFoundModal").hide();
             });
-        } else {
+        } else if (numResults == 1) {
+            var firstName = result[0].first_name;
+            var lastName = result[0].last_name;
+            var email = result[0].email
+            $("#customerFirstName").val(firstName);
+            $("#customerLastName").val(lastName);
+            $("#customerEmail").val(email);
             console.log(result);
+        } else {
         }
     };
+
+    $("#userNotFoundModalClose").click(function(event) {
+        $("#userNotFoundModal").hide();
+    });
+
+    $("#newCustomerModalClose").click(function(event) {
+        $("#newCustomerModal").hide();
+    });
 
     $("#mainrow").on("click", "#newReservationFindCustomerBtn", function(event) {
         /**
@@ -46,11 +61,15 @@ steal(function() {
         if ($("#customerEmail").val()) {
             User.findOne({id: $("#customerEmail").val()}, function(User) {
                 populateInfo(User);
+            }, function() {
+                $("#userNotFoundModal").show();
             });
         // If no e-mail was entered, let's search by first and last name if they entered both
         } else if ($("#customerFirstName").val() && $("#customerLastName").val()) {
             User.findOne({FullName: $("#customerFirstName").val()+" "+$("#customerLastName").val()}, function(User) {
                 populateInfo(User);
+            }, function() {
+                $("#userNotFoundModal").show();
             });
         // Finally, let's search by first name or last name if they only entered one
         } else if (($("#customerFirstName").val() || $("#customerLastName").val())) {
@@ -61,8 +80,13 @@ steal(function() {
             }
             User.findOne({OneName: oneName}, function(User) {
                 populateInfo(User);
+            }, function() {
+                $("#userNotFoundModal").show();
             });
         }
+        $("#userNotFoundModalClose").click(function() {
+            $("#userNotFoundModal").hide();
+        });
     });
 
     $("#mainrow").on("click", "#newReservationNewCustomerBtn", function(event) {
@@ -70,7 +94,7 @@ steal(function() {
          * This function handles adding a new customer to the system.
          */
         event.preventDefault();
-        steal.dev.log("New Customer Btn clicked!");
+        $("#newCustomerModal").show();
     });
 
     $("#mainrow").on("click", "#addNewActionBtn", function(event) {

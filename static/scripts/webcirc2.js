@@ -292,7 +292,7 @@ $(document).ready(function() {
             $("#endDateTime").datetimepicker();
             $("#newReservationActions").sortable();
 
-            fillNewReservation();
+            //fillNewReservation();
         });
     });
 
