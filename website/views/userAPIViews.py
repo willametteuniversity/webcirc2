@@ -46,7 +46,9 @@ def userDetail(request, pk=None, em=None, fn=None, n=None):
         elif n:
             userModels = User.objects.filter(Q(first_name=n) | Q(last_name=n))
             if len(userModels) == 0:
-                raise User.DoesNotExist
+                userModels = User.objects.filter(username=n)
+                if len(userModels) == 0:
+                    raise User.DoesNotExist
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
     except User.DoesNotExist:
