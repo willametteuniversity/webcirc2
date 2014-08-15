@@ -70,53 +70,81 @@ steal(function () {
         return result;
     };
 
+    var showUserAddedAlert = function(target) {
+        var alert = '<div class="alert alert-success" id="userCreatedAlert">' +
+                        '<a class="close" data-dismiss="alert">x</a>' +
+                        '<p>User was successfully created!</p>' +
+                        '</div>'
+        $(target).prepend(alert);
+    }
+
     $("body").on("click", "#newCustomerModalCreate", function (event) {
+        /**
+         * This function tries to create a new user. It contains code to try to find an unused username. It does this
+         * by trying the first part of their e-mail address, then the first letter of their first name and their last
+         * name, and finally by appending a number to the end of their first letter and lastname and incrementing it
+         * until the server doesn't find a user with that username.
+         * @type {*|jQuery}
+         */
         // TODO: Validation?
-        jQuery.ajaxSetup({async: false});
         var firstName = $("#newCustomerFirstNameInput").val();
         var lastName = $("#newCustomerFirstNameInput").val();
         var email = $("#newCustomerEmailInput").val();
         // First we are going to do need to generate a username that does not exist. Let's start with their e-mail.
         var username = email.split("@", 1)[0];
-        steal.dev.log("Starting with checking: " + username)
-        var usernameFree = false;
+        steal.dev.log("Starting with checking: " + username);
         User.findOne({OneName: username}, function (result) {
+            // We'll combine the first letter of their username with their last name
+            // TODO: Should we restrict length?
             var username = firstName[0] + lastName.slice(1);
             steal.dev.log("Trying: " + username);
             User.findOne({OneName: username}, function (result) {
-                var curNum = 1
+                // If we are here, we're giving up and just going to take
+                // the first letter of their first name and their last name
+                // and append an ever increasing number to it until we find one
+                // that is not used.
+                var curNum = 1;
                 var username = firstName[0] + lastName.slice(1);
+                // Need to keep a root copy of the username
                 var rootUsername = username;
                 username = rootUsername+curNum.toString();
                 var inUse = checkUsernameInUse(username);
                 steal.dev.log("inUse is: "+inUse);
+                // Iterate while the server returns a user found result
                 while (checkUsernameInUse(username)) {
                     curNum += 1;
+                    // Generate a new username
                     username = rootUsername+curNum.toString();
                     steal.dev.log("Trying username: "+username)
                 }
+                // Once we are here, we know the server has returned a 404, so we can use that username!
+
+                // Generate a new user
                 var newUser = new User({username: username, first_name: firstName, last_name: lastName,
                                         password: "password", email: email});
+                // Save it to the server
                 newUser.save(function (saved) {
                     steal.dev.log("New user saved!");
+                    showUserAddedAlert($("#newCustomerModal .modal-body"));
                 });
             }, function (result) {
+                // If we are here, we know that we can use the first letter and last name
                 var newUser = new User({username: username, first_name: firstName, last_name: lastName,
                     password: "password", email: email});
                 newUser.save(function (saved) {
                     steal.dev.log("New user saved!");
+                    showUserAddedAlert($("#newCustomerModal .modal-body"));
                 });
             })
 
         }, function (result) {
+            // If here, we know that we can use the first part of their e-mail address!
             var newUser = new User({username: username, first_name: firstName, last_name: lastName,
                 password: "password", email: email});
-            newUser.save(function (saved) {
-                steal.dev.log("New user saved!");
+                newUser.save(function (saved) {
+                showUserAddedAlert($("#newCustomerModal .modal-body"));
             });
         });
-
-
     });
 
 
