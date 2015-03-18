@@ -41,3 +41,35 @@ var fillNewReservation = function () {
         }
     });
 };
+
+var loadActionTypes = function() {
+    ActionType.findAll({}, function (actionTypes) {
+        $("#actionType").empty();
+        var numActionTypes = actionTypes.length;
+        for (x = 0; x < numActionTypes; x++) {
+            $("#actionType").append("<option value=\"" + actionTypes.attr(x).ActionTypeID + "\">" + actionTypes.attr(x).ActionTypeName + "</option>");
+        }
+    });
+}
+
+var loadOrigins = function() {
+    Location.findAll({}, function (locations) {
+        $("#actionOrigin").empty();
+        var numLocations = locations.length;
+        for (x = 0; x < numLocations; x++) {
+
+            $("#actionOrigin").append("<option value=\"" + locations.attr(x).LocationID + "\">" + locations[x].LocationDescription + "</option>");
+        }
+    })
+}
+
+var loadDestinations = function() {
+    Location.findAll({}, function (locations) {
+        $("#actionDestination").empty();
+        var numLocations = locations.length;
+        for (x = 0; x < numLocations; x++) {
+
+            $("#actionDestination").append("<option value=\"" + locations.attr(x).LocationID + "\">" + locations[x].LocationDescription + "</option>");
+        }
+    })
+}
