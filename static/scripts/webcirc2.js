@@ -23,6 +23,7 @@ $(document).ready(function() {
 
     steal("can/can.js", function() {});
     steal("scripts/utility.js", function() {});
+    steal("scripts/models/action.js", function() {});
     steal("scripts/models/actionType.js", function() {});
     steal("scripts/models/building.js", function() {});
     steal("scripts/models/collection.js", function() {});
@@ -35,6 +36,7 @@ $(document).ready(function() {
     steal("scripts/models/nonInventoryItem.js", function() {});
     steal("scripts/models/user.js", function() {});
     steal("scripts/models/status.js", function() {});
+    steal("scripts/models/reservation.js", function() {});
     steal("jstree/dist/jstree.min.js", function() {});
     steal("scripts/labelAndCategoryMgmt.js", function() {
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
@@ -294,6 +296,7 @@ $(document).ready(function() {
             loadActionTypes();
             loadOrigins();
             loadDestinations();
+            loadAssignUserToAction();
             //fillNewReservation();
         });
     });

@@ -54,14 +54,14 @@ class Reservation(models.Model):
 
 class Action(models.Model):
     ActionID = models.AutoField(primary_key=True)
-    AssignedOperatorID = models.ForeignKey(User)    # User who created the reservation
-    ActionTypeID = models.ForeignKey(u'ActionType')
+    AssignedOperatorID = models.ForeignKey(User, null=True, blank=True)    # User who created the reservation
+    ActionTypeID = models.ForeignKey(u'ActionType', null=True, blank=True)
     StartTime = models.DateTimeField()
     EndTime = models.DateTimeField()
     Origin = models.ForeignKey(u'Location', related_name=u'action_origin')
     Destination = models.ForeignKey(u'Location', related_name=u'action_destination')
-    ActionStatus = models.CharField(max_length=500)
-    ActionNotes = models.CharField(max_length=500)
+    ActionStatus = models.CharField(max_length=500, null=True, blank=True)
+    ActionNotes = models.CharField(max_length=500, null=True, blank=True)
     Reservation = models.ManyToManyField(Reservation, blank=True)
 
 

@@ -31,7 +31,25 @@
         </div>
     </div>
     <!-- End modal for adding new equipment -->
+
+    <!-- Reservation added successfully modal -->
+    <div class="modal fade" id="reservationAddedSuccessfullyModal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h4 class="modal-title">Reservation Successfully Added!</h4>
+            </div>
+            <div class="modal-body" id="reservationSuccessfullyAddedModalBody">
+                <p>The reservation has been successfully added! Click the button below to continue.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="acknowledgeReservationSuccessfullyAddedBtn">OK!</button>
+            </div>
+        </div>
+    </div>
+    <!-- End reservation added successfully modal -->
+
 <!-- END MODAL WINDOWS FOR RESERVATIONS -->
+
 <div class="page-header">
     <h1>Create New Reservation</h1>
 </div>
@@ -95,6 +113,13 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-3 control-label" for="actionOrigin">Assign User:</label>
+                            <div class="col-sm-8">
+                                <select id="actionAssignedUser" class="form-control">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-3 control-label" for="startDateTime">Earliest:</label>
                             <div class="col-sm-8">
                                 <div class="input-group date" id="startDateTime">
@@ -127,6 +152,18 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-3 control-label" for="actionStatus">Action Status:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control actionStatus" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="actionNotes">Action Notes:</label>
+                            <div class="col-sm-8">
+                                <textarea type="text" class="form-control actionNotes"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <div class="col-sm-6 col-sm-push-3">
                                 <button id="addNewActionBtn" type="submit" class="btn btn-default">Add Action</button>
                             </div>
@@ -136,14 +173,37 @@
             </div>
         </div>
         <div class="col-lg-6">
-            <div id="newReservationActionsDiv" class="panel panel-default">
+            <div id="newReservationInfoDiv" class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Enter Reservation Information</h2>
+                </div>
+                <div class="panel-body">
+                    <form role="form" class="form-horizontal">
+                        <div id="reservationInfo">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="newReservationEventTitle">Event Title:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="newReservationEventTitle" placeholder="Enter the event title...">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="newReservationNotes">Notes:</label>
+                                <div class="col-sm-8">
+                                    <textarea class="form-control" id="newReservationNotes" placeholder="Enter your notes here..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div id="newReservationActions" class="panel panel-default">
                 <div class="panel-heading">
                     <h2 class="panel-title">View/Remove Actions from the Reservation</h2>
                 </div>
                 <div class="panel-body">
                     <span id="actionHelpText" class="help-block">Actions will appear here when you create them</span>
-                    <div id="newReservationActions">
-                    </div>
                     <div id="newReservationActionsBtns">
                         <button id="showAddEquipmentModalBtn" type="button" class="btn btn-default pull-left">Add Equipment</button>
                         <button id="createReservationBtn" type="button" class="btn btn-default pull-right">Create Reservation</button>

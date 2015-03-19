@@ -61,7 +61,7 @@ var loadOrigins = function() {
             $("#actionOrigin").append("<option value=\"" + locations.attr(x).LocationID + "\">" + locations[x].LocationDescription + "</option>");
         }
     })
-}
+};
 
 var loadDestinations = function() {
     Location.findAll({}, function (locations) {
@@ -72,4 +72,13 @@ var loadDestinations = function() {
             $("#actionDestination").append("<option value=\"" + locations.attr(x).LocationID + "\">" + locations[x].LocationDescription + "</option>");
         }
     })
-}
+};
+
+var loadAssignUserToAction = function() {
+    User.findAll({}, function (users) {
+       $("#actionAssignedUser").empty();
+        $.each(users, function(index, value) {
+            $("#actionAssignedUser").append("<option value=\"" + value.id+ "\">" + value.username+"</option>");
+        })
+    });
+};

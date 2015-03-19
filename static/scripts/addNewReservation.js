@@ -212,7 +212,7 @@ steal(function () {
         var actionDestination = $("#actionDestination").val();
         var actionDestinationName = $("#actionDestination option:selected").text();
 
-        $("#newReservationActions").append('<div id="individualAction" class="well reservationActionDiv" data-actiontype="' + actionType + '" data-origin="' + actionOrigin + '" data-destination="' + actionDestination + '" data-start="' + actionStart + '" data-end="' + actionEnd + '"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn"><span class="glyphicon glyphicon-remove"></span></button><div><font size=6>' + actionTypeName + '</font><br /><font size=2>Between ' + actionStart + ' and ' + actionEnd + '</font><br /><font size=4>From ' + actionOriginName + ' to ' + actionDestinationName + '<br />Equipment:</font><br /><ul id="equipmentList"><li>Item 1</li></ul></div>' + '<div class="equipmentAssignedToActionDiv"></div></div>');
+        $("#newReservationActions").append('<div class="well reservationActionDiv" data-actiontype="' + actionType + '" data-origin="' + actionOrigin + '" data-destination="' + actionDestination + '" data-start="' + actionStart + '" data-end="' + actionEnd + '"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn"><span class="glyphicon glyphicon-remove"></span></button><div><font size=6>' + actionTypeName + '</font><br /><font size=2>Between ' + actionStart + ' and ' + actionEnd + '</font><br /><font size=4>From ' + actionOriginName + ' to ' + actionDestinationName + '<br />Equipment:</font><br /><ul id="equipmentList"><li>Item 1</li></ul></div>' + '<div class="equipmentAssignedToActionDiv"></div></div>');
     });
 
     /*
@@ -273,5 +273,64 @@ steal(function () {
                 '<strong>Error!</strong> An item with that ID was not found! Please try again.' +
                 '</div>');
         });
+    });
+
+    $("#mainrow").on("click", "#createReservationBtn", function(event) {
+       event.preventDefault();
+        steal.dev.log("Creating a new reservation")
+        var customerStatus = "SomeStatus"
+        var eventTitle = $("#newReservationEventTitle").val();
+        var customerPhone = $("#customerPhone").val();
+        var customerEmail = $("#customerEmail").val();
+        var customerDept = "SomeDept";
+        var reservationNotes = $("#newReservationNotes").val();
+        var ownerID = 1;
+        var customerID = 2;
+        var newReservation = new Reservation({CustomerStatus: customerStatus,
+                                                EventTitle: eventTitle,
+                                                CustomerPhone: customerPhone,
+                                                CustomerEmail: customerEmail,
+                                                CustomerDept: customerDept,
+                                                ReservationNotes: reservationNotes,
+                                                OwnerID: ownerID,
+                                                CustomerID: customerID});
+        //newReservation.save();
+        $(".reservationActionDiv").each(function() {
+
+            var formattedStartDate = new Date($(this).data('start'));
+            var formattedEndDate = new Date($(this).data('end'));
+            var startYear = formattedStartDate.getFullYear()
+            var startMonth = formattedStartDate.getMonth()
+            startMonth += 1
+            var startDay = formattedStartDate.getDay()
+            var startMinute = formattedStartDate.getMinutes()
+            var startHour = formattedStartDate.getHours()
+
+            var endYear = formattedEndDate.getFullYear()
+            var endMonth = formattedEndDate.getMonth()
+            endMonth += 1
+            var endDay = formattedEndDate.getDay()
+            var endMinute = formattedEndDate.getMinutes()
+            var endHour = formattedEndDate.getHours()
+            steal.dev.log("OK, creating new action");
+            var newAction = new Action({
+                StartTime: startYear+"-"+startMonth+"-"+startDay+"T"+startHour+":"+startMinute,
+                EndTime: endYear+"-"+endMonth+"-"+endDay+"T"+endHour+":"+endMinute,
+                Origin: $(this).data("origin"),
+                Destination: $(this).data("destination"),
+                ActionTypeID: $(this).data("actiontype"),
+                Reservation: newReservation.ReservationID,
+                AssignedOperatorID: null,
+                ActionNotes: $(this).find(".actionNotes").val(),
+                ActionStatus: $(this).find(".actionStatus").val()
+            });
+            steal.dev.log("Done creating new action. Saving...");
+            newAction.save(function() {
+                steal.dev.log("Saved!");
+            });
+            steal.dev.log("Done saving");
+        });
+
+
     });
 })
