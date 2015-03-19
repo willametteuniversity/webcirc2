@@ -1,4 +1,5 @@
 var Reservation = can.Model({
+    id: "ReservationID",
     findAll: 'GET /reservations/',
     findOne: function(params) {
         if (params.id) {

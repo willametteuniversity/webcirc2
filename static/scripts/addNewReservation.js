@@ -15,7 +15,7 @@ steal(function () {
             $("#multiUsersFoundModal").show();
             for (var x = 0; x < numResults; x++) {
                 $("#multiUsersFoundTable > tbody:last").append("<tr class=\"multiUserFoundResult\"><td>" + result[x].first_name + "</td><td>" +
-                    result[x].last_name + "</td><td>" + result[x].email + "</td></tr>");
+                result[x].last_name + "</td><td>" + result[x].email + "</td></tr>");
 
                 console.log(result[x]);
             }
@@ -50,18 +50,18 @@ steal(function () {
         $("#newCustomerModal").hide();
     });
 
-    var checkUsernameInUse = function(username) {
+    var checkUsernameInUse = function (username) {
         var result;
         $.ajax({
-            url: "/users/"+username,
+            url: "/users/" + username,
             async: false,
             type: 'GET',
             statusCode: {
-                404: function() {
+                404: function () {
                     steal.dev.log("FREE!");
                     result = false;
                 },
-                200: function() {
+                200: function () {
                     steal.dev.log("NOT FRE!");
                     result = true;
                 }
@@ -70,11 +70,11 @@ steal(function () {
         return result;
     };
 
-    var showUserAddedAlert = function(target) {
+    var showUserAddedAlert = function (target) {
         var alert = '<div class="alert alert-success" id="userCreatedAlert">' +
-                        '<a class="close" data-dismiss="alert">x</a>' +
-                        '<p>User was successfully created!</p>' +
-                        '</div>'
+            '<a class="close" data-dismiss="alert">x</a>' +
+            '<p>User was successfully created!</p>' +
+            '</div>'
         $(target).prepend(alert);
     }
 
@@ -107,21 +107,23 @@ steal(function () {
                 var username = firstName[0] + lastName.slice(1);
                 // Need to keep a root copy of the username
                 var rootUsername = username;
-                username = rootUsername+curNum.toString();
+                username = rootUsername + curNum.toString();
                 var inUse = checkUsernameInUse(username);
-                steal.dev.log("inUse is: "+inUse);
+                steal.dev.log("inUse is: " + inUse);
                 // Iterate while the server returns a user found result
                 while (checkUsernameInUse(username)) {
                     curNum += 1;
                     // Generate a new username
-                    username = rootUsername+curNum.toString();
-                    steal.dev.log("Trying username: "+username)
+                    username = rootUsername + curNum.toString();
+                    steal.dev.log("Trying username: " + username)
                 }
                 // Once we are here, we know the server has returned a 404, so we can use that username!
 
                 // Generate a new user
-                var newUser = new User({username: username, first_name: firstName, last_name: lastName,
-                                        password: "password", email: email});
+                var newUser = new User({
+                    username: username, first_name: firstName, last_name: lastName,
+                    password: "password", email: email
+                });
                 // Save it to the server
                 newUser.save(function (saved) {
                     steal.dev.log("New user saved!");
@@ -129,8 +131,10 @@ steal(function () {
                 });
             }, function (result) {
                 // If we are here, we know that we can use the first letter and last name
-                var newUser = new User({username: username, first_name: firstName, last_name: lastName,
-                    password: "password", email: email});
+                var newUser = new User({
+                    username: username, first_name: firstName, last_name: lastName,
+                    password: "password", email: email
+                });
                 newUser.save(function (saved) {
                     steal.dev.log("New user saved!");
                     showUserAddedAlert($("#newCustomerModal .modal-body"));
@@ -139,9 +143,11 @@ steal(function () {
 
         }, function (result) {
             // If here, we know that we can use the first part of their e-mail address!
-            var newUser = new User({username: username, first_name: firstName, last_name: lastName,
-                password: "password", email: email});
-                newUser.save(function (saved) {
+            var newUser = new User({
+                username: username, first_name: firstName, last_name: lastName,
+                password: "password", email: email
+            });
+            newUser.save(function (saved) {
                 showUserAddedAlert($("#newCustomerModal .modal-body"));
             });
         });
@@ -201,18 +207,19 @@ steal(function () {
          * This function handles adding a new action to a reservation.
          */
         event.preventDefault();
-        steal.dev.log("Appending new action");
         var actionType = $("#actionType").val();
         var actionTypeName = $("#actionType option:selected").text();
-        var actionOperator = $("#actionOperator").val();
+        var actionAssignedUser = $("#actionAssignedUser").val();
         var actionStart = $("#startDateTime").data('date');
         var actionEnd = $("#endDateTime").data('date');
         var actionOrigin = $("#actionOrigin").val();
         var actionOriginName = $("#actionOrigin option:selected").text();
         var actionDestination = $("#actionDestination").val();
         var actionDestinationName = $("#actionDestination option:selected").text();
+        var actionStatus = $("#actionStatus").val();
+        var actionNote = $("#actionNote").val();
 
-        $("#newReservationActions").append('<div class="well reservationActionDiv" data-actiontype="' + actionType + '" data-origin="' + actionOrigin + '" data-destination="' + actionDestination + '" data-start="' + actionStart + '" data-end="' + actionEnd + '"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn"><span class="glyphicon glyphicon-remove"></span></button><div><font size=6>' + actionTypeName + '</font><br /><font size=2>Between ' + actionStart + ' and ' + actionEnd + '</font><br /><font size=4>From ' + actionOriginName + ' to ' + actionDestinationName + '<br />Equipment:</font><br /><ul id="equipmentList"><li>Item 1</li></ul></div>' + '<div class="equipmentAssignedToActionDiv"></div></div>');
+        $("#newReservationActions").append('<div class="well reservationActionDiv" data-action="' +actionStatus+'" data-note="' + actionNote +'" data-assigned="' + actionAssignedUser + '" data-actiontype="' + actionType + '" data-origin="' + actionOrigin + '" data-destination="' + actionDestination + '" data-start="' + actionStart + '" data-end="' + actionEnd + '"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn"><span class="glyphicon glyphicon-remove"></span></button><div><font size=6>' + actionTypeName + '</font><br /><font size=2>Between ' + actionStart + ' and ' + actionEnd + '</font><br /><font size=4>From ' + actionOriginName + ' to ' + actionDestinationName + '<br />Equipment:</font><br /><ul id="equipmentList"><li>Item 1</li></ul></div>' + '<div class="equipmentAssignedToActionDiv"></div></div>');
     });
 
     /*
@@ -261,22 +268,22 @@ steal(function () {
             $('.reservationActionDiv .equipmentAssignedToActionDiv').each(function (index) {
                 steal.dev.log('Appending equipment to Action');
                 $(this).append('<div class="equipmentForAction" id="equipmentForAction-' + success.ItemID + '">#' + success.ItemID + ' ' + success.Description +
-                    '<button type="button" class="removeEquipmentFromActionBtn btn btn-xs btn-danger pull-right">Remove</button>' +
-                    '</div>');
+                '<button type="button" class="removeEquipmentFromActionBtn btn btn-xs btn-danger pull-right">Remove</button>' +
+                '</div>');
             });
 
             $("#addEquipmentModal").modal('hide');
         }, function (error) {
             $(".alert-equipment-not-found").hide();
             $("#addEquipmentModalBody").prepend('<div class="alert alert-danger alert-dismissable alert-equipment-not-found">' +
-                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                '<strong>Error!</strong> An item with that ID was not found! Please try again.' +
-                '</div>');
+            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+            '<strong>Error!</strong> An item with that ID was not found! Please try again.' +
+            '</div>');
         });
     });
 
-    $("#mainrow").on("click", "#createReservationBtn", function(event) {
-       event.preventDefault();
+    $("#mainrow").on("click", "#createReservationBtn", function (event) {
+        event.preventDefault();
         steal.dev.log("Creating a new reservation")
         var customerStatus = "SomeStatus"
         var eventTitle = $("#newReservationEventTitle").val();
@@ -286,51 +293,53 @@ steal(function () {
         var reservationNotes = $("#newReservationNotes").val();
         var ownerID = 1;
         var customerID = 2;
-        var newReservation = new Reservation({CustomerStatus: customerStatus,
-                                                EventTitle: eventTitle,
-                                                CustomerPhone: customerPhone,
-                                                CustomerEmail: customerEmail,
-                                                CustomerDept: customerDept,
-                                                ReservationNotes: reservationNotes,
-                                                OwnerID: ownerID,
-                                                CustomerID: customerID});
-        //newReservation.save();
-        $(".reservationActionDiv").each(function() {
-
-            var formattedStartDate = new Date($(this).data('start'));
-            var formattedEndDate = new Date($(this).data('end'));
-            var startYear = formattedStartDate.getFullYear()
-            var startMonth = formattedStartDate.getMonth()
-            startMonth += 1
-            var startDay = formattedStartDate.getDay()
-            var startMinute = formattedStartDate.getMinutes()
-            var startHour = formattedStartDate.getHours()
-
-            var endYear = formattedEndDate.getFullYear()
-            var endMonth = formattedEndDate.getMonth()
-            endMonth += 1
-            var endDay = formattedEndDate.getDay()
-            var endMinute = formattedEndDate.getMinutes()
-            var endHour = formattedEndDate.getHours()
-            steal.dev.log("OK, creating new action");
-            var newAction = new Action({
-                StartTime: startYear+"-"+startMonth+"-"+startDay+"T"+startHour+":"+startMinute,
-                EndTime: endYear+"-"+endMonth+"-"+endDay+"T"+endHour+":"+endMinute,
-                Origin: $(this).data("origin"),
-                Destination: $(this).data("destination"),
-                ActionTypeID: $(this).data("actiontype"),
-                Reservation: newReservation.ReservationID,
-                AssignedOperatorID: null,
-                ActionNotes: $(this).find(".actionNotes").val(),
-                ActionStatus: $(this).find(".actionStatus").val()
-            });
-            steal.dev.log("Done creating new action. Saving...");
-            newAction.save(function() {
-                steal.dev.log("Saved!");
-            });
-            steal.dev.log("Done saving");
+        var newReservation = new Reservation({
+            CustomerStatus: customerStatus,
+            EventTitle: eventTitle,
+            CustomerPhone: customerPhone,
+            CustomerEmail: customerEmail,
+            CustomerDept: customerDept,
+            ReservationNotes: reservationNotes,
+            OwnerID: ownerID,
+            CustomerID: customerID
         });
+        newReservation.save(function (saved) {
+            steal.dev.log("Reservation saved!");
+            $(".reservationActionDiv").each(function () {
+                steal.dev.log("Creating actions...");
+                var formattedStartDate = new Date($(this).data('start'));
+                var formattedEndDate = new Date($(this).data('end'));
+                var startYear = formattedStartDate.getFullYear()
+                var startMonth = formattedStartDate.getMonth()
+                startMonth += 1
+                var startDay = formattedStartDate.getDay()
+                var startMinute = formattedStartDate.getMinutes()
+                var startHour = formattedStartDate.getHours()
 
-
+                var endYear = formattedEndDate.getFullYear()
+                var endMonth = formattedEndDate.getMonth()
+                endMonth += 1
+                var endDay = formattedEndDate.getDay()
+                var endMinute = formattedEndDate.getMinutes()
+                var endHour = formattedEndDate.getHours()
+                steal.dev.log("OK, creating new action assigned to reservation " + newReservation.ReservationID);
+                var newAction = new Action({
+                    StartTime: startYear + "-" + startMonth + "-" + startDay + "T" + startHour + ":" + startMinute,
+                    EndTime: endYear + "-" + endMonth + "-" + endDay + "T" + endHour + ":" + endMinute,
+                    Origin: $(this).data("origin"),
+                    Destination: $(this).data("destination"),
+                    ActionTypeID: $(this).data("actiontype"),
+                    Reservation: newReservation.ReservationID,
+                    AssignedOperatorID: $(this).data("assigned"),
+                    ActionNotes: $(this).data("note"),
+                    ActionStatus: $(this).data("status")
+                });
+                steal.dev.log("Done creating new action. Saving...");
+                newAction.save(function () {
+                    steal.dev.log("Action saved!");
+                });
+            });
+            steal.dev.log("Done saving all actions");
+        });
     });
 })
