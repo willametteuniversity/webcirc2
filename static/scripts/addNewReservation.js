@@ -219,7 +219,16 @@ steal(function () {
         var actionStatus = $("#actionStatus").val();
         var actionNote = $("#actionNote").val();
 
-        $("#newReservationActions").append('<div class="well reservationActionDiv" data-action="' +actionStatus+'" data-note="' + actionNote +'" data-assigned="' + actionAssignedUser + '" data-actiontype="' + actionType + '" data-origin="' + actionOrigin + '" data-destination="' + actionDestination + '" data-start="' + actionStart + '" data-end="' + actionEnd + '"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn"><span class="glyphicon glyphicon-remove"></span></button><div><font size=6>' + actionTypeName + '</font><br /><font size=2>Between ' + actionStart + ' and ' + actionEnd + '</font><br /><font size=4>From ' + actionOriginName + ' to ' + actionDestinationName + '<br />Equipment:</font><br /><ul id="equipmentList"><li>Item 1</li></ul></div>' + '<div class="equipmentAssignedToActionDiv"></div></div>');
+        $("#newReservationActions").append('<div class="well reservationActionDiv" data-action="' +actionStatus+
+        '" data-note="' + actionNote +'" data-assigned="' + actionAssignedUser + '" data-actiontype="' + actionType +
+        '" data-origin="' + actionOrigin + '" data-origintext="' + actionOriginName + '" data-destinationtext="' +
+        actionDestinationName+'" data-destination="' + actionDestination + '" data-start="' + actionStart +
+        '" data-end="' + actionEnd + '"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn">' +
+        '<span class="glyphicon glyphicon-remove"></span></button><div><font size=6>'
+        + actionTypeName + '</font><br /><font size=2>Between ' + actionStart + ' and ' + actionEnd
+        + '</font><br /><font size=4>From ' + actionOriginName + ' to ' + actionDestinationName
+        + '<br />Equipment:</font><br /><ul id="equipmentList"><li>Item 1</li></ul></div>'
+        + '<div class="equipmentAssignedToActionDiv"></div></div>');
     });
 
     /*
@@ -247,6 +256,13 @@ steal(function () {
          */
         steal.dev.log("Bringing up add equipment modal");
         $("#addEquipmentModal").modal('show');
+        $.each(".reservationActionDiv", function(index, value) {
+            var actionTypeText = value.data("actiontypetext");
+            var actionOriginText = value.data("origintext");
+            var actionDestinationText = value.data("destinationtext");
+            steal.dev.log(actionTypeText);
+            $("#applyToAllActionsChkDiv").append('<br /><input type="checkbox" value')
+        });
         $("#newReservationActions").children("#individualAction").each(function () {
             steal.dev.log(jQuery.data($(this), "actiontype"));
         });
@@ -280,6 +296,11 @@ steal(function () {
             '<strong>Error!</strong> An item with that ID was not found! Please try again.' +
             '</div>');
         });
+    });
+
+    $("#mainrow").on("click", ".removeEquipmentFromActionBtn", function (event) {
+        steal.dev.log($(this).prev());
+        $(this).closest(".equipmentForAction").remove();
     });
 
     $("#mainrow").on("click", "#createReservationBtn", function (event) {

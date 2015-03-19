@@ -1,7 +1,7 @@
 var InventoryItem = can.Model({
-    findAll: 'GET /inventoryitems/',
-    findOne: 'GET /inventoryitems/{id}',
-    create:  'POST /inventoryitems/',
-    update:  'PUT /inventoryitems/{id}',
-    destroy: 'DELETE /inventoryitems/{id}'
+    findAll: 'GET /inventoryItems/',
+    findOne: 'GET /inventoryItems/{id}',
+    create:  'POST /inventoryItems/',
+    update:  'PUT /inventoryItems/{id}',
+    destroy: 'DELETE /inventoryItems/{id}'
 }, {});
