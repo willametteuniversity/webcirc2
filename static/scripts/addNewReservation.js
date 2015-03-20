@@ -219,16 +219,16 @@ steal(function () {
         var actionStatus = $("#actionStatus").val();
         var actionNote = $("#actionNote").val();
 
-        $("#newReservationActions").append('<div class="well reservationActionDiv" data-action="' +actionStatus+
+        $("#newReservationActions").append($('<div class="well reservationActionDiv" data-actionstatus="' +actionStatus+
         '" data-note="' + actionNote +'" data-assigned="' + actionAssignedUser + '" data-actiontype="' + actionType +
         '" data-origin="' + actionOrigin + '" data-origintext="' + actionOriginName + '" data-destinationtext="' +
         actionDestinationName+'" data-destination="' + actionDestination + '" data-start="' + actionStart +
-        '" data-end="' + actionEnd + '"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn">' +
+        '" data-end="' + actionEnd + '" data-actiontypetext="'+actionTypeName+'"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn">' +
         '<span class="glyphicon glyphicon-remove"></span></button><div><font size=6>'
         + actionTypeName + '</font><br /><font size=2>Between ' + actionStart + ' and ' + actionEnd
         + '</font><br /><font size=4>From ' + actionOriginName + ' to ' + actionDestinationName
         + '<br />Equipment:</font><br /><ul id="equipmentList"><li>Item 1</li></ul></div>'
-        + '<div class="equipmentAssignedToActionDiv"></div></div>');
+        + '<div class="equipmentAssignedToActionDiv"></div></div>').uniqueId());
     });
 
     /*
@@ -255,18 +255,23 @@ steal(function () {
          * a reservation
          */
         steal.dev.log("Bringing up add equipment modal");
+        // Clear the current checkboxes, as we want to regenerate them in case the actions have changed
+        $(".addEquipmentActionCheck").remove();
+        $(".addEquipmentToActionCheckSpan").remove();
         $("#addEquipmentModal").modal('show');
-        $.each(".reservationActionDiv", function(index, value) {
-            var actionTypeText = value.data("actiontypetext");
-            var actionOriginText = value.data("origintext");
-            var actionDestinationText = value.data("destinationtext");
+        // Now we want to iterate over every action that has been added to build the checkbox list
+        $.each($(".reservationActionDiv"), function(index, value) {
+            steal.dev.log("Iterating over existing actions");
+            // We need this data to build the text for the checkbox
+            var actionTypeText = $(this).data("actiontypetext");
+            var actionOriginText = $(this).data("origintext");
+            var actionDestinationText = $(this).data("destinationtext");
+            var actionDivId = $(this).attr("id");
             steal.dev.log(actionTypeText);
-            $("#applyToAllActionsChkDiv").append('<br /><input type="checkbox" value')
+            var actionDescString = ' <span class="addEquipmentToActionCheckSpan">'+actionTypeText + ' from '+actionOriginText+' to '+actionDestinationText+'</span>'
+            // Now append the HTML for the checkbox
+            $("#applyToAllActionsChkDiv").append('<div><input data-actiondivid="'+actionDivId+'" class="addEquipmentActionCheck" type="checkbox" value="applyToTestAction" />'+actionDescString+"</div>");
         });
-        $("#newReservationActions").children("#individualAction").each(function () {
-            steal.dev.log(jQuery.data($(this), "actiontype"));
-        });
-        $("#applyToAllActionsChkDiv").append('<br /><input type="checkbox" id="testActionBox" value="applyToTestAction" checked/>Test action')
     });
 
     $("#mainrow").on("click", "#addEquipmentBtn", function (event) {
@@ -279,15 +284,22 @@ steal(function () {
         steal.dev.log("Searching for equipment ID: " + invItemId);
         InventoryItem.findOne({id: invItemId}, function (success) {
             steal.dev.log("Found an item");
-            console.log(success);
             $("#newReservationEquipment").append('<div class="equipmentEntry well">#' + success.ItemID + ' ' + success.Description + '</div>');
-            $('.reservationActionDiv .equipmentAssignedToActionDiv').each(function (index) {
-                steal.dev.log('Appending equipment to Action');
-                $(this).append('<div class="equipmentForAction" id="equipmentForAction-' + success.ItemID + '">#' + success.ItemID + ' ' + success.Description +
-                '<button type="button" class="removeEquipmentFromActionBtn btn btn-xs btn-danger pull-right">Remove</button>' +
-                '</div>');
-            });
-
+            // TODO: Check if item is already added?
+            if ($("#applyToAllActionsChk").is(":checked")) {
+                $('.reservationActionDiv').each(function (index, value) {
+                    $(this).append('<div class="equipmentForAction" id="equipmentForAction-' + success.ItemID + '">#' + success.ItemID + ' ' + success.Description +
+                    '<button type="button" class="removeEquipmentFromActionBtn btn btn-xs btn-danger pull-right">Remove</button>' +
+                    '</div>');
+                });
+            } else {
+                $('.addEquipmentActionCheck:checked').each(function (index) {
+                    steal.dev.log('Appending equipment to Action');
+                    $('#' + $(this).data('actiondivid')).append('<div class="equipmentForAction" id="equipmentForAction-' + success.ItemID + '">#' + success.ItemID + ' ' + success.Description +
+                    '<button type="button" class="removeEquipmentFromActionBtn btn btn-xs btn-danger pull-right">Remove</button>' +
+                    '</div>');
+                });
+            }
             $("#addEquipmentModal").modal('hide');
         }, function (error) {
             $(".alert-equipment-not-found").hide();
