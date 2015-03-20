@@ -14,7 +14,7 @@ def actionInventoryItems(request, pk):
 
 
 @api_view([u'POST'])
-def addInventoryItemtoAction(request, pk):
+def addInventoryItemToAction(request, pk):
     ## TODO: Make sure the item doesn't conflict
     try:
         item = InventoryItem.objects.get(pk=pk)

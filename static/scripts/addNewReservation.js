@@ -252,7 +252,7 @@ steal(function () {
         '<span class="glyphicon glyphicon-remove"></span></button><div><font size=6>'
         + actionTypeName + '</font><br /><font size=2>Between ' + actionStart + ' and ' + actionEnd
         + '</font><br /><font size=4>From ' + actionOriginName + ' to ' + actionDestinationName
-        + '<br />Equipment:</font><br /><ul id="equipmentList"><li>Item 1</li></ul></div>'
+        + '<br />Equipment:</font><br /><ul class="equipmentList"></ul></div>'
         + '<div class="equipmentAssignedToActionDiv"></div></div>').uniqueId());
     });
 
@@ -411,12 +411,35 @@ steal(function () {
                     ActionNotes: $(this).data("note"),
                     ActionStatus: $(this).data("status")
                 });
+                var curActionDiv = $(this).attr("id");
                 steal.dev.log("Done creating new action. Saving...");
-                newAction.save(function () {
+                newAction.save(function (){
                     steal.dev.log("Action saved!");
+                    // And new we need to get each piece of equipment associated with this action...
+                    $('#'+curActionDiv).find(".equipmentForAction").each(function (index, value) {
+                        steal.dev.log("Beginning saving of equipment to action...");
+                        var equipmentId = $(this).attr("id").split("-")[1];
+
+                        InventoryItem.findOne({id: equipmentId}, function(success) {
+                            steal.dev.log("Found the item...");
+
+                            $.ajax({
+                                url: '/addInventoryItemToAction/' + equipmentId,
+                                type: 'POST',
+
+                                data: {action: newAction.ActionID},
+                                success: function(data) {
+                                    steal.dev.log("Added equipment to action");
+                                },
+                                error: function(data) {
+                                    steal.dev.log("Failed to add equipment to action");
+                                }
+                            });
+
+                        });
+                    });
                 });
             });
-            steal.dev.log("Done saving all actions");
         });
     });
 })
