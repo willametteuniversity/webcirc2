@@ -83,7 +83,17 @@ steal(function () {
             '<p>User was successfully created!</p>' +
             '</div>'
         $(target).prepend(alert);
-    }
+    };
+
+    var clearActionForm = function() {
+        /**
+         * This function clears all the fields in the Action form. It is meant to be called
+         * after an action is added, so that the user has a blank form to add another.
+         */
+        $("#startDateTimePicker").val('');
+        $('#endDateTimePicker').val('');
+        $('#actionNotes').val('')
+    };
 
     $("body").on("click", "#newCustomerModalCreate", function (event) {
         /**
@@ -253,7 +263,8 @@ steal(function () {
         + actionTypeName + '</font><br /><font size=2>Between ' + actionStart + ' and ' + actionEnd
         + '</font><br /><font size=4>From ' + actionOriginName + ' to ' + actionDestinationName
         + '<br />Equipment:</font><br /><ul class="equipmentList"></ul></div>'
-        + '<div class="equipmentAssignedToActionDiv"></div></div>').uniqueId());
+        + '<div class="equipmentAssignedToActionDiv"></div></div>').uniqueId())
+        clearActionForm();
     });
 
     /*
