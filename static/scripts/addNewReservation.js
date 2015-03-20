@@ -51,6 +51,9 @@ steal(function () {
     });
 
     var checkUsernameInUse = function (username) {
+        /**
+         * This function checks if a username is in use on the server
+         */
         var result;
         $.ajax({
             url: "/users/" + username,
@@ -62,7 +65,7 @@ steal(function () {
                     result = false;
                 },
                 200: function () {
-                    steal.dev.log("NOT FRE!");
+                    steal.dev.log("NOT FREE!");
                     result = true;
                 }
             }
@@ -71,6 +74,10 @@ steal(function () {
     };
 
     var showUserAddedAlert = function (target) {
+        /**
+         * This function displays a user added alert
+         * @type {string}
+         */
         var alert = '<div class="alert alert-success" id="userCreatedAlert">' +
             '<a class="close" data-dismiss="alert">x</a>' +
             '<p>User was successfully created!</p>' +
@@ -207,23 +214,41 @@ steal(function () {
          * This function handles adding a new action to a reservation.
          */
         event.preventDefault();
+        // We'll need these various attributes to create the action div
+        // Type of action given as the ID it has on the erver
         var actionType = $("#actionType").val();
+        // Textual representation of the actionType (delivery, pickup, etc)
         var actionTypeName = $("#actionType option:selected").text();
+        // User that was assigned to the action
         var actionAssignedUser = $("#actionAssignedUser").val();
+        // Starting time of the action
+        // TODO: Should this be changed to represent the earliest/latest concept?
         var actionStart = $("#startDateTime").data('date');
+        // Latest time of the action
+        // TODO: Should this be changed to represent the earliest/latest concept?
         var actionEnd = $("#endDateTime").data('date');
+        // Origin of the action in the form of the ID of the model on the server
         var actionOrigin = $("#actionOrigin").val();
+        // Textual name of the action origin
         var actionOriginName = $("#actionOrigin option:selected").text();
+        // ID of destination Location on server, then textual
         var actionDestination = $("#actionDestination").val();
         var actionDestinationName = $("#actionDestination option:selected").text();
+        // TODO: This probably doesn't need to a field on the form?
         var actionStatus = $("#actionStatus").val();
+        // Any notes specific to that action
         var actionNote = $("#actionNote").val();
 
-        $("#newReservationActions").append($('<div class="well reservationActionDiv" data-actionstatus="' +actionStatus+
-        '" data-note="' + actionNote +'" data-assigned="' + actionAssignedUser + '" data-actiontype="' + actionType +
+        // Finally, we're going to append a new action to the newReservationActions div on the right to display them to the user
+        // We are going to populate a bunch of data- attributes for user later
+        // We also give it a unique ID so we can tell which checkbox is linked to which action div in the add equipment
+        // form
+        $("#newReservationActions").append($('<div class="well reservationActionDiv" data-actionstatus="' + actionStatus +
+        '" data-note="' + actionNote + '" data-assigned="' + actionAssignedUser + '" data-actiontype="' + actionType +
         '" data-origin="' + actionOrigin + '" data-origintext="' + actionOriginName + '" data-destinationtext="' +
-        actionDestinationName+'" data-destination="' + actionDestination + '" data-start="' + actionStart +
-        '" data-end="' + actionEnd + '" data-actiontypetext="'+actionTypeName+'"><button type="button" class="btn btn-danger btn-xs pull-right del-action-btn">' +
+        actionDestinationName + '" data-destination="' + actionDestination + '" data-start="' + actionStart +
+        '" data-end="' + actionEnd + '" data-actiontypetext="' + actionTypeName + '"><button type="button" class="' +
+        'btn btn-danger btn-xs pull-right del-action-btn">' +
         '<span class="glyphicon glyphicon-remove"></span></button><div><font size=6>'
         + actionTypeName + '</font><br /><font size=2>Between ' + actionStart + ' and ' + actionEnd
         + '</font><br /><font size=4>From ' + actionOriginName + ' to ' + actionDestinationName
@@ -260,17 +285,17 @@ steal(function () {
         $(".addEquipmentToActionCheckSpan").remove();
         $("#addEquipmentModal").modal('show');
         // Now we want to iterate over every action that has been added to build the checkbox list
-        $.each($(".reservationActionDiv"), function(index, value) {
+        $.each($(".reservationActionDiv"), function (index, value) {
             steal.dev.log("Iterating over existing actions");
             // We need this data to build the text for the checkbox
             var actionTypeText = $(this).data("actiontypetext");
             var actionOriginText = $(this).data("origintext");
             var actionDestinationText = $(this).data("destinationtext");
             var actionDivId = $(this).attr("id");
-            steal.dev.log(actionTypeText);
-            var actionDescString = ' <span class="addEquipmentToActionCheckSpan">'+actionTypeText + ' from '+actionOriginText+' to '+actionDestinationText+'</span>'
+            // We need to construct a meaningful string to identify the action this checkbox applies to
+            var actionDescString = ' <span class="addEquipmentToActionCheckSpan">' + actionTypeText + ' from ' + actionOriginText + ' to ' + actionDestinationText + '</span>'
             // Now append the HTML for the checkbox
-            $("#applyToAllActionsChkDiv").append('<div><input data-actiondivid="'+actionDivId+'" class="addEquipmentActionCheck" type="checkbox" value="applyToTestAction" />'+actionDescString+"</div>");
+            $("#applyToAllActionsChkDiv").append('<div><input data-actiondivid="' + actionDivId + '" class="addEquipmentActionCheck" type="checkbox" value="applyToTestAction" />' + actionDescString + "</div>");
         });
     });
 
@@ -280,12 +305,12 @@ steal(function () {
          * a reservation.
          */
         var invItemId = $("#equipmentId").val();
-
         steal.dev.log("Searching for equipment ID: " + invItemId);
         InventoryItem.findOne({id: invItemId}, function (success) {
             steal.dev.log("Found an item");
             $("#newReservationEquipment").append('<div class="equipmentEntry well">#' + success.ItemID + ' ' + success.Description + '</div>');
             // TODO: Check if item is already added?
+            // If the all actions box is checked, no need for anything else, just iterate over every action div to add the equipment
             if ($("#applyToAllActionsChk").is(":checked")) {
                 $('.reservationActionDiv').each(function (index, value) {
                     $(this).append('<div class="equipmentForAction" id="equipmentForAction-' + success.ItemID + '">#' + success.ItemID + ' ' + success.Description +
@@ -293,6 +318,9 @@ steal(function () {
                     '</div>');
                 });
             } else {
+                // If only a few check boxes are checked (not the All Actions one), then we need to find out which action divs
+                // are desired, iterate over them, and append the equipment
+                // Here we use the uniqueId we generated for the action Divs earlier
                 $('.addEquipmentActionCheck:checked').each(function (index) {
                     steal.dev.log('Appending equipment to Action');
                     $('#' + $(this).data('actiondivid')).append('<div class="equipmentForAction" id="equipmentForAction-' + success.ItemID + '">#' + success.ItemID + ' ' + success.Description +
@@ -300,8 +328,10 @@ steal(function () {
                     '</div>');
                 });
             }
+            // Get rid of the modal
             $("#addEquipmentModal").modal('hide');
         }, function (error) {
+            // If we didn't find a piece of equipment with that ID
             $(".alert-equipment-not-found").hide();
             $("#addEquipmentModalBody").prepend('<div class="alert alert-danger alert-dismissable alert-equipment-not-found">' +
             '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
@@ -311,11 +341,19 @@ steal(function () {
     });
 
     $("#mainrow").on("click", ".removeEquipmentFromActionBtn", function (event) {
+        /**
+         * This handles remove a piece of equipment from an action
+         */
         steal.dev.log($(this).prev());
         $(this).closest(".equipmentForAction").remove();
     });
 
     $("#mainrow").on("click", "#createReservationBtn", function (event) {
+        /**
+         * This function handles creating the reservation with its associated actions and pieces of equipment
+         */
+        // Starting with creating the reservation so that we can provide the Reservation ID to the server when creating
+        // the subsequent actions
         event.preventDefault();
         steal.dev.log("Creating a new reservation")
         var customerStatus = "SomeStatus"
@@ -337,13 +375,17 @@ steal(function () {
             CustomerID: customerID
         });
         newReservation.save(function (saved) {
+            // If we are able to create the Reservation, let's move on to creating the actions
             steal.dev.log("Reservation saved!");
             $(".reservationActionDiv").each(function () {
                 steal.dev.log("Creating actions...");
+                // Django expects the datestamps in a particular format
+                // TODO: I'm sure there is a more elegant way to reformat the datestamps
                 var formattedStartDate = new Date($(this).data('start'));
                 var formattedEndDate = new Date($(this).data('end'));
                 var startYear = formattedStartDate.getFullYear()
                 var startMonth = formattedStartDate.getMonth()
+                // javascript months are 0-11 for some reason
                 startMonth += 1
                 var startDay = formattedStartDate.getDay()
                 var startMinute = formattedStartDate.getMinutes()
@@ -351,11 +393,13 @@ steal(function () {
 
                 var endYear = formattedEndDate.getFullYear()
                 var endMonth = formattedEndDate.getMonth()
+
                 endMonth += 1
                 var endDay = formattedEndDate.getDay()
                 var endMinute = formattedEndDate.getMinutes()
                 var endHour = formattedEndDate.getHours()
                 steal.dev.log("OK, creating new action assigned to reservation " + newReservation.ReservationID);
+                // Let's make and try to save the action
                 var newAction = new Action({
                     StartTime: startYear + "-" + startMonth + "-" + startDay + "T" + startHour + ":" + startMinute,
                     EndTime: endYear + "-" + endMonth + "-" + endDay + "T" + endHour + ":" + endMinute,
