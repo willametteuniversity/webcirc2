@@ -374,6 +374,7 @@ steal(function () {
             OwnerID: ownerID,
             CustomerID: customerID
         });
+
         newReservation.save(function (saved) {
             // If we are able to create the Reservation, let's move on to creating the actions
             steal.dev.log("Reservation saved!");
@@ -432,6 +433,7 @@ steal(function () {
                                     steal.dev.log("Added equipment to action");
                                 },
                                 error: function(data) {
+                                    // TODO: If any of this fails, we need to remove the actions and the reservation
                                     steal.dev.log("Failed to add equipment to action");
                                 }
                             });
@@ -441,5 +443,7 @@ steal(function () {
                 });
             });
         });
+    }).done(function() {
+        steal.dev.log("Reservation done!");
     });
 })
