@@ -48,7 +48,7 @@ class Reservation(models.Model):
     CustomerEmail = models.CharField(max_length=500)
     CustomerDept = models.CharField(max_length=500)
     CustomerStatus = models.CharField(max_length=500)
-    ReservationNotes = models.CharField(max_length=500)
+    ReservationNotes = models.CharField(max_length=500, null=True, blank=True)
     EventTitle = models.CharField(max_length=500)
 
 

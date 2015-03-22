@@ -284,6 +284,15 @@ $(document).ready(function() {
         });
     });
 
+    $("#viewTodaysActionsLink").on("click", function(event) {
+        /**
+         * This function loads the today's actions view
+         */
+        $("#mainrow").load("/viewTodaysActions/", function() {
+            loadTodaysActions();
+        })
+    });
+
     $("#addNewReservationLink").on("click", function(event) {
         /**
          * This function loads the page to add new reservations

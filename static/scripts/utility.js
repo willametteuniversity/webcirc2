@@ -82,3 +82,15 @@ var loadAssignUserToAction = function() {
         })
     });
 };
+
+var loadTodaysActions = function() {
+    var todayObj = new Date();
+
+    var todayString = todayObj.getFullYear()+'-'+(todayObj.getMonth()+1)+'-'+todayObj.getDate()
+    Action.findAll({
+        date: todayString
+    }, function(actions) {
+        steal.dev.log(actions);
+    });
+
+};
