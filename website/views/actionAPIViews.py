@@ -4,7 +4,7 @@ from website.serializers import *
 from rest_framework import status
 from django.http import HttpResponse
 
-
+import datetime
 @api_view(['Get'])
 def reservationActions(request, pk):
     try:
@@ -42,9 +42,15 @@ def removeActionFromReservation(request, pk):
 
 
 @api_view(['Get', 'POST'])
-def actionList(request):
+def actionList(request, date=None):
     if request.method == u'GET':
         actions = Action.objects.all()
+        if date != None:
+            today = datetime.datetime.strptime(date, '%Y-%m-%d')
+            actions = actions.filter(StartTime__year=today.year,
+                                     StartTime__month=today.month,
+                                     StartTime__day=today.day)
+
         serializer = ActionSerializer(actions, many=True)
         return Response(serializer.data)
     elif request.method == u'POST':

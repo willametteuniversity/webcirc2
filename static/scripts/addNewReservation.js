@@ -90,7 +90,7 @@ steal(function () {
          * This function clears all the fields in the Action form. It is meant to be called
          * after an action is added, so that the user has a blank form to add another.
          */
-        $("#startDateTimePicker").val('');
+        $('#startDateTimePicker').val('');
         $('#endDateTimePicker').val('');
         $('#actionNotes').val('')
     };
@@ -399,6 +399,7 @@ steal(function () {
             OwnerID: ownerID,
             CustomerID: customerID
         });
+
         newReservation.save(function (saved) {
             // If we are able to create the Reservation, let's move on to creating the actions
             steal.dev.log("Reservation saved!");
@@ -411,16 +412,15 @@ steal(function () {
                 var startYear = formattedStartDate.getFullYear()
                 var startMonth = formattedStartDate.getMonth()
                 // javascript months are 0-11 for some reason
-                startMonth += 1;
-                var startDay = formattedStartDate.getDay()
+                startMonth += 1
+                var startDay = formattedStartDate.getDate()
                 var startMinute = formattedStartDate.getMinutes()
                 var startHour = formattedStartDate.getHours()
 
                 var endYear = formattedEndDate.getFullYear()
                 var endMonth = formattedEndDate.getMonth()
-
-                endMonth += 1;
-                var endDay = formattedEndDate.getDay()
+                endMonth += 1
+                var endDay = formattedEndDate.getDate()
                 var endMinute = formattedEndDate.getMinutes()
                 var endHour = formattedEndDate.getHours()
                 steal.dev.log("OK, creating new action assigned to reservation " + newReservation.ReservationID);
@@ -436,11 +436,13 @@ steal(function () {
                     ActionNotes: $(this).data("note"),
                     ActionStatus: $(this).data("status")
                 });
+
                 var curActionDiv = $(this).attr("id");
                 steal.dev.log("Done creating new action. Saving...");
                 newAction.save(function () {
                     actionCount--;
                     steal.dev.log("Action saved!");
+                    steal.dev.log('Dates recorded: '+newAction.StartTime+' '+newAction.EndTime);
                     // And new we need to get each piece of equipment associated with this action...
                     $('#' + curActionDiv).find(".equipmentForAction").each(function (index, value) {
                         steal.dev.log("Beginning saving of equipment to action...");
@@ -461,7 +463,8 @@ steal(function () {
                                     }
                                     steal.dev.log("Added equipment to action");
                                 },
-                                error: function (data) {
+                                error: function(data) {
+                                    // TODO: If any of this fails, we need to remove the actions and the reservation
                                     steal.dev.log("Failed to add equipment to action");
                                 }
                             });
