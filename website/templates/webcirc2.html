@@ -7,26 +7,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
-
-    <title>WebCirc 2</title>
-
+    <title>WebCirc</title>
     <!-- Bootstrap core CSS -->
     <link href="{% static "css/bootstrap.css" %}" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="jumbotron.css" rel="stylesheet">
-
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
+    <link href="{% static "jstree/dist/themes/default/style.min.css" %}" rel="stylesheet">
+    <link href="{% static "css/webcirc2.css" %}" rel="stylesheet">
+    <link href="{% static "css/typeahead.css" %}" rel="stylesheet">
+    <link href="{% static "css/bootstrap-datetimepicker.min.css" %}" rel="stylesheet">
   </head>
-
   <body>
+    <script src="{% static "scripts/jquery-1.10.2.js" %}"></script>
+    <script src="{% static "scripts/jquery-ui-1.10.3.custom.js" %}"></script>
+    <script src="{% static "scripts/handlebars.js" %}"></script>
+    <script src="{% static "scripts/bootstrap.js" %}"></script>
+    <script src="{% static "scripts/typeahead.js" %}"></script>
+    <script src="{% static "scripts/moment-with-langs.js" %}"></script>
+    <script src="{% static "scripts/bootstrap-datetimepicker.min.js" %}"></script>
+    <script src="{% static "steal/steal.js" %}"></script>
+    <script src="{% static "jstree/dist/jstree.js" %}"></script>
+    <script src="{% static "scripts/webcirc2.js" %}"></script>
 
+
+
+
+    <!-- Begin Modal Forms -->
+    <div class="modal" id="addNewLabelModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" id="closeAddNewLabelModalBtn" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Add a Label</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" id="addNewLabelForm">
+                        <div class="form-group">
+                            <label for="newLabelNameText">Label Name:</label>
+                            <input type="text" class="form-control" id="newLabelNameText"
+                                   placeholder="Enter a name for your label...">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveNewLabelBtn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- This is the select a user modal form for new reservations -->
+    <div class="modal" id="multiUsersFoundModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Multiple Users Were Found</h4>
+                </div>
+                <div class="modal-body" id="multiUsersFoundDiv">
+                    <table class="table table-striped" id="multiUsersFoundTable">
+                        <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>E-Mail</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- This is the modal for if a user is not found -->
+    <div class="modal" id="userNotFoundModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">No User Found</h4>
+                </div>
+                <div class="modal-body" id="noUserFoundDiv">
+                    <p>No User was found! Please create them or search with different parameters.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="userNotFoundModalClose" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End user not found modal -->
+
+    <!-- This is the modal for adding a new customer -->
+    <div class="modal" id="newCustomerModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Customer</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="newCustomerFirstNameInputLabel">First Name:</label>
+                            <input type="text" class="form-control" id="newCustomerFirstNameInput" placeholder="Enter first name" />
+                        </div>
+                        <div class="form-group">
+                            <label for="newCustomerLastNameInputLabel">Last Name:</label>
+                            <input type="text" class="form-control" id="newCustomerLastNameInput" placeholder="Enter last name" />
+                        </div>
+                        <div class="form-group">
+                            <label for="newCustomerEmailInputLabel">E-Mail:</label>
+                            <input type="email" class="form-control" id="newCustomerEmailInput" placeholder="Enter e-mail" />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="newCustomerModalClose" class="btn btn-default" data-dimiss="modal">Close</button>
+                    <button type="button" id="newCustomerModalCreate" class="btn btn-default">Add Customer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End new customer modal -->
+
+    <!-- End Modal Forms -->
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -35,55 +137,48 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">WebCirc 2</a>
+          <a class="navbar-brand" href="#">WebCirc</a>
         </div>
         <div class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right">
+        {%  if user.is_authenticated %}
+            <ul class="nav navbar-nav">
+                <li><a href="#" id="addNewReservationLink">New Reservation</a></li>
+                <li><a href="#" id="viewTodaysActionsLink">Today's Actions</a></li>
+                <li><a href="#">Monthly View</a></li>
+                <li><a href="#">Overdue Items</a></li>
+                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" id="labelAndCategoryMgmtLink">Label and Category Management</a></li>
+                        <li><a href="#" id="addNewEquipmentLink">Add Equipment</a></li>
+                        <li><a href="#" id="collectionAdministrationLink">Administer Collections</a></li>
+                        <li><a href="#" id="locationAdministrationLink">Administer Locations</a></li>
+                        <li><a href="#" id="buildingAdministrationLink">Administer Buildings</a></li>
+                        <li><a href="#" id="actionTypeAdministrationLink">Administer Action Types</a></li>
+                        <li><a href="#" id="statusAdministrationLink">Administer Statuses</a></li>
+                    </ul>
+                </li>
+            </ul>
+        {% else %}
+          <form class="navbar-form navbar-right" id="signInForm">
             <div class="form-group">
-              <input type="text" placeholder="Email" class="form-control">
+              <input name="username" type="text" placeholder="Email" class="form-control">
             </div>
             <div class="form-group">
-              <input type="password" placeholder="Password" class="form-control">
+              <input name="password" type="password" placeholder="Password" class="form-control">
             </div>
-            <button type="submit" class="btn btn-success">Sign in</button>
+            <button type="submit" class="btn btn-success" id="signInBtn">Sign in</button> <span id="signInOrRegisterText">or</span> <button id="registerBtn" type="button" class="btn btn-info">Register</button>
+
           </form>
+        {% endif %}
         </div><!--/.navbar-collapse -->
       </div>
     </div>
+    <div class="container" id="mainblock">
+        <div class="row" id="mainrow">
+        {% if not user.isauthenticated %}
+        {% endif %}
+        </div>
 
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <div class="container">
-        <h1>WebCirc 2</h1>
-        <p> This is the placeholder for our WebCirc 2 page!</p>
-        <p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>
-      </div>
     </div>
-
-    <div class="container">
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-      </div>
-
-      <hr>
-
-      <footer>
-        <p>&copy; OrgNameHere</p>
-      </footer>
-    </div> <!-- /container -->
+  </body>
 </html>

@@ -1,0 +1,38 @@
+[
+    {
+        "pk": 1,
+        "model": "website.CustomerProfile",
+        "fields": {
+            "user": 1,
+            "phoneNumber": "5035551234",
+            "altPhoneNumber": "5035555678",
+            "altEmail": "altemail1@invalid.com",
+            "userDept": 1,
+            "userNote": "This is a user note"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "website.CustomerProfile",
+        "fields": {
+            "user": 2,
+            "phoneNumber": "5035552212",
+            "altPhoneNumber": "5035555574",
+            "altEmail": "altemail2@invalid.com",
+            "userDept": 2,
+            "userNote": "This is a user note 2"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "website.CustomerProfile",
+        "fields": {
+            "user": 3,
+            "phoneNumber": "5735558778",
+            "altPhoneNumber": "5415557741",
+            "altEmail": "altemail3@invalid.com",
+            "userDept": 1,
+            "userNote": "This is a user note 3"
+        }
+    }
+]

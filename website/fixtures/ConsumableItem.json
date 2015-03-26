@@ -1,0 +1,34 @@
+[
+    {
+        "model": "website.ConsumableItem",
+        "pk": 1,
+        "fields": {
+            "Description": "Consumable 1",
+            "CategoryID": 1,
+            "StorageLocation": 1,
+            "CollectionID": 1,
+            "Notes": "What a cool item",
+            "Action": [1],
+            "ItemName": "Consumable Item",
+            "Quantity": 5,
+            "MinQuantity": 2,
+            "Cost": 1.00
+        }
+    },
+    {
+        "model": "website.ConsumableItem",
+        "pk": 2,
+        "fields": {
+            "Description": "Consumable 2",
+            "CategoryID": 1,
+            "StorageLocation": 1,
+            "CollectionID": 1,
+            "Notes": "What a cool item",
+            "Action": [1],
+            "ItemName": "Consumable Item",
+            "Quantity": 5,
+            "MinQuantity": 2,
+            "Cost": 1.00
+        }
+    }
+]

@@ -1,0 +1,18 @@
+[
+    {
+        "model": "website.Building",
+        "pk": 1,
+        "fields": {
+            "BuildingCode": "SML",
+            "BuildingName": "Smullin"
+        }
+    },
+    {
+        "model": "website.Building",
+        "pk": 2,
+        "fields": {
+            "BuildingCode": "MOH",
+            "BuildingName": "Hatfield Library"
+        }
+    }
+]

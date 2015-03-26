@@ -1,0 +1,10 @@
+[
+	{
+		"model" : "website.Collection",
+		"pk" : 1,
+		"fields": {
+			"CollectionName" : "West Campus HD",
+            "CollectionDescription": "This is all the equipment that lives in the Law School Help Desk"
+		}
+	}
+]

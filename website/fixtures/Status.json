@@ -1,0 +1,27 @@
+
+[
+	{
+        "model": "website.Status",
+        "pk": 1,
+        "fields": {
+            "StatusName": "Status 1",
+            "StatusDescription" : "First Status"
+        }  
+    },
+    {
+        "model": "website.Status",
+        "pk": 2,
+        "fields": {
+            "StatusName": "Status 2",
+            "StatusDescription" : "Second Status"
+        }  
+    },
+    {
+        "model": "website.Status",
+        "pk": 3,
+        "fields": {
+            "StatusName": "Status 3",
+            "StatusDescription" : "Third status"
+        }  
+    }
+]

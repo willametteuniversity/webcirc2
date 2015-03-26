@@ -1,0 +1,81 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Add New Inventory Item</h3>
+    </div>
+    <div class="panel-body" id="addNewInventoryItemFormBody">
+         <form class="form-horizontal" role="form" id="addNewInventoryItemForm">
+             <div class="form-group">
+                 <label class="col-sm-3 control-label" for="brandInput">Brand:</label>
+                 <div class="col-sm-9">
+                    <input type="text" class="form-control" id="brandInput" name="brand" placeholder="Enter the brand...">
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="col-sm-3 control-label" for="modelInput">Model:</label>
+                 <div class="col-sm-9">
+                    <input type="text" class="form-control" id="modelInput" name="model" placeholder="Enter the model...">
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="col-sm-3 control-label" for="descriptionInput">Description:</label>
+                 <div class="col-sm-9">
+                    <textarea class="form-control" id="descriptionInput" name="description" placeholder="Enter the description..." />
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="col-sm-3 control-label" for="notes">Notes:</label>
+                 <div class="col-sm-9">
+                    <textarea type="text" class="form-control" id="notesInput" name="notes" placeholder="Enter the notes..." />
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="col-sm-3 control-label" for="categoryInput">Category:</label>
+                 <div class="col-sm-9">
+                    <input type="text" class="form-control" id="categoryInput" name="category" placeholder="Enter the category...">
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="col-sm-3 control-label" for="statusSelect">Status:</label>
+                 <div class="col-sm-9">
+                    <select class="form-control" name="status" id="statusSelect">
+                    </select>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="col-sm-3 control-label" for="storageLocationSelect">Storage Location:</label>
+                 <div class="col-sm-9">
+                    <select class="form-control" name="storageLocation" id="storageLocationSelect">
+                    </select>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="col-sm-3 control-label" for="inventoryItemCollectionSelect">Collection:</label>
+                 <div class="col-sm-9">
+                    <select class="form-control" name="inventoryItemCollectionSelect" id="inventoryItemCollectionSelect">
+                    </select>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <div class="col-sm-offset-3 col-sm-10">
+                    <button type="submit" class="btn btn-default" id="submitCreateNewInventoryItemBtn">Submit</button>
+                 </div>
+             </div>
+
+        </form>
+    </div>
+</div>
+
+<!--
+class InventoryItem(models.Model):
+    ItemID = models.AutoField(primary_key=True)
+    AlternateID = models.ForeignKey('InventoryWidget')
+    BrandID = models.ForeignKey('ItemBrand')
+    ModelID = models.ForeignKey('ItemModel')
+    Description = models.CharField(max_length=500)
+    Notes = models.CharField(max_length=500)
+    CategoryID = models.ForeignKey('Label')
+    ParentItem = models.ForeignKey('InventoryItem', null=True, blank=True)
+    StatusID = models.ForeignKey('Status')
+    StorageLocation = models.ForeignKey('Location')
+    CollectionID = models.ForeignKey('Collection')
+-->

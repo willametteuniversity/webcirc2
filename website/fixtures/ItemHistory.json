@@ -1,0 +1,32 @@
+[
+    {
+        "model": "website.ItemHistory",
+        "pk": 1,
+        "fields": {
+            "OperatorID": 1,
+            "ItemID": 1,
+            "ChangeDescription": "Reinstalled the OS",
+            "ChangeDateTime": "2014-03-03 15:32-08:00"
+        }
+    },
+	{
+        "model": "website.ItemHistory",
+        "pk": 2,
+        "fields": {
+            "OperatorID": 2,
+            "ItemID": 1,
+            "ChangeDescription": "Replaced the hard drive",
+            "ChangeDateTime": "2014-03-03 12:02-08:00"
+        }
+    },
+    {
+        "model": "website.ItemHistory",
+        "pk": 3,
+        "fields": {
+            "OperatorID": 1,
+            "ItemID": 2,
+            "ChangeDescription": "Labeled the device",
+            "ChangeDateTime": "2014-03-03 11:35-08:00"
+        }
+    }
+]

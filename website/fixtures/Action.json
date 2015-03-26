@@ -1,0 +1,34 @@
+[
+    {
+        "model": "website.Action",
+        "pk": 1,
+        "fields": {
+            "ActionID": 1,
+            "AssignedOperatorID": 1,
+            "ActionTypeID": 1,
+            "StartTime": "2014-01-15 12:21:20",
+            "EndTime": "2015-02-14 18:13:46",
+            "Origin": 1,
+            "Destination": 2,
+            "ActionStatus": "testing",
+            "ActionNotes": "Test fixture",
+            "Reservation": 1
+        }
+    },
+    {
+        "model": "website.Action",
+        "pk": 2,
+        "fields": {
+            "ActionID": 2,
+            "AssignedOperatorID": 2,
+            "ActionTypeID": 2,
+            "StartTime": "2014-03-15",
+            "EndTime": "2015-05-14",
+            "Origin": 1,
+            "Destination": 2,
+            "ActionStatus": "testing",
+            "ActionNotes": "Test fixture",
+            "Reservation": 1
+        }
+    }
+]

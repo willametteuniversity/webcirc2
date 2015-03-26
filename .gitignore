@@ -1,3 +1,7 @@
 *DS_Store
 *.pyc
+__init__.pyc
 *._*
+.idea/
+.coverage
+dbwebcirc2.db

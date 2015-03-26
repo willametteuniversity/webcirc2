@@ -1,0 +1,18 @@
+[
+    {
+        "model": "website.ReservationAction",
+        "pk": 1,
+        "fields": {
+            "ReservationID": 1,
+            "ActionID": 1
+        }
+    },
+    {
+        "model": "website.ReservationAction",
+        "pk": 2,
+        "fields": {
+            "ReservationID": 2,
+            "ActionID": 2
+        }
+    }
+]

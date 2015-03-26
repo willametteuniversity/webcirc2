@@ -1,0 +1,33 @@
+<!--
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Label and Category Management</h3>
+    </div>
+    <div class="panel-body">
+
+    </div>
+</div>
+-->
+
+<div class="col-md-4">
+    <div class="panel panel-default" id="labelMasterList">
+        <div class="panel-heading">Labels</div>
+        <div class="panel-body">
+            <select multiple="multiple" id="labelListBox"></select>
+            <button type="button" class="btn btn-default btn-xs lblMgmtBtn" id="addLabelBtn" data-toggle="modal" data-target="#addNewLabelModal"><span class="glyphicon glyphicon-plus-sign"></span></button>
+            <button type="button" class="btn btn-default btn-xs lblMgmtBtn" id="delLabelBtn"><span class="glyphicon glyphicon-minus-sign"></span></button>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-8 pull-right">
+    <div class="panel panel-default" id="categoryMasterList">
+        <div class="panel-heading">Categories</div>
+        <div class="panel-body">
+            <div id="categoryMasterTree"></div>
+            <br />
+            <button type="button" class="btn btn-default btn-xs catMgmtBtn" id="addCategoryBtn"><span class="glyphicon glyphicon-plus-sign"></span></button>
+            <button type="button" class="btn btn-default btn-xs catMgmtBtn" id="delCategoryBtn"><span class="glyphicon glyphicon-minus-sign"></span></button>
+        </div>
+    </div>
+</div>

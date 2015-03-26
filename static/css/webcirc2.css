@@ -1,0 +1,111 @@
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    margin: 0;
+    background-color: #C4BBBB
+    /*background-image: url('/static/images/blackfelt.png');  #A3A3C2;*/
+}
+
+h1 {
+
+}
+.panel {
+
+}
+
+.panel-default > .panel-heading {
+    color: #AAAAAA;
+   /* color: #660000; */
+    background-color: #333333;
+}
+
+.panel-default > .panel-body {
+    color: #090040;
+    background-color: #E8E1E1;
+}
+
+.help-block {
+    color: #333333;
+}
+
+label {
+
+}
+
+#mainblock {
+    margin-top: 100px;
+}
+
+#signInOrRegisterText {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#registrationFormDiv {
+    padding-top: 10px;
+    margin-top: 150px;
+}
+
+#addEquipmentModal .modal-dialog {
+    width: 60%;
+}
+/* These are rules for the label management page */
+#labelListBox, #categoryListBox {
+    width: 100%;
+    height: 600px;
+}
+
+.lblMgmtBtn, .catMgmtBtn {
+    margin-bottom: 15px;
+    border-color: #3a3a3a;
+}
+
+#addLabelBtn, #addCategoryBtn {
+    margin-left: 15px;
+    background-color: #7ae95f;
+}
+
+#delLabelBtn, #delCategoryBtn {
+    background-color: #e4181c;
+}
+
+#labelMasterList, #categoryMasterList {
+    height: 700px;
+}
+
+/* End label management page styles */
+
+/* Begin section for site-wide nav-pills */
+.nav-pills > li.active > a {
+    background-color: #7D7575;
+}
+
+.nav-pills > li.active > a:hover, .nav-pills > li > a:hover {
+   background-color: #7D7575;
+}
+.nav-pills > li > a {
+    color: #660000;
+}
+
+/* End site wide section for nav pills */
+
+/* This removes the annoying padding from around panel headers */
+#newCustomerFormDiv, #newReservationActionsDiv, #newReservationNewActionDiv {
+    padding: 0px;
+}
+
+/* TODO: Figure out what this is necessary and get rid of it */
+#newCustomerFormBtns {
+    margin-left: -6px;
+}
+
+.equipmentForAction {
+    margin-top: 10px;
+}
+
+/* .navbar {
+    background: none repeat scroll 0 0 #333;
+    border: none;
+} */
