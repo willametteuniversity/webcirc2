@@ -90,9 +90,38 @@ steal(function () {
          * This function clears all the fields in the Action form. It is meant to be called
          * after an action is added, so that the user has a blank form to add another.
          */
+        steal.dev.log('Clearing Action form');
         $('#startDateTimePicker').val('');
         $('#endDateTimePicker').val('');
-        $('#actionNotes').val('')
+        $('#actionNote').val('')
+    };
+
+    var clearCustomerForm = function() {
+        /**
+         * This function clears all the fields in the Customer form
+         */
+        steal.dev.log('Clearing Customer form');
+        $('#customerFirstName').val('');
+        $('#customerLastName').val('');
+        $('#customerPhone').val('');
+        $('#customerEmail').val('');
+    };
+
+    var clearReservationForm = function() {
+        /**
+         * This function clears all the fields in the Reservation form
+         */
+        steal.dev.log('Clearing Reservation form');
+        $('#newReservationEventTitle').val('');
+        $('#newReservationNotes').val('');
+    };
+
+    var clearActions = function() {
+        /**
+         * This function removes the actions added (i.e., deletes the divs) so they don't get
+         * processed if they add another reservation
+         */
+        $('.reservationActionDiv').remove();
     };
 
     $("body").on("click", "#newCustomerModalCreate", function (event) {
@@ -375,6 +404,7 @@ steal(function () {
 
         actionCount = $(".reservationActionDiv").length;
         equipmentCount = $(".equipmentForAction").length;
+        steal.dev.log('Processing '+actionCount+' actions and '+equipmentCount+' pieces of equipment');
 
         steal.dev.log("Creating a new reservation");
         // Starting with creating the reservation so that we can provide the Reservation ID to the server when creating
@@ -459,7 +489,8 @@ steal(function () {
                                 success: function (data) {
                                     equipmentCount--;
                                     if (equipmentCount == 0 && actionCount == 0) {
-                                        steal.dev.log("All equipment and actions done!");
+                                        $('#reservationAddedSuccessfullyModal').modal('show');
+                                        steal.dev.log('All equipment and actions added');
                                     }
                                     steal.dev.log("Added equipment to action");
                                 },
@@ -474,4 +505,15 @@ steal(function () {
             });
         });
     });
+
+    $("#mainrow").on("click", "#acknowledgeReservationSuccessfullyAddedBtn", function (event) {
+        event.preventDefault();
+        clearActionForm();
+        clearCustomerForm();
+        clearReservationForm();
+        clearActions();
+        $('#reservationAddedSuccessfullyModal').modal('hide');
+
+    });
+
 });
