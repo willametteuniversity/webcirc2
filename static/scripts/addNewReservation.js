@@ -85,7 +85,7 @@ steal(function () {
         $(target).prepend(alert);
     };
 
-    var clearActionForm = function() {
+    var clearActionForm = function () {
         /**
          * This function clears all the fields in the Action form. It is meant to be called
          * after an action is added, so that the user has a blank form to add another.
@@ -363,16 +363,30 @@ steal(function () {
         /**
          * This function handles creating the reservation with its associated actions and pieces of equipment
          */
+
+
+        // These variables are used to track when we are done processing adding all actions and equipment to
+        // a particular reservation. When the user cliks the createReservationBtn, we set them equal to the total
+        // number of actions and equipments we are going to add. As the AJAX calls complete, we count them down
+        // and when they hit zero, we know they are done.
+        var actionCount = null;
+        var equipmentCount = null;
+        event.preventDefault();
+
+        actionCount = $(".reservationActionDiv").length;
+        equipmentCount = $(".equipmentForAction").length;
+
+        steal.dev.log("Creating a new reservation");
         // Starting with creating the reservation so that we can provide the Reservation ID to the server when creating
         // the subsequent actions
-        event.preventDefault();
-        steal.dev.log("Creating a new reservation")
-        var customerStatus = "SomeStatus"
+        var customerStatus = "SomeStatus";
         var eventTitle = $("#newReservationEventTitle").val();
         var customerPhone = $("#customerPhone").val();
         var customerEmail = $("#customerEmail").val();
         var customerDept = "SomeDept";
         var reservationNotes = $("#newReservationNotes").val();
+
+        // TODO: Fix these to be lookups
         var ownerID = 1;
         var customerID = 2;
         var newReservation = new Reservation({
@@ -397,7 +411,7 @@ steal(function () {
                 var startYear = formattedStartDate.getFullYear()
                 var startMonth = formattedStartDate.getMonth()
                 // javascript months are 0-11 for some reason
-                startMonth += 1
+                startMonth += 1;
                 var startDay = formattedStartDate.getDay()
                 var startMinute = formattedStartDate.getMinutes()
                 var startHour = formattedStartDate.getHours()
@@ -405,7 +419,7 @@ steal(function () {
                 var endYear = formattedEndDate.getFullYear()
                 var endMonth = formattedEndDate.getMonth()
 
-                endMonth += 1
+                endMonth += 1;
                 var endDay = formattedEndDate.getDay()
                 var endMinute = formattedEndDate.getMinutes()
                 var endHour = formattedEndDate.getHours()
@@ -424,33 +438,37 @@ steal(function () {
                 });
                 var curActionDiv = $(this).attr("id");
                 steal.dev.log("Done creating new action. Saving...");
-                newAction.save(function (){
+                newAction.save(function () {
+                    actionCount--;
                     steal.dev.log("Action saved!");
                     // And new we need to get each piece of equipment associated with this action...
-                    $('#'+curActionDiv).find(".equipmentForAction").each(function (index, value) {
+                    $('#' + curActionDiv).find(".equipmentForAction").each(function (index, value) {
                         steal.dev.log("Beginning saving of equipment to action...");
                         var equipmentId = $(this).attr("id").split("-")[1];
 
-                        InventoryItem.findOne({id: equipmentId}, function(success) {
+                        InventoryItem.findOne({id: equipmentId}, function (success) {
                             steal.dev.log("Found the item...");
-
+                            // TODO: This could be done as a custom method on the object?
                             $.ajax({
                                 url: '/addInventoryItemToAction/' + equipmentId,
                                 type: 'POST',
 
                                 data: {action: newAction.ActionID},
-                                success: function(data) {
+                                success: function (data) {
+                                    equipmentCount--;
+                                    if (equipmentCount == 0 && actionCount == 0) {
+                                        steal.dev.log("All equipment and actions done!");
+                                    }
                                     steal.dev.log("Added equipment to action");
                                 },
-                                error: function(data) {
+                                error: function (data) {
                                     steal.dev.log("Failed to add equipment to action");
                                 }
                             });
-
                         });
                     });
                 });
             });
         });
     });
-})
+});
