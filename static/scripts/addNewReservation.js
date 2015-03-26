@@ -253,6 +253,13 @@ steal(function () {
          * This function handles adding a new action to a reservation.
          */
         event.preventDefault();
+        $("#newActionForm").validate();
+        var isValid = $("#newActionForm").valid();
+        if (isValid == false) {
+            steal.dev.log("New Action Form is not valid");
+            return;
+        }
+        steal.dev.log("New Action Form is valid, proceeding...");
         // We'll need these various attributes to create the action div
         // Type of action given as the ID it has on the erver
         var actionType = $("#actionType").val();
@@ -266,6 +273,22 @@ steal(function () {
         // Latest time of the action
         // TODO: Should this be changed to represent the earliest/latest concept?
         var actionEnd = $("#endDateTime").data('date');
+        var formattedStartDate = new Date(actionStart);
+        var formattedEndDate = new Date(actionEnd);
+        var startYear = formattedStartDate.getFullYear();
+        var startMonth = formattedStartDate.getMonth();
+        // javascript months are 0-11 for some reason
+        startMonth += 1;
+        var startDay = formattedStartDate.getDate();
+        var startMinute = formattedStartDate.getMinutes();
+        var startHour = formattedStartDate.getHours();
+
+        var endYear = formattedEndDate.getFullYear();
+        var endMonth = formattedEndDate.getMonth();
+        endMonth += 1;
+        var endDay = formattedEndDate.getDate();
+        var endMinute = formattedEndDate.getMinutes();
+        var endHour = formattedEndDate.getHours();
         // Origin of the action in the form of the ID of the model on the server
         var actionOrigin = $("#actionOrigin").val();
         // Textual name of the action origin
@@ -273,27 +296,44 @@ steal(function () {
         // ID of destination Location on server, then textual
         var actionDestination = $("#actionDestination").val();
         var actionDestinationName = $("#actionDestination option:selected").text();
-        // TODO: This probably doesn't need to a field on the form?
-        var actionStatus = $("#actionStatus").val();
         // Any notes specific to that action
         var actionNote = $("#actionNote").val();
-
         // Finally, we're going to append a new action to the newReservationActions div on the right to display them to the user
         // We are going to populate a bunch of data- attributes for user later
         // We also give it a unique ID so we can tell which checkbox is linked to which action div in the add equipment
         // form
-        $("#newReservationActions").append($('<div class="well reservationActionDiv" data-actionstatus="' + actionStatus +
-        '" data-note="' + actionNote + '" data-assigned="' + actionAssignedUser + '" data-actiontype="' + actionType +
-        '" data-origin="' + actionOrigin + '" data-origintext="' + actionOriginName + '" data-destinationtext="' +
-        actionDestinationName + '" data-destination="' + actionDestination + '" data-start="' + actionStart +
-        '" data-end="' + actionEnd + '" data-actiontypetext="' + actionTypeName + '"><button type="button" class="' +
-        'btn btn-danger btn-xs pull-right del-action-btn">' +
-        '<span class="glyphicon glyphicon-remove"></span></button><div><font size=6>'
-        + actionTypeName + '</font><br /><font size=2>Between ' + actionStart + ' and ' + actionEnd
-        + '</font><br /><font size=4>From ' + actionOriginName + ' to ' + actionDestinationName
-        + '<br />Equipment:</font><br /><ul class="equipmentList"></ul></div>'
-        + '<div class="equipmentAssignedToActionDiv"></div></div>').uniqueId())
-        clearActionForm();
+
+        var newAction = new Action({
+            StartTime: startYear + "-" + startMonth + "-" + startDay + "T" + startHour + ":" + startMinute,
+            EndTime: endYear + "-" + endMonth + "-" + endDay + "T" + endHour + ":" + endMinute,
+            Origin: actionOrigin,
+            Destination: actionDestination,
+            ActionTypeID: actionType,
+            Reservation: newReservation.ReservationID,
+            AssignedOperatorID: actionAssignedUser,
+            ActionNotes: actionNote
+        });
+        newAction.save(function(saved) {
+            steal.dev.log("New action created...");
+            steal.dev.log(saved);
+            $("#newReservationActions").append($('<div class="well reservationActionDiv" data-actionid="' +
+            saved.ActionID+'"><button type="button" class="' + 'btn btn-danger btn-xs pull-right del-action-btn">' +
+            '<span class="glyphicon glyphicon-remove"></span></button><div><font size=6>'
+            + actionTypeName + '</font><br /><font size=2>Between ' + actionStart + ' and ' + actionEnd
+            + '</font><br /><font size=4>From ' + actionOriginName + ' to ' + actionDestinationName
+            + '<br />Equipment:</font><br /><ul class="equipmentList"></ul></div>'
+            + '<div class="equipmentAssignedToActionDiv"></div></div>'));
+            clearActionForm();
+            $("#showAddEquipmentModalBtn").button("enable");
+        }, function(error) {
+            // Need to display this to the user somehow...
+            steal.dev.log("There was an error creating the action")
+            steal.dev.log("Error was"+error.responseText)
+        });
+
+
+
+
     });
 
     /*
@@ -393,22 +433,20 @@ steal(function () {
          * This function handles creating the reservation with its associated actions and pieces of equipment
          */
 
+        var isValid = false;
+        steal.dev.log("Validating forms..");
+        $("#newReservationCustomerForm").validate();
+        isValid = $("#newReservationCustomerForm").valid();
+        if (isValid == false) {
+            return;
+        }
+        $("#newReservationForm").validate();
+        isValid = $("#newReservationForm").valid()
+        if (isValid == false) {
+            return;
+        }
 
-        // These variables are used to track when we are done processing adding all actions and equipment to
-        // a particular reservation. When the user cliks the createReservationBtn, we set them equal to the total
-        // number of actions and equipments we are going to add. As the AJAX calls complete, we count them down
-        // and when they hit zero, we know they are done.
-        var actionCount = null;
-        var equipmentCount = null;
-        event.preventDefault();
-
-        actionCount = $(".reservationActionDiv").length;
-        equipmentCount = $(".equipmentForAction").length;
-        steal.dev.log('Processing '+actionCount+' actions and '+equipmentCount+' pieces of equipment');
-
-        steal.dev.log("Creating a new reservation");
-        // Starting with creating the reservation so that we can provide the Reservation ID to the server when creating
-        // the subsequent actions
+        steal.dev.log("Forms are valid, proceeding...");
         var customerStatus = "SomeStatus";
         var eventTitle = $("#newReservationEventTitle").val();
         var customerPhone = $("#customerPhone").val();
@@ -419,7 +457,8 @@ steal(function () {
         // TODO: Fix these to be lookups
         var ownerID = 1;
         var customerID = 2;
-        var newReservation = new Reservation({
+
+        newReservation = new Reservation({
             CustomerStatus: customerStatus,
             EventTitle: eventTitle,
             CustomerPhone: customerPhone,
@@ -430,79 +469,8 @@ steal(function () {
             CustomerID: customerID
         });
 
-        newReservation.save(function (saved) {
-            // If we are able to create the Reservation, let's move on to creating the actions
-            steal.dev.log("Reservation saved!");
-            $(".reservationActionDiv").each(function () {
-                steal.dev.log("Creating actions...");
-                // Django expects the datestamps in a particular format
-                // TODO: I'm sure there is a more elegant way to reformat the datestamps
-                var formattedStartDate = new Date($(this).data('start'));
-                var formattedEndDate = new Date($(this).data('end'));
-                var startYear = formattedStartDate.getFullYear()
-                var startMonth = formattedStartDate.getMonth()
-                // javascript months are 0-11 for some reason
-                startMonth += 1
-                var startDay = formattedStartDate.getDate()
-                var startMinute = formattedStartDate.getMinutes()
-                var startHour = formattedStartDate.getHours()
-
-                var endYear = formattedEndDate.getFullYear()
-                var endMonth = formattedEndDate.getMonth()
-                endMonth += 1
-                var endDay = formattedEndDate.getDate()
-                var endMinute = formattedEndDate.getMinutes()
-                var endHour = formattedEndDate.getHours()
-                steal.dev.log("OK, creating new action assigned to reservation " + newReservation.ReservationID);
-                // Let's make and try to save the action
-                var newAction = new Action({
-                    StartTime: startYear + "-" + startMonth + "-" + startDay + "T" + startHour + ":" + startMinute,
-                    EndTime: endYear + "-" + endMonth + "-" + endDay + "T" + endHour + ":" + endMinute,
-                    Origin: $(this).data("origin"),
-                    Destination: $(this).data("destination"),
-                    ActionTypeID: $(this).data("actiontype"),
-                    Reservation: newReservation.ReservationID,
-                    AssignedOperatorID: $(this).data("assigned"),
-                    ActionNotes: $(this).data("note"),
-                    ActionStatus: $(this).data("status")
-                });
-
-                var curActionDiv = $(this).attr("id");
-                steal.dev.log("Done creating new action. Saving...");
-                newAction.save(function () {
-                    actionCount--;
-                    steal.dev.log("Action saved!");
-                    steal.dev.log('Dates recorded: '+newAction.StartTime+' '+newAction.EndTime);
-                    // And new we need to get each piece of equipment associated with this action...
-                    $('#' + curActionDiv).find(".equipmentForAction").each(function (index, value) {
-                        steal.dev.log("Beginning saving of equipment to action...");
-                        var equipmentId = $(this).attr("id").split("-")[1];
-
-                        InventoryItem.findOne({id: equipmentId}, function (success) {
-                            steal.dev.log("Found the item...");
-                            // TODO: This could be done as a custom method on the object?
-                            $.ajax({
-                                url: '/addInventoryItemToAction/' + equipmentId,
-                                type: 'POST',
-
-                                data: {action: newAction.ActionID},
-                                success: function (data) {
-                                    equipmentCount--;
-                                    if (equipmentCount == 0 && actionCount == 0) {
-                                        $('#reservationAddedSuccessfullyModal').modal('show');
-                                        steal.dev.log('All equipment and actions added');
-                                    }
-                                    steal.dev.log("Added equipment to action");
-                                },
-                                error: function(data) {
-                                    // TODO: If any of this fails, we need to remove the actions and the reservation
-                                    steal.dev.log("Failed to add equipment to action");
-                                }
-                            });
-                        });
-                    });
-                });
-            });
+        newReservation.save(function(saved) {
+            $("#addNewActionBtn").button("enable");
         });
     });
 
