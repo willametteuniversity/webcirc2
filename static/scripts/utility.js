@@ -56,6 +56,7 @@ var loadOrigins = function() {
     Location.findAll({}, function (locations) {
         $("#actionOrigin").empty();
         var numLocations = locations.length;
+        // TODO: This should be done with $.each
         for (x = 0; x < numLocations; x++) {
 
             $("#actionOrigin").append("<option value=\"" + locations.attr(x).LocationID + "\">" + locations[x].LocationDescription + "</option>");
@@ -83,14 +84,32 @@ var loadAssignUserToAction = function() {
     });
 };
 
-var loadTodaysActions = function() {
+var loadTodaysActions = function () {
     var todayObj = new Date();
 
-    var todayString = todayObj.getFullYear()+'-'+(todayObj.getMonth()+1)+'-'+todayObj.getDate()
+    var todayString = todayObj.getFullYear() + '-' + (todayObj.getMonth() + 1) + '-' + todayObj.getDate()
     Action.findAll({
         date: todayString
-    }, function(actions) {
-        steal.dev.log(actions);
+    }, function (actions) {
+        // This really should use Promises
+        $.each(actions, function(index, value) {
+            ActionType.findOne({id: value.ActionTypeID}, function (actionType) {
+                Location.findOne({id: value.Origin}, function (origin) {
+                    Location.findOne({id: value.Destination}, function(destination) {
+                        User.findOne({id: value.AssignedOperatorID}, function(user) {
+                            $('#todaysActionsTableBody').append('<tr><td>'+value.ActionID+'</td>'+
+                              '<td>'+actionType.ActionTypeName+'</td><td>'+
+                              value.StartTime+'</td><td>'+
+                              value.EndTime+'</td><td>'+
+                              origin.LocationDescription+'</td><td>'+
+                              destination.LocationDescription+'</td><td>'+
+                              value.ActionNotes+'</td><td>'+
+                              user.username+'</td></tr>');
+                        });
+                    });
+                });
+            });
+        });
     });
 
 };

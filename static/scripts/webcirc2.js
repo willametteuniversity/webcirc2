@@ -59,6 +59,7 @@ $(document).ready(function() {
     });
     steal("scripts/addNewEquipment.js", function() {});
     steal("scripts/addNewReservation.js", function() {});
+    steal("scripts/viewTodaysActions.js", function() {});
     steal("scripts/administerCollections.js", function() {
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
             /**
