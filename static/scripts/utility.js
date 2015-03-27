@@ -46,6 +46,7 @@ var loadActionTypes = function() {
     ActionType.findAll({}, function (actionTypes) {
         $("#actionType").empty();
         var numActionTypes = actionTypes.length;
+        $("#actionType").append("<option value=\"\" selected=\"\">Please select an Action Type...</option>");
         for (x = 0; x < numActionTypes; x++) {
             $("#actionType").append("<option value=\"" + actionTypes.attr(x).ActionTypeID + "\">" + actionTypes.attr(x).ActionTypeName + "</option>");
         }
@@ -55,6 +56,7 @@ var loadActionTypes = function() {
 var loadOrigins = function() {
     Location.findAll({}, function (locations) {
         $("#actionOrigin").empty();
+        $("#actionOrigin").append("<option value=\"\" selected=\"\">Please select an Origin...</option>");
         var numLocations = locations.length;
         // TODO: This should be done with $.each
         for (x = 0; x < numLocations; x++) {
@@ -67,6 +69,7 @@ var loadOrigins = function() {
 var loadDestinations = function() {
     Location.findAll({}, function (locations) {
         $("#actionDestination").empty();
+        $("#actionDestination").append("<option value=\"\" selected=\"\">Please select a Destination...</option>");
         var numLocations = locations.length;
         for (x = 0; x < numLocations; x++) {
 
@@ -78,6 +81,7 @@ var loadDestinations = function() {
 var loadAssignUserToAction = function() {
     User.findAll({}, function (users) {
        $("#actionAssignedUser").empty();
+        $("#actionAssignedUser").append("<option value=\"\" selected=\"\">Please select User...</option>");
         $.each(users, function(index, value) {
             $("#actionAssignedUser").append("<option value=\"" + value.id+ "\">" + value.username+"</option>");
         })
