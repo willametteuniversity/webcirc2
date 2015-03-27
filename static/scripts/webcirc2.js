@@ -306,6 +306,7 @@ $(document).ready(function() {
             loadOrigins();
             loadDestinations();
             loadAssignUserToAction();
+
             //fillNewReservation();
         });
     });

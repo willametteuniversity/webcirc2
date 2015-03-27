@@ -82,6 +82,30 @@ steal(function () {
             '<a class="close" data-dismiss="alert">x</a>' +
             '<p>User was successfully created!</p>' +
             '</div>'
+        $(target).prepend(alert)
+    };
+
+    var showReservationCreatedAlert = function (target) {
+        /**
+         * This function displays a reservation created alert
+         * @type {string}
+         */
+        var alert = '<div class="alert alert-success">'+
+                    '<a href="#" class="close" data-dismiss="alert">&times;</a>'+
+                    '<strong>Success!</strong> A reservation was successfully created.'+
+                    'Please add Actions now</div>';
+        $(target).prepend(alert);
+    };
+
+    var showReservationCreationError = function (target) {
+        /**
+         * This function displays a reservation creation error
+         * @type {string}
+         */
+        var alert = '<div class="alert alert-success">'+
+                    '<a href="#" class="close" data-dismiss="alert">&times;</a>'+
+                    '<strong>Success!</strong> A reservation was successfully created.'+
+                    'Please add Actions now</div>';
         $(target).prepend(alert);
     };
 
@@ -360,6 +384,18 @@ steal(function () {
          * a reservation
          */
         steal.dev.log("Bringing up add equipment modal");
+        var labels = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('LabelName'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: '/autocomplete/?model=items&term=%QUERY'
+        });
+
+        labels.initialize();
+        $("#equipmentId").typeahead(null, {
+            name: 'labels',
+            displayKey: 'LabelName',
+            source: labels.ttAdapter()
+        });
         // Clear the current checkboxes, as we want to regenerate them in case the actions have changed
         $(".addEquipmentActionCheck").remove();
         $(".addEquipmentToActionCheckSpan").remove();
@@ -470,7 +506,16 @@ steal(function () {
         });
 
         newReservation.save(function(saved) {
+            // Now we can allow them to add actions
             $("#addNewActionBtn").button("enable");
+            // Want to disable the Create Reservation button so they don't accidentally make more
+            $("#createReservationBtn").attr('disabled', 'disabled');
+            // Display a reservation created message
+            showReservationCreatedAlert($("#newReservationForm"));
+        }, function(error) {
+            $("#addingReservationErrorMessageDiv").html(error.responseText);
+            $("#errorAddingReservationModal").modal('show');
+
         });
     });
 
