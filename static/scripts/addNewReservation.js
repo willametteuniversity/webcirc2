@@ -317,7 +317,8 @@ steal(function () {
             steal.dev.log("New action created...");
             steal.dev.log(saved);
             $("#newReservationActions").append($('<div class="well reservationActionDiv" data-actionid="' +
-            saved.ActionID+'"><button type="button" class="' + 'btn btn-danger btn-xs pull-right del-action-btn">' +
+            saved.ActionID+'" data-origintext="'+actionOriginName+'" data-destinationtext="'+actionDestinationName+
+            '" data-actiontypetext="'+actionTypeName+'"><button type="button" class="' + 'btn btn-danger btn-xs pull-right del-action-btn">' +
             '<span class="glyphicon glyphicon-remove"></span></button><div><font size=6>'
             + actionTypeName + '</font><br /><font size=2>Between ' + actionStart + ' and ' + actionEnd
             + '</font><br /><font size=4>From ' + actionOriginName + ' to ' + actionDestinationName
@@ -485,3 +486,24 @@ steal(function () {
     });
 
 });
+
+
+
+
+/**
+a1.res = res1
+a2.res = res1
+
+newResStart = firstActionLeavingHome
+newResEnd = lastResActionReturningHome
+
+nearestResStartPast = action where action.res == res1 && e leaves home && is nearest in time to newResStart && occurs before newResStart
+nearestResEnd = action where action.res == res1 and e returns home
+
+if no action where e leaves home occurs between newResStart / newResEnd AND
+    no action where e returns home occurs between newResStart / newResEnd AND
+    newResStart is before nearestResEnd
+*/
+
+
+
