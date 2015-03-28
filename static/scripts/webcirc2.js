@@ -307,6 +307,18 @@ $(document).ready(function() {
             loadOrigins();
             loadDestinations();
             loadAssignUserToAction();
+                    var labels = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('LabelName'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: '/autocomplete/?model=items&term=%QUERY'
+        });
+
+        labels.initialize();
+        $("#equipmentTerm").typeahead(null, {
+            name: 'labels',
+            displayKey: 'LabelName',
+            source: labels.ttAdapter()
+        });
 
             //fillNewReservation();
         });

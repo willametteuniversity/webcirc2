@@ -1,4 +1,5 @@
 steal(function () {
+
     var populateInfo = function (result) {
         /**
          * This function handles populating the information into the form from a
@@ -90,9 +91,9 @@ steal(function () {
          * This function displays a reservation created alert
          * @type {string}
          */
-        var alert = '<div class="alert alert-success">'+
-            '<a href="#" class="close" data-dismiss="alert">&times;</a>'+
-            '<strong>Success!</strong> A reservation was successfully created.'+
+        var alert = '<div class="alert alert-success">' +
+            '<a href="#" class="close" data-dismiss="alert">&times;</a>' +
+            '<strong>Success!</strong> A reservation was successfully created.' +
             'Please add Actions now</div>';
         $(target).prepend(alert);
     };
@@ -102,9 +103,9 @@ steal(function () {
          * This function displays a reservation creation error
          * @type {string}
          */
-        var alert = '<div class="alert alert-success">'+
-            '<a href="#" class="close" data-dismiss="alert">&times;</a>'+
-            '<strong>Success!</strong> A reservation was successfully created.'+
+        var alert = '<div class="alert alert-success">' +
+            '<a href="#" class="close" data-dismiss="alert">&times;</a>' +
+            '<strong>Success!</strong> A reservation was successfully created.' +
             'Please add Actions now</div>';
         $(target).prepend(alert);
     };
@@ -120,7 +121,7 @@ steal(function () {
         $('#actionNote').val('')
     };
 
-    var clearCustomerForm = function() {
+    var clearCustomerForm = function () {
         /**
          * This function clears all the fields in the Customer form
          */
@@ -131,7 +132,7 @@ steal(function () {
         $('#customerEmail').val('');
     };
 
-    var clearReservationForm = function() {
+    var clearReservationForm = function () {
         /**
          * This function clears all the fields in the Reservation form
          */
@@ -140,12 +141,39 @@ steal(function () {
         $('#newReservationNotes').val('');
     };
 
-    var clearActions = function() {
+    var clearActions = function () {
         /**
          * This function removes the actions added (i.e., deletes the divs) so they don't get
          * processed if they add another reservation
          */
         $('.reservationActionDiv').remove();
+    };
+
+    var addEquipmentToAction = function (item) {
+        $('#newReservationEquipment').append('<div class="equipmentEntry well">#'+item.ItemID+' '+item.Description+'</div>');
+        // TODO: Check if item is already added? 
+        // If the all actions box is checked, no need for anything else,
+        // just iterate over every action div to add the equipment 
+        if ($("#applyToAllActionsChk").is(":checked")) {
+            $('.reservationActionDiv').each(function (index, value) {
+                $(this).append('<div class="equipmentForAction" id="equipmentForAction-' + item.ItemID + '">#' +
+                item.ItemID + ' ' + item.Description +'<button type="button" class="removeEquipmentFromActionBtn'+
+
+                'btn btn-xs btn-danger pull-right">Remove</button>' + '</div>');
+            });
+        } else {
+            // If only a few check boxes are checked (not the All Actions one), then we need to find out which action divs 
+            // are desired, iterate over them, and append the equipment 
+            // Here we use the uniqueId we generated for the action Divs earlier 
+            $('.addEquipmentActionCheck:checked').each(function (index) {
+                steal.dev.log('Appending equipment to Action');
+                $('#' + $(this).data('actiondivid')).append('<div class="equipmentForAction" id="equipmentForAction-' +
+                item.ItemID + '">#' + item.ItemID + ' ' + item.Description +
+                '<button type="button" class="removeEquipmentFromActionBtn btn btn-xs btn-danger pull-right">Remove</button>' +
+                '</div>');
+            });
+        };
+        $("#addEquipmentModal").modal('hide');
     };
 
     $("body").on("click", "#newCustomerModalCreate", function (event) {
@@ -337,12 +365,12 @@ steal(function () {
             AssignedOperatorID: actionAssignedUser,
             ActionNotes: actionNote
         });
-        newAction.save(function(saved) {
+        newAction.save(function (saved) {
             steal.dev.log("New action created...");
             steal.dev.log(saved);
             $("#newReservationActions").append($('<div class="well reservationActionDiv" data-actionid="' +
-            saved.ActionID+'" data-origintext="'+actionOriginName+'" data-destinationtext="'+actionDestinationName+
-            '" data-actiontypetext="'+actionTypeName+'"><button type="button" class="' + 'btn btn-danger btn-xs pull-right del-action-btn">' +
+            saved.ActionID + '" data-origintext="' + actionOriginName + '" data-destinationtext="' + actionDestinationName +
+            '" data-actiontypetext="' + actionTypeName + '"><button type="button" class="' + 'btn btn-danger btn-xs pull-right del-action-btn">' +
             '<span class="glyphicon glyphicon-remove"></span></button><div><font size=6>'
             + actionTypeName + '</font><br /><font size=2>Between ' + actionStart + ' and ' + actionEnd
             + '</font><br /><font size=4>From ' + actionOriginName + ' to ' + actionDestinationName
@@ -350,13 +378,11 @@ steal(function () {
             + '<div class="equipmentAssignedToActionDiv"></div></div>'));
             clearActionForm();
             $("#showAddEquipmentModalBtn").button("enable");
-        }, function(error) {
+        }, function (error) {
             // Need to display this to the user somehow...
             steal.dev.log("There was an error creating the action")
-            steal.dev.log("Error was"+error.responseText)
+            steal.dev.log("Error was" + error.responseText)
         });
-
-
 
 
     });
@@ -385,21 +411,14 @@ steal(function () {
          * a reservation
          */
         steal.dev.log("Bringing up add equipment modal");
-        var labels = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('LabelName'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: '/autocomplete/?model=items&term=%QUERY'
-        });
 
-        labels.initialize();
-        $("#equipmentId").typeahead(null, {
-            name: 'labels',
-            displayKey: 'LabelName',
-            source: labels.ttAdapter()
-        });
         // Clear the current checkboxes, as we want to regenerate them in case the actions have changed
         $(".addEquipmentActionCheck").remove();
         $(".addEquipmentToActionCheckSpan").remove();
+
+        $('#equipmentDisplayByLabelList').empty();
+        $('#equipmentDisplayByCategoryDiv').empty();
+        $('#equipmentDisplayByCategoryDiv').append('<div id="equipmentDisplayByTree"></div>');
         $("#addEquipmentModal").modal('show');
         // Now we want to iterate over every action that has been added to build the checkbox list
         $.each($(".reservationActionDiv"), function (index, value) {
@@ -422,35 +441,39 @@ steal(function () {
          * a reservation.
          */
         var equipmentTerm = $("#equipmentTerm").val();
+        steal.dev.log('Equipment term is: ' + $('#equipmentTerm').val());
         if ($.isNumeric(equipmentTerm)) {
-            // They typed in a specific ID
+            InventoryItem.findOne({id: equipmentTerm}, function (item) {
+                addEquipmentToAction(item);
+            });
         } else {
             // Let's try to find a Label that matches
             steal.dev.log('Searching for a label...');
-            InventoryItem.findAll({eterm: equipmentTerm}, function(items) {
-                $.each(items, function(index, value) {
-                    var descString = '#'+value.ItemID+' ';
-                    ItemBrand.findOne({id: value.BrandID}, function(brand) {
+            InventoryItem.findAll({eterm: equipmentTerm}, function (items) {
+                $.each(items, function (index, value) {
+                    var descString = '#' + value.ItemID + ' ';
+                    ItemBrand.findOne({id: value.BrandID}, function (brand) {
                         descString += brand.BrandName;
-                        ItemModel.findOne({id: value.ModelID}, function(model) {
-                            descString += ' '+model.ModelDesignation;
-                            steal.dev.log('DescString is: '+descString);
-                            $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item">'+descString+'</a>');
+                        ItemModel.findOne({id: value.ModelID}, function (model) {
+                            descString += ' ' + model.ModelDesignation;
+                            steal.dev.log('DescString is: ' + descString);
+                            $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item">' + descString + '</a>');
                         })
                     });
                 });
             });
 
+            steal.dev.log('Populating jsTree');
             // OK, now let's populate the tree on the other side...
             $("#equipmentDisplayByTree").jstree({
-                'core' : {
-                    'data' : {
-                        'url' : '/categoryHierarchyWithEquipment/'+equipmentTerm
+                'core': {
+                    'data': {
+                        'url': '/categoryHierarchyWithEquipment/' + equipmentTerm
                     },
-                    'check_callback' : true
+                    'check_callback': true
 
                 },
-                'plugins' : ['dnd']
+                'plugins': ['dnd']
             });
         }
     });
@@ -504,14 +527,14 @@ steal(function () {
             CustomerID: customerID
         });
 
-        newReservation.save(function(saved) {
+        newReservation.save(function (saved) {
             // Now we can allow them to add actions
             $("#addNewActionBtn").button("enable");
             // Want to disable the Create Reservation button so they don't accidentally make more
             $("#createReservationBtn").attr('disabled', 'disabled');
             // Display a reservation created message
             showReservationCreatedAlert($("#newReservationForm"));
-        }, function(error) {
+        }, function (error) {
             $("#addingReservationErrorMessageDiv").html(error.responseText);
             $("#errorAddingReservationModal").modal('show');
 
@@ -529,8 +552,6 @@ steal(function () {
     });
 
 });
-
-
 
 
 /**
