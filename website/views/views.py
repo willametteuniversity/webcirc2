@@ -265,6 +265,11 @@ def autocomplete(request):
         for eachResult in r:
             results.append({u'CollectionID': eachResult.CollectionID, u'CollectionName': eachResult.CollectionName})
 
+    elif request.GET[u'model'].lower() == u'items':
+        r = Label.objects.filter(Q(LabelName__icontains = request.GET[u'term']))
+        for eachResult in r:
+            results.append({u'LabelID': eachResult.LabelID, u'LabelName': eachResult.LabelName})
+
     return HttpResponse(json.dumps(results), content_type=u'application/json')
 
 
