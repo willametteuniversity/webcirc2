@@ -1,0 +1,23 @@
+[
+	{
+        "model": "website.ItemLabel",
+        "fields": {
+            "LabelID" : 2000,
+            "ItemID" : 1
+        }
+    },
+  	{
+        "model": "website.ItemLabel",
+        "fields": {
+            "LabelID" : 2001,
+            "ItemID" : 1
+        }
+    },
+    	{
+        "model": "website.ItemLabel",
+        "fields": {
+            "LabelID" : 2001,
+            "ItemID" : 2
+        }
+    }
+]

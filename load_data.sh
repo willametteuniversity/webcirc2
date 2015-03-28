@@ -18,3 +18,4 @@ rm webcirc2/dbwebcirc2.db
 ~/webcirc2/bin/python manage.py loaddata ConsumableItem
 ~/webcirc2/bin/python manage.py loaddata InventoryItem
 ~/webcirc2/bin/python manage.py loaddata ItemHistory
+~/webcirc2/bin/python manage.py loaddata ItemLabel

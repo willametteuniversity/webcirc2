@@ -421,40 +421,26 @@ steal(function () {
          * This button handles searching the server for an inventory item and adding it to
          * a reservation.
          */
-        var invItemId = $("#equipmentId").val();
-        steal.dev.log("Searching for equipment ID: " + invItemId);
-        InventoryItem.findOne({id: invItemId}, function (success) {
-            steal.dev.log("Found an item");
-            $("#newReservationEquipment").append('<div class="equipmentEntry well">#' + success.ItemID + ' ' + success.Description + '</div>');
-            // TODO: Check if item is already added?
-            // If the all actions box is checked, no need for anything else, just iterate over every action div to add the equipment
-            if ($("#applyToAllActionsChk").is(":checked")) {
-                $('.reservationActionDiv').each(function (index, value) {
-                    $(this).append('<div class="equipmentForAction" id="equipmentForAction-' + success.ItemID + '">#' + success.ItemID + ' ' + success.Description +
-                    '<button type="button" class="removeEquipmentFromActionBtn btn btn-xs btn-danger pull-right">Remove</button>' +
-                    '</div>');
+        var equipmentTerm = $("#equipmentTerm").val();
+        if ($.isNumeric(equipmentTerm)) {
+            // They typed in a specific ID
+        } else {
+            // Let's try to find a Label that matches
+            steal.dev.log('Searching for a label...');
+            InventoryItem.findAll({eterm: equipmentTerm}, function(items) {
+                $.each(items, function(index, value) {
+                    var descString = '#'+value.ItemID+' ';
+                    ItemBrand.findOne({id: value.BrandID}, function(brand) {
+                        descString += brand.BrandName;
+                        ItemModel.findOne({id: value.ModelID}, function(model) {
+                            descString += ' '+model.ModelDesignation;
+                            steal.dev.log('DescString is: '+descString);
+                            $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item">'+descString+'</a>');
+                        })
+                    });
                 });
-            } else {
-                // If only a few check boxes are checked (not the All Actions one), then we need to find out which action divs
-                // are desired, iterate over them, and append the equipment
-                // Here we use the uniqueId we generated for the action Divs earlier
-                $('.addEquipmentActionCheck:checked').each(function (index) {
-                    steal.dev.log('Appending equipment to Action');
-                    $('#' + $(this).data('actiondivid')).append('<div class="equipmentForAction" id="equipmentForAction-' + success.ItemID + '">#' + success.ItemID + ' ' + success.Description +
-                    '<button type="button" class="removeEquipmentFromActionBtn btn btn-xs btn-danger pull-right">Remove</button>' +
-                    '</div>');
-                });
-            }
-            // Get rid of the modal
-            $("#addEquipmentModal").modal('hide');
-        }, function (error) {
-            // If we didn't find a piece of equipment with that ID
-            $(".alert-equipment-not-found").hide();
-            $("#addEquipmentModalBody").prepend('<div class="alert alert-danger alert-dismissable alert-equipment-not-found">' +
-            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-            '<strong>Error!</strong> An item with that ID was not found! Please try again.' +
-            '</div>');
-        });
+            });
+        }
     });
 
     $("#mainrow").on("click", ".removeEquipmentFromActionBtn", function (event) {

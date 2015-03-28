@@ -49,7 +49,7 @@ label {
 }
 
 #addEquipmentModal .modal-dialog {
-    width: 60%;
+    width: 80%;
 }
 /* These are rules for the label management page */
 #labelListBox, #categoryListBox {
@@ -104,8 +104,3 @@ label {
 .equipmentForAction {
     margin-top: 10px;
 }
-
-/* .navbar {
-    background: none repeat scroll 0 0 #333;
-    border: none;
-} */
