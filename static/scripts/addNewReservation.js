@@ -91,9 +91,9 @@ steal(function () {
          * @type {string}
          */
         var alert = '<div class="alert alert-success">'+
-                    '<a href="#" class="close" data-dismiss="alert">&times;</a>'+
-                    '<strong>Success!</strong> A reservation was successfully created.'+
-                    'Please add Actions now</div>';
+            '<a href="#" class="close" data-dismiss="alert">&times;</a>'+
+            '<strong>Success!</strong> A reservation was successfully created.'+
+            'Please add Actions now</div>';
         $(target).prepend(alert);
     };
 
@@ -103,9 +103,9 @@ steal(function () {
          * @type {string}
          */
         var alert = '<div class="alert alert-success">'+
-                    '<a href="#" class="close" data-dismiss="alert">&times;</a>'+
-                    '<strong>Success!</strong> A reservation was successfully created.'+
-                    'Please add Actions now</div>';
+            '<a href="#" class="close" data-dismiss="alert">&times;</a>'+
+            '<strong>Success!</strong> A reservation was successfully created.'+
+            'Please add Actions now</div>';
         $(target).prepend(alert);
     };
 
@@ -440,6 +440,18 @@ steal(function () {
                     });
                 });
             });
+
+            // OK, now let's populate the tree on the other side...
+            $("#equipmentDisplayByTree").jstree({
+                'core' : {
+                    'data' : {
+                        'url' : '/categoryHierarchyWithEquipment/'+equipmentTerm
+                    },
+                    'check_callback' : true
+
+                },
+                'plugins' : ['dnd']
+            });
         }
     });
 
@@ -522,19 +534,19 @@ steal(function () {
 
 
 /**
-a1.res = res1
-a2.res = res1
+ a1.res = res1
+ a2.res = res1
 
-newResStart = firstActionLeavingHome
-newResEnd = lastResActionReturningHome
+ newResStart = firstActionLeavingHome
+ newResEnd = lastResActionReturningHome
 
-nearestResStartPast = action where action.res == res1 && e leaves home && is nearest in time to newResStart && occurs before newResStart
-nearestResEnd = action where action.res == res1 and e returns home
+ nearestResStartPast = action where action.res == res1 && e leaves home && is nearest in time to newResStart && occurs before newResStart
+ nearestResEnd = action where action.res == res1 and e returns home
 
-if no action where e leaves home occurs between newResStart / newResEnd AND
-    no action where e returns home occurs between newResStart / newResEnd AND
-    newResStart is before nearestResEnd
-*/
+ if no action where e leaves home occurs between newResStart / newResEnd AND
+ no action where e returns home occurs between newResStart / newResEnd AND
+ newResStart is before nearestResEnd
+ */
 
 
 
