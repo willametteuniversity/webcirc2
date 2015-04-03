@@ -93,7 +93,7 @@ var loadTodaysActions = function () {
 
     var todayString = todayObj.getFullYear() + '-' + (todayObj.getMonth() + 1) + '-' + todayObj.getDate()
     Action.findAll({
-        date: todayString
+        //date: todayString
     }, function (actions) {
         // This really should use Promises
         $.each(actions, function(index, value) {
@@ -101,14 +101,20 @@ var loadTodaysActions = function () {
                 Location.findOne({id: value.Origin}, function (origin) {
                     Location.findOne({id: value.Destination}, function(destination) {
                         User.findOne({id: value.AssignedOperatorID}, function(user) {
-                            $('#todaysActionsTableBody').append('<tr><td>'+value.ActionID+'</td>'+
-                              '<td>'+actionType.ActionTypeName+'</td><td>'+
-                              value.StartTime+'</td><td>'+
-                              value.EndTime+'</td><td>'+
-                              origin.LocationDescription+'</td><td>'+
-                              destination.LocationDescription+'</td><td>'+
-                              value.ActionNotes+'</td><td>'+
-                              user.username+'</td></tr>');
+                            Building.findOne({id: origin.BuildingID}, function(origin_building) {
+                                Building.findOne({id: destination.BuildingID}, function(destination_building) {
+                                    $('#todaysActionsTableBody').append('<tr><td>'+value.ActionID+'</td><td>'+
+                                      value.Reservation[0]+'</td><td>'+
+                                      actionType.ActionTypeName+'</td><td>'+
+                                      new Date(value.StartTime).toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})+'</td><td>'+
+                                      new Date(value.EndTime).toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})+'</td><td>'+
+                                      origin_building.BuildingCode+'-'+origin.RoomNumber+'</td><td>'+
+                                      destination_building.BuildingCode+'-'+destination.RoomNumber+'</td><td>'+
+                                      'eqipment goes here</td><td>'+
+                                      value.ActionNotes+'</td><td>'+
+                                      user.username+'</td></tr>');
+                                });
+                            });
                         });
                     });
                 });
