@@ -103,17 +103,31 @@ var loadTodaysActions = function () {
                         User.findOne({id: value.AssignedOperatorID}, function(user) {
                             Building.findOne({id: origin.BuildingID}, function(origin_building) {
                                 Building.findOne({id: destination.BuildingID}, function(destination_building) {
-                                    Reservation.findOne({id: value.Reservation[0]}, function(reservation) {
-                                        $('#todaysActionsTableBody').append('<tr><td>'+value.ActionID+'</td><td>'+
-                                          reservation.ReservationID+'</td><td>'+
-                                          actionType.ActionTypeName+'</td><td>'+
-                                          new Date(value.StartTime).toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})+'</td><td>'+
-                                          new Date(value.EndTime).toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})+'</td><td>'+
-                                          origin_building.BuildingCode+'-'+origin.RoomNumber+'</td><td>'+
-                                          destination_building.BuildingCode+'-'+destination.RoomNumber+'</td><td>'+
-                                          'equipment goes here</td><td>'+
-                                          value.ActionNotes+'</td><td>'+
-                                          user.username+'</td></tr>');
+                                    InventoryItem.findAll({action_id: value.ActionID}, function(equipment) {
+                                        var equipment_ids = "";
+                                        $.each(equipment, function(index, item){
+                                                equipment_ids += item.ItemID;
+                                                equipment_ids += ", "
+                                        });
+                                        equipment_ids = equipment_ids.slice(0,equipment_ids.length-2)
+                                        $('#todaysActionsTableBody').append(
+                                            '<tr><td>' + value.ActionID + '</td><td>' +
+                                            value.Reservation[0] + '</td><td>' +
+                                            actionType.ActionTypeName + '</td><td>' +
+                                            new Date(value.StartTime).toLocaleTimeString('en-US', {
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            }) + '</td><td>' +
+                                            new Date(value.EndTime).toLocaleTimeString('en-US', {
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            }) + '</td><td>' +
+                                            origin_building.BuildingCode + '-' + origin.RoomNumber + '</td><td>' +
+                                            destination_building.BuildingCode + '-' + destination.RoomNumber + '</td><td>'+
+                                            equipment_ids+'</td><td>'+
+                                            value.ActionNotes + '</td><td>' +
+                                            user.username + '</td></tr>'
+                                        );
                                     });
                                 });
                             });

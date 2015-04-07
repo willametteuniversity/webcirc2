@@ -17,6 +17,13 @@ var InventoryItem = can.Model({
                 dataType: 'json'
             });
         }
+        if (params.action_id) {
+            return $.ajax({
+                url: '/actionInventoryItems/'+params.action,
+                type: 'get',
+                dataType: 'json'
+            });
+        }
     },
     findOne: 'GET /inventoryItems/{id}',
     create:  'POST /inventoryItems/',
