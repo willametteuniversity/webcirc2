@@ -45,7 +45,6 @@ steal(function() {
         Label.destroy(categoryToDelete).then(function() {
             $('#categoryMasterTree').jstree('refresh');
         });
-
     });
 
 });
