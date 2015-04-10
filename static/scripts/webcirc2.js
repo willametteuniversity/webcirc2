@@ -203,8 +203,8 @@ $(document).ready(function() {
                     'data' : {
                         'url' : '/categoryHierarchy/'
                      },
+                     'multiple': false,
                      'check_callback' : true
-
                  },
                  'plugins' : ['dnd']
              });
