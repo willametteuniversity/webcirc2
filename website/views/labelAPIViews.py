@@ -46,5 +46,8 @@ def labelDetail(request, pk=None, ln=None, format=None):
     elif request.method == u'DELETE':
         # If they used DELETE, they want to delete the Collection
         # that they sent the PK for.
+        children = Label.objects.filter(ParentCategory = label.LabelID)
+        for eachChildren in children:
+            eachChildren.ParentCategory = label.ParentCategory
         label.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
