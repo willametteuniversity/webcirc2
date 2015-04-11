@@ -104,3 +104,8 @@ label {
 .equipmentForAction {
     margin-top: 10px;
 }
+
+
+.middletext {
+    vertical-align: middle !important;
+}
