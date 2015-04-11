@@ -13,7 +13,7 @@
             "StatusID": 1,
             "StorageLocation": 1,
             "CollectionID": 1,
-            "Action": []
+            "Action": [1,2]
         }
     },
     {
@@ -30,7 +30,7 @@
             "StatusID": 1,
             "StorageLocation": 1,
             "CollectionID": 1,
-            "Action": [2]
+            "Action": [1,2]
         }
     }
 ]

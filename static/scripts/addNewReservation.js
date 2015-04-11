@@ -440,41 +440,61 @@ steal(function () {
          * This button handles searching the server for an inventory item and adding it to
          * a reservation.
          */
-        var equipmentTerm = $("#equipmentTerm").val();
-        steal.dev.log('Equipment term is: ' + $('#equipmentTerm').val());
-        if ($.isNumeric(equipmentTerm)) {
-            InventoryItem.findOne({id: equipmentTerm}, function (item) {
-                addEquipmentToAction(item);
-            });
-        } else {
-            // Let's try to find a Label that matches
-            steal.dev.log('Searching for a label...');
-            InventoryItem.findAll({eterm: equipmentTerm}, function (items) {
-                $.each(items, function (index, value) {
-                    var descString = '#' + value.ItemID + ' ';
-                    ItemBrand.findOne({id: value.BrandID}, function (brand) {
-                        descString += brand.BrandName;
-                        ItemModel.findOne({id: value.ModelID}, function (model) {
-                            descString += ' ' + model.ModelDesignation;
-                            steal.dev.log('DescString is: ' + descString);
-                            $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item">' + descString + '</a>');
-                        })
+        console.log('Attempting to add equipment...');
+        var actions = [];
+        var categoryID = $('#equipmentDisplayByTree').jstree().get_selected()[0];
+        $.each($('.reservationActionDiv'), function(key, value) {
+            console.log($(this).data('actionid'));
+            actions.push($(this).data('actionid'));
+        });
+
+
+        $.get('/findAvailableEquipment/', {'actions': actions}, function(result) {
+            console.log(result);
+        });
+    });
+
+    $('#mainrow').on('keyup', '#equipmentTerm', function (event) {
+        event.preventDefault();
+        console.log(event);
+        if (event.keyCode == 13) {
+            var equipmentTerm = $("#equipmentTerm").val();
+            steal.dev.log('Equipment term is: ' + $('#equipmentTerm').val());
+            if ($.isNumeric(equipmentTerm)) {
+                InventoryItem.findOne({id: equipmentTerm}, function (item) {
+                    addEquipmentToAction(item);
+                });
+            } else {
+                // Let's try to find a Label that matches
+                steal.dev.log('Searching for a label...');
+                InventoryItem.findAll({eterm: equipmentTerm}, function (items) {
+                    $.each(items, function (index, value) {
+                        var descString = '#' + value.ItemID + ' ';
+                        ItemBrand.findOne({id: value.BrandID}, function (brand) {
+                            descString += brand.BrandName;
+                            ItemModel.findOne({id: value.ModelID}, function (model) {
+                                descString += ' ' + model.ModelDesignation;
+                                steal.dev.log('DescString is: ' + descString);
+                                $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item">' + descString + '</a>');
+                            })
+                        });
                     });
                 });
-            });
 
-            steal.dev.log('Populating jsTree');
-            // OK, now let's populate the tree on the other side...
-            $("#equipmentDisplayByTree").jstree({
-                'core': {
-                    'data': {
-                        'url': '/categoryHierarchyWithEquipment/' + equipmentTerm
+                $('#equipmentDisplayByTree').empty().jstree('destroy');
+                steal.dev.log('Populating jsTree');
+                // OK, now let's populate the tree on the other side...
+                $("#equipmentDisplayByTree").jstree({
+                    'core': {
+                        'data': {
+                            'url': '/categoryHierarchyWithEquipment/' + equipmentTerm
+                        },
+                        'check_callback': true
+
                     },
-                    'check_callback': true
-
-                },
-                'plugins': ['dnd']
-            });
+                    'plugins': ['dnd']
+                });
+            }
         }
     });
 
