@@ -39,32 +39,61 @@ def addNewReservationForm(request):
     '''
     return render(request, u'forms/add_new_reservation_form.html', {})
 
+def previousAction(action):
+    print 'Checking previousAction for: '+str(action.ActionID)
+    previousAction = Action.objects.filter(EndTime__lt=action.StartTime).order_by(u'-EndTime')[0]
+    print 'Previous action is: '+str(previousAction.ActionID)
+    return previousAction
+
+def isDelivery(action, equipment):
+    print 'Checking isDelivery for: '+str(action.ActionID)+' '+str(equipment.ItemID)
+    if action.Origin != equipment.StorageLocation:
+        return False
+    return True
+
+def equipmentComesHomeFirst(action, equipment):
+    print 'Checking equipmentComesHomeFirst for: '+str(action.ActionID)+' '+str(equipment.ItemID)
+    if previousAction(action).Destination != equipment.StorageLocation:
+        return False
+    return True
+
+def addToSchedule(action, equipment):
+    if isDelivery(action, equipment):
+        if not equipmentComesHomeFirst(action, equipment):
+            print "Equipment does not come home first!"
+            return False
+        else:
+            print "Equipment comes home first!"
+            return True
+    else:
+        print previousAction(action).Reservation.all()[0]
+        print action.Reservation.all()[0]
+        if previousAction(action).Reservation.all()[0] != action.Reservation.all()[0]:
+            print "Previous action and action reservations are not the same!"
+            return False
+        else:
+            print "Previous action and action reservations are the same!"
+            return True
+
 def findAvailableEquipment(request):
     '''
     This function attempts to find an available piece of equipment to fulfill a reservation's needs
     '''
-    reservationID = request.GET['reservation']
+
+    actions = request.GET['actions[]'].split(",")
     equipmentCategory = request.GET['categoryid']
-    reservationActions = Action.objects.filter(Reservation=reservationID)
-    print u'reservationActions is', reservationActions
-    # These are all the possible pieces of equipment that could fulfill the request
     candidateEquipment = InventoryItem.objects.filter(CategoryID=equipmentCategory)
-
-    print candidateEquipment
-    for eachEquipment in candidateEquipment:
-        homeLocation = eachEquipment.StorageLocation
-        # Now we need to get the most recent action in the past that this piece of equipment was involved in
-        actionsWithThisEquipment = eachEquipment.Action.all()
-        print u'actionsWithThisEquipmentIs: ', actionsWithThisEquipment
-
-        earliestActionInNewRes = reservationActions.filter(Origin=eachEquipment.StorageLocation).order_by(u'StartTime')[0]
-        print u'earliestActionInNewRes', earliestActionInNewRes
-
-        nearestActionPast = actionsWithThisEquipment.filter(EndTime__lt=earliestActionInNewRes.StartTime).order_by(u'EndTime')[0]
-        print u'nearestActionPast is: ', nearestActionPast
-
-
-
-
+    print 'Candidate equipment is: '
+    for q in candidateEquipment:
+        print q.ItemID
+    print '----'
+    for eachAction in actions:
+        print "Retrieving action "+eachAction
+        curAction = Action.objects.get(ActionID=eachAction)
+        for eachEquipment in candidateEquipment:
+            if addToSchedule(curAction, eachEquipment):
+                print "Found an acceptable piece of equipment!"
+            else:
+                print "This piece of equipment does not work, trying another one!"
 
     return HttpResponse(200)
