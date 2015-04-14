@@ -109,3 +109,22 @@ label {
 .middletext {
     vertical-align: middle !important;
 }
+.collapse {
+    display: none;
+}
+
+li.invlabel {
+    color: green;
+}
+
+li.noninvlabel {
+    color: red;
+}
+
+li.consumablelabel {
+    color: blue;
+}
+
+.black {
+    color: black;
+}
