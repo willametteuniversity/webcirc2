@@ -6,7 +6,11 @@ steal(function() {
     });
 
     $("body").on("click", "#showAllItems", function (event) {
-        $(".collapse").slideToggle(0)
+        $(".collapse").show()
+    });
+
+    $("body").on("click", "#hideAllItems", function (event) {
+        $(".collapse").hide()
     });
 
 });
