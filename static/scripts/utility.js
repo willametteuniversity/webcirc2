@@ -80,7 +80,7 @@ var loadDestinations = function() {
 
 var loadAssignUserToAction = function() {
     User.findAll({}, function (users) {
-       $("#actionAssignedUser").empty();
+        $("#actionAssignedUser").empty();
         $("#actionAssignedUser").append("<option value=\"\" selected=\"\">Please select User...</option>");
         $.each(users, function(index, value) {
             $("#actionAssignedUser").append("<option value=\"" + value.id+ "\">" + value.username+"</option>");
@@ -133,37 +133,35 @@ var loadTodaysActions = function () {
     };
 
     var getItemCategoryName = function(item) {
-        return new Promise(function(resolve, reject) {
-            Label.findOne({id: item.CategoryID}, function (category) {
-                resolve(category.LabelName);
+        return Label.findOne({id: item.CategoryID}, function (category) {
+                return category.LabelName;
             });
-        });
     };
 
+
     var getEquipmentList = function(action) {
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
             InventoryItem.findAll({action_id: action.ActionID}, function (invItems) {
                 NonInventoryItem.findAll({action_id: action.ActionID}, function (nonInvItems) {
                     ConsumableItem.findAll({action_id: action.ActionID}, function (consumableItems) {
                         var eq = '<span class="header">View n items</span><br /><div class="collapse"><ul>';
+                        var actionCount = 0;
                         $.each(invItems, function (index, invItem) {
-                            getItemCategoryName(invItem).then(function (itemName) {
-                                eq += '<li class="invlabel"><span class="black">' + itemName + ' (' + invItem.CategoryID + ')' + '</span></li>';
-                                console.log("a");
-                            });
-                        }).promise().then(function () {
-                            console.log("b");
-                            $.each(nonInvItems, function (index, nonInvItem) {
-                                eq += '<li class="noninvlabel"><span class="black">' + nonInvItem.CategoryID + '</span></li>';
-                            }).then(function () {
-                                console.log("c");
-                                $.each(consumableItems, function (index, consumableItem) {
-                                    eq += '<li class="consumablelabel"><span class="black">' + consumableItem.CategoryID + '</span></li>';
-                                }).then(function () {
-                                    console.log("d");
+                            actionCount += 1;
+                            $.when(getItemCategoryName(invItem)).then(function(itemName) {
+                                actionCount -= 1;
+                                if (actionCount > 0) {
+                                    eq += '<li class="invlabel"><span class="black">' + itemName.LabelName + ' (' + invItem.CategoryID + ')' + '</span></li>';
+                                } else {
+                                    $.each(nonInvItems, function (index, nonInvItem) {
+                                        eq += '<li class="noninvlabel"><span class="black">' + nonInvItem.CategoryID + '</span></li>';
+                                    });
+                                    $.each(consumableItems, function (index, consumableItem) {
+                                        eq += '<li class="consumablelabel"><span class="black">' + consumableItem.CategoryID + '</span></li>';
+                                    });
                                     eq += '</ul></div>';
                                     resolve(eq);
-                                });
+                                }
                             });
                         });
                     });
