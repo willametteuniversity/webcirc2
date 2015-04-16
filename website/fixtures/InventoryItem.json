@@ -25,7 +25,7 @@
             "ModelID": 1,
             "Description": "This is another item",
             "Notes": "It is also cool",
-            "CategoryID": 1,
+            "CategoryID": 121,
             "ParentItem": null,
             "StatusID": 1,
             "StorageLocation": 1,

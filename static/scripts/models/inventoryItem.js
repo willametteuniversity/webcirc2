@@ -9,17 +9,17 @@ var InventoryItem = can.Model({
                 type: 'get',
                 dataType: 'json'
             });
-        } else {
-            steal.dev.log('Getting all items...');
+        } else if (params.action_id) {
+            steal.dev.log('Searching inventory item by action..');
             return $.ajax({
-                url: '/inventoryItems/',
+                url: '/actionInventoryItems/'+params.action_id,
                 type: 'get',
                 dataType: 'json'
             });
-        }
-        if (params.action_id) {
+        } else {
+            steal.dev.log('Getting all inventory items..');
             return $.ajax({
-                url: '/actionInventoryItems/'+params.action,
+                url: '/inventoryItems/',
                 type: 'get',
                 dataType: 'json'
             });

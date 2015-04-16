@@ -107,7 +107,7 @@ var loadTodaysActions = function () {
 
     var getActionType = function(action) {
         return new Promise(function(resolve, reject) {
-            ActionType.findOne({id: action.ActionTypeID}, function (actionType) {
+            return ActionType.findOne({id: action.ActionTypeID}, function (actionType) {
                 resolve(actionType.ActionTypeName);
             });
         });
@@ -134,36 +134,62 @@ var loadTodaysActions = function () {
 
     var getItemCategoryName = function(item) {
         return Label.findOne({id: item.CategoryID}, function (category) {
-                return category.LabelName;
-            });
+            return category.LabelName;
+        });
     };
 
+    var getItems = function(action, itemType, labelClass, list) {
+        return new Promise(function(resolve, reject) {
+            itemType.findAll({}, function (invItems) {
+                actionCount = invItems.length;
+                console.log(actionCount);
+                total = 0;
+                tmplist = '';
+                $.each(invItems, function (index, invItem) {
+                    //actionCount++;
+                    getItemCategoryName(invItem).then(function (itemName) {
+                        if (actionCount > 0) {
+                            var name;
+                            if (itemType != InventoryItem) {
+                                name = invItem.Description;
+                            } else {
+                                name = itemName.LabelName;
+                            }
+                            tmplist += '<li class="' + labelClass + '"><span class="black">' + name + ' (' + invItem.ItemID + ')' + '</span></li>';
+                            total++;
+                        } else {
+                            console.log("were resolving with list: " + tmplist);
+                            resolve([tmplist, total]);
+                        }
+                        actionCount--;
+                    });
+                });
+            });
+        });
+    };
 
     var getEquipmentList = function(action) {
         return new Promise(function(resolve, reject) {
-            InventoryItem.findAll({action_id: action.ActionID}, function (invItems) {
-                NonInventoryItem.findAll({action_id: action.ActionID}, function (nonInvItems) {
-                    ConsumableItem.findAll({action_id: action.ActionID}, function (consumableItems) {
-                        var eq = '<span class="header">View n items</span><br /><div class="collapse"><ul>';
-                        var actionCount = 0;
-                        $.each(invItems, function (index, invItem) {
-                            actionCount += 1;
-                            $.when(getItemCategoryName(invItem)).then(function(itemName) {
-                                actionCount -= 1;
-                                if (actionCount > 0) {
-                                    eq += '<li class="invlabel"><span class="black">' + itemName.LabelName + ' (' + invItem.CategoryID + ')' + '</span></li>';
-                                } else {
-                                    $.each(nonInvItems, function (index, nonInvItem) {
-                                        eq += '<li class="noninvlabel"><span class="black">' + nonInvItem.CategoryID + '</span></li>';
-                                    });
-                                    $.each(consumableItems, function (index, consumableItem) {
-                                        eq += '<li class="consumablelabel"><span class="black">' + consumableItem.CategoryID + '</span></li>';
-                                    });
-                                    eq += '</ul></div>';
-                                    resolve(eq);
-                                }
-                            });
-                        });
+            getItems(action, InventoryItem, 'invlabel', "").then(function (invItemsArr) {
+                getItems(action, NonInventoryItem, 'noninvlabel', "").then(function (nonInvItemsArr) {
+                    getItems(action, ConsumableItem, 'consumablelabel', "").then(function (consumableItemsArr) {
+                        var count = 0;
+                        var invItems = invItemsArr[0];
+                        count += invItemsArr[1];
+                        var nonInvItems = nonInvItemsArr[0];
+                        count += nonInvItemsArr[1];
+                        var consumableItems = consumableItemsArr[0];
+                        count += consumableItemsArr[1];
+                        var word = 'item';
+                        if (count > 1) {
+                            word += 's'
+                        };
+                        var eq = '<span class="header">' +  count + ' ' + word +'</span><br /><div class="collapse"><ul>';
+                        eq += invItems;
+                        eq += nonInvItems;
+                        eq += consumableItems;
+                        eq += '</ul></div>';
+                        resolve(eq);
                     });
                 });
             });
@@ -203,18 +229,4 @@ var loadTodaysActions = function () {
             });
         });
     });
-
-
-
-    //                                InventoryItem.findAll({action_id: value.ActionID}, function(equipment) {
-    //                                    var equipment_ids = "";
-    //                                    $.each(equipment, function(index, item){
-    //                                                equipment_ids += "Item"//category;
-    //                                                equipment_ids += " (";
-    //                                                equipment_ids += item.ItemID;
-    //                                                equipment_ids += ")";
-    //                                                equipment_ids += ", ";
-    //                                    });
-    //                                    equipment_ids = equipment_ids.slice(0,equipment_ids.length-2)
-
 };

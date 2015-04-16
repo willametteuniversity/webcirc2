@@ -6,16 +6,15 @@ var ConsumableItem = can.Model({
                     type: 'get',
                     dataType: 'json'
                 });
-            } else {
+            } else if (params.action_id) {
                 return $.ajax({
-                    url: '/consumableItems/',
+                    url: '/consumableItems/'+params.action_id,
                     type: 'get',
                     dataType: 'json'
                 });
-            }
-            if (params.action_id) {
+            } else {
                 return $.ajax({
-                    url: '/consumableItems/'+params.action,
+                    url: '/consumableItems/',
                     type: 'get',
                     dataType: 'json'
                 });

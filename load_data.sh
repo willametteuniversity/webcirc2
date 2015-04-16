@@ -1,5 +1,5 @@
 #!/bin/sh
-rm webcirc_venv/dbwebcirc_venv.db
+rm webcirc2/dbwebcirc2.db
 ~/webcirc_venv/bin/python manage.py syncdb
 ~/webcirc_venv/bin/python manage.py loaddata User
 ~/webcirc_venv/bin/python manage.py loaddata Status
