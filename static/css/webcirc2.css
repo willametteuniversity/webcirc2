@@ -114,15 +114,15 @@ label {
 }
 
 li.invlabel {
-    color: green;
+    color: forestgreen;
 }
 
 li.noninvlabel {
-    color: red;
+    color: dodgerblue;
 }
 
 li.consumablelabel {
-    color: blue;
+    color: #8b0000;
 }
 
 .black {
