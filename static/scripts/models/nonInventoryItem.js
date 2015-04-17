@@ -20,8 +20,8 @@ var NonInventoryItem = can.Model({
             });
         }
     },
-    findOne: 'GET /noninventoryitems/{id}',
-    create:  'POST /noninventoryitems/',
-    update:  'PUT /noninventoryitems/{id}',
-    destroy: 'DELETE /noninventoryitems/{id}'
+    findOne: 'GET /nonInventoryItems/{id}',
+    create:  'POST /nonInventoryItems/',
+    update:  'PUT /nonInventoryItems/{id}',
+    destroy: 'DELETE /nonInventoryItems/{id}'
 }, {});

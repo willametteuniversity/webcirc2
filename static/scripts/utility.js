@@ -139,30 +139,28 @@ var loadTodaysActions = function () {
     };
 
     var getItems = function(action, itemType, labelClass, list) {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             itemType.findAll({}, function (invItems) {
-                actionCount = invItems.length;
-                console.log(actionCount);
-                total = 0;
-                tmplist = '';
+                var actionCount = invItems.length;
+                var results = [];
                 $.each(invItems, function (index, invItem) {
-                    //actionCount++;
-                    getItemCategoryName(invItem).then(function (itemName) {
-                        if (actionCount > 0) {
-                            var name;
-                            if (itemType != InventoryItem) {
-                                name = invItem.Description;
-                            } else {
-                                name = itemName.LabelName;
-                            }
-                            tmplist += '<li class="' + labelClass + '"><span class="black">' + name + ' (' + invItem.ItemID + ')' + '</span></li>';
-                            total++;
-                        } else {
-                            console.log("were resolving with list: " + tmplist);
-                            resolve([tmplist, total]);
-                        }
+                    if (itemType != InventoryItem) {
+                        results.add('<li class="' + labelClass + '"><span class="black">' + invItem.Description + ' (' + invItem.ItemID + ')' + '</span></li>')
                         actionCount--;
-                    });
+                        if (actionCount == 0) {
+                            console.log(results);
+                        }
+                    } else {
+                        Label.findOne({id: invItem.CategoryID}, function(category) {
+                            console.log('Found a label');
+                            results.add('<li class="' + labelClass + '"><span class="black">' + category + ' (' + invItem.ItemID + ')' + '</span></li>')
+                            actionCount--;
+                            if (actionCount == 0) {
+                                console.log(results);
+                            }
+                        })
+                    }
+
                 });
             });
         });
@@ -170,9 +168,9 @@ var loadTodaysActions = function () {
 
     var getEquipmentList = function(action) {
         return new Promise(function(resolve, reject) {
-            getItems(action, InventoryItem, 'invlabel', "").then(function (invItemsArr) {
-                getItems(action, NonInventoryItem, 'noninvlabel', "").then(function (nonInvItemsArr) {
-                    getItems(action, ConsumableItem, 'consumablelabel', "").then(function (consumableItemsArr) {
+            getItems(action, InventoryItem, 'invlabel').then(function (invItemsArr) {
+                getItems(action, NonInventoryItem, 'noninvlabel').then(function (nonInvItemsArr) {
+                    getItems(action, ConsumableItem, 'consumablelabel').then(function (consumableItemsArr) {
                         var count = 0;
                         var invItems = invItemsArr[0];
                         count += invItemsArr[1];
