@@ -139,11 +139,8 @@ var loadTodaysActions = function () {
     };
 
     var getItems = function(action, itemType, labelClass) {
-        console.log('in getItems for action: '+action.ActionID);
         return new Promise(function (resolve, reject) {
             itemType.findAll({action_id: action.ActionID}, function (invItems) {
-                console.log('invItems for action: '+action.ActionID);
-                console.log(invItems);
                 if (invItems.length == 0) {
                     resolve(['', 0])
                 }
@@ -171,22 +168,18 @@ var loadTodaysActions = function () {
 
                 });
             }, function(failed) {
-                console.log('Failed to find items for action: '+action.ActionID);
                 resolve([null, 0]);
             });
         });
     };
 
     var getEquipmentList = function(action) {
-        console.log('getEquipmentList for: ' + action.ActionID);
         return new Promise(function (resolve, reject) {
-            console.log('Building Promise for: '+action.ActionID);
             var invItemsArr = [];
             var nonInvItemsArr = [];
             var consumableItemsArr = [];
             var c = 3;
             var doneGetItems = function () {
-                console.log('doneGetItems for:'+action.ActionID);
                 var count = 0;
                 if (invItemsArr[0] != null) {
                     var invItems = invItemsArr[0];
@@ -204,7 +197,7 @@ var loadTodaysActions = function () {
                 if (count > 1) {
                     word += 's'
                 };
-                var eq = '<span class="header">' +  count + ' ' + word +'</span><br /><div class="collapse"><ul>';
+                var eq = '<span class="header">Click to <span replace-text="hide">view</span> ' +  count + ' ' + word +'</span><br /><div class="collapse"><ul>';
                 if (invItemsArr[0] != null) {
                     eq += invItems;
                 }
@@ -215,12 +208,10 @@ var loadTodaysActions = function () {
                     eq += consumableItems;
                 }
                 eq += '</ul></div>';
-                console.log(eq);
                 resolve(eq);
             };
             getItems(action, InventoryItem, 'invlabel').then(function (result) {
                 c -= 1;
-                console.log('inv c is: '+c+' for action: '+action.ActionID);
                 invItemsArr = result;
                 if (c == 0) {
                     doneGetItems();
@@ -229,7 +220,6 @@ var loadTodaysActions = function () {
 
             getItems(action, NonInventoryItem, 'noninvlabel').then(function (result) {
                 c -= 1;
-                console.log('non c is: '+c+' for action: '+action.ActionID);
                 nonInvItemsArr = result;
                 if (c == 0) {
                     doneGetItems();
@@ -238,9 +228,7 @@ var loadTodaysActions = function () {
 
             getItems(action, ConsumableItem, 'consumablelabel').then(function (result) {
                 c -= 1;
-                console.log('cons c is: '+c+' for action: '+action.ActionID);
                 consumableItemsArr = result;
-
                 if (c == 0) {
                     doneGetItems();
                 }
@@ -263,7 +251,6 @@ var loadTodaysActions = function () {
             var attributeCount = 5;
             var row = startRow(action);
             var buildFinalRow = function() {
-                console.log('Building final row');
                 row += rowAttributes['actionType'] + '</td><td class="middletext">';
                 row += formatDate(action.StartTime) + '</td><td class="middletext">';
                 row += formatDate(action.EndTime) + '</td><td class="middletext">';
@@ -299,7 +286,6 @@ var loadTodaysActions = function () {
             });
 
             getEquipmentList(action).then(function(equipmentList) {
-
                 attributeCount -= 1;
                 rowAttributes['equipmentList'] = equipmentList;
                 if (attributeCount == 0) {
@@ -316,6 +302,6 @@ var loadTodaysActions = function () {
             });
         });
     }, function (errors) {
-        console.log('errors!');
+        console.log(errors);
     });
 };
