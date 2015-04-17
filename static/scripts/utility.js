@@ -138,58 +138,112 @@ var loadTodaysActions = function () {
         });
     };
 
-    var getItems = function(action, itemType, labelClass, list) {
+    var getItems = function(action, itemType, labelClass) {
+        console.log('in getItems for action: '+action.ActionID);
         return new Promise(function (resolve, reject) {
-            itemType.findAll({}, function (invItems) {
+            itemType.findAll({action_id: action.ActionID}, function (invItems) {
+                console.log('invItems for action: '+action.ActionID);
+                console.log(invItems);
+                if (invItems.length == 0) {
+                    resolve(['', 0])
+                }
                 var actionCount = invItems.length;
-                var results = [];
+                var argh = '';
+                var total = 0;
                 $.each(invItems, function (index, invItem) {
                     if (itemType != InventoryItem) {
-                        results.add('<li class="' + labelClass + '"><span class="black">' + invItem.Description + ' (' + invItem.ItemID + ')' + '</span></li>')
-                        actionCount--;
+                        argh += '<li class="' + labelClass + '"><span class="black">' + invItem.Description + ' (' + invItem.ItemID + ')' + '</span></li>';
+                        actionCount -= 1;
+                        total += 1;
                         if (actionCount == 0) {
-                            console.log(results);
+                            resolve([argh, total]);
                         }
                     } else {
                         Label.findOne({id: invItem.CategoryID}, function(category) {
-                            console.log('Found a label');
-                            results.add('<li class="' + labelClass + '"><span class="black">' + category + ' (' + invItem.ItemID + ')' + '</span></li>')
-                            actionCount--;
+                            argh += '<li class="' + labelClass + '"><span class="black">' + category.LabelName + ' (' + invItem.ItemID + ')' + '</span></li>';
+                            actionCount -= 1;
+                            total += 1;
                             if (actionCount == 0) {
-                                console.log(results);
+                                resolve([argh, total])
                             }
                         })
                     }
 
                 });
+            }, function(failed) {
+                console.log('Failed to find items for action: '+action.ActionID);
+                resolve([null, 0]);
             });
         });
     };
 
     var getEquipmentList = function(action) {
-        return new Promise(function(resolve, reject) {
-            getItems(action, InventoryItem, 'invlabel').then(function (invItemsArr) {
-                getItems(action, NonInventoryItem, 'noninvlabel').then(function (nonInvItemsArr) {
-                    getItems(action, ConsumableItem, 'consumablelabel').then(function (consumableItemsArr) {
-                        var count = 0;
-                        var invItems = invItemsArr[0];
-                        count += invItemsArr[1];
-                        var nonInvItems = nonInvItemsArr[0];
-                        count += nonInvItemsArr[1];
-                        var consumableItems = consumableItemsArr[0];
-                        count += consumableItemsArr[1];
-                        var word = 'item';
-                        if (count > 1) {
-                            word += 's'
-                        };
-                        var eq = '<span class="header">' +  count + ' ' + word +'</span><br /><div class="collapse"><ul>';
-                        eq += invItems;
-                        eq += nonInvItems;
-                        eq += consumableItems;
-                        eq += '</ul></div>';
-                        resolve(eq);
-                    });
-                });
+        console.log('getEquipmentList for: ' + action.ActionID);
+        return new Promise(function (resolve, reject) {
+            console.log('Building Promise for: '+action.ActionID);
+            var invItemsArr = [];
+            var nonInvItemsArr = [];
+            var consumableItemsArr = [];
+            var c = 3;
+            var doneGetItems = function () {
+                console.log('doneGetItems for:'+action.ActionID);
+                var count = 0;
+                if (invItemsArr[0] != null) {
+                    var invItems = invItemsArr[0];
+                    count += invItemsArr[1];
+                }
+                if (nonInvItemsArr[0] != null) {
+                    var nonInvItems = nonInvItemsArr[0];
+                    count += nonInvItemsArr[1];
+                }
+                if (consumableItemsArr[0] != null) {
+                    var consumableItems = consumableItemsArr[0];
+                    count += consumableItemsArr[1];
+                }
+                var word = 'item';
+                if (count > 1) {
+                    word += 's'
+                };
+                var eq = '<span class="header">' +  count + ' ' + word +'</span><br /><div class="collapse"><ul>';
+                if (invItemsArr[0] != null) {
+                    eq += invItems;
+                }
+                if (nonInvItemsArr[0] != null) {
+                    eq += nonInvItems;
+                }
+                if (consumableItemsArr[0] != null) {
+                    eq += consumableItems;
+                }
+                eq += '</ul></div>';
+                console.log(eq);
+                resolve(eq);
+            };
+            getItems(action, InventoryItem, 'invlabel').then(function (result) {
+                c -= 1;
+                console.log('inv c is: '+c+' for action: '+action.ActionID);
+                invItemsArr = result;
+                if (c == 0) {
+                    doneGetItems();
+                }
+            });
+
+            getItems(action, NonInventoryItem, 'noninvlabel').then(function (result) {
+                c -= 1;
+                console.log('non c is: '+c+' for action: '+action.ActionID);
+                nonInvItemsArr = result;
+                if (c == 0) {
+                    doneGetItems();
+                }
+            });
+
+            getItems(action, ConsumableItem, 'consumablelabel').then(function (result) {
+                c -= 1;
+                console.log('cons c is: '+c+' for action: '+action.ActionID);
+                consumableItemsArr = result;
+
+                if (c == 0) {
+                    doneGetItems();
+                }
             });
         });
     };
@@ -205,26 +259,63 @@ var loadTodaysActions = function () {
         //date: todayString
     }, function (actions) {
         $.each(actions, function(index, action) {
+            var rowAttributes = {};
+            var attributeCount = 5;
             var row = startRow(action);
-            getActionType(action).then(function(actionType){
-                row += actionType + '</td><td class="middletext">';
+            var buildFinalRow = function() {
+                console.log('Building final row');
+                row += rowAttributes['actionType'] + '</td><td class="middletext">';
                 row += formatDate(action.StartTime) + '</td><td class="middletext">';
                 row += formatDate(action.EndTime) + '</td><td class="middletext">';
-                getLocationString(action.Origin).then(function(originString){
-                    row += originString + '</td><td class="middletext">';
-                    getLocationString(action.Destination).then(function(destinationString){
-                        row += destinationString + '</td><td class="middletext">';
-                        getEquipmentList(action).then(function(equipmentList){
-                            row += equipmentList + '</td><td class="middletext">';
-                            row += action.ActionNotes + '</td><td class="middletext">';
-                            getActionOperator(action).then(function(operator){
-                                row += operator  + '</td>';
-                                $('#todaysActionsTableBody').append(row);
-                            });
-                        });
-                    });
-                });
+                row += rowAttributes['originString'] + '</td><td class="middletext">';
+                row += rowAttributes['destinationString'] + '</td><td class="middletext">';
+                row += rowAttributes['equipmentList'] + '</td><td class="middletext">';
+                row += action.ActionNotes + '</td><td class="middletext">';
+                row += rowAttributes['operator']  + '</td>';
+                $('#todaysActionsTableBody').append(row);
+            };
+            getActionType(action).then(function(actionType) {
+                attributeCount -= 1;
+                rowAttributes['actionType'] = actionType
+                if (attributeCount == 0) {
+                    buildFinalRow();
+                }
+            });
+
+            getLocationString(action.Origin).then(function(originString) {
+                attributeCount -= 1;
+                rowAttributes['originString'] = originString;
+                if (attributeCount == 0) {
+                    buildFinalRow();
+                }
+            });
+
+            getLocationString(action.Destination).then(function(destinationString){
+                attributeCount -= 1;
+                rowAttributes['destinationString'] = destinationString;
+                if (attributeCount == 0) {
+                    buildFinalRow();
+                }
+            });
+
+            getEquipmentList(action).then(function(equipmentList) {
+
+                attributeCount -= 1;
+                rowAttributes['equipmentList'] = equipmentList;
+                if (attributeCount == 0) {
+                    buildFinalRow();
+                }
+            });
+
+            getActionOperator(action).then(function(operator){
+                attributeCount -= 1;
+                rowAttributes['operator'] = operator;
+                if (attributeCount == 0) {
+                    buildFinalRow();
+                }
             });
         });
+    }, function (errors) {
+        console.log('errors!');
     });
 };

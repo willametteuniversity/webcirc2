@@ -8,7 +8,7 @@ var ConsumableItem = can.Model({
                 });
             } else if (params.action_id) {
                 return $.ajax({
-                    url: '/consumableItems/'+params.action_id,
+                    url: '/actionConsumableItems/'+params.action_id,
                     type: 'get',
                     dataType: 'json'
                 });
@@ -20,8 +20,8 @@ var ConsumableItem = can.Model({
                 });
             }
     },
-    findOne: 'GET /consumableitems/{id}',
-    create:  'POST /consumableitems/',
-    update:  'PUT /consumableitems/{id}',
-    destroy: 'DELETE /consumableitems/{id}'
+    findOne: 'GET /consumableItems/{id}',
+    create:  'POST /consumableItems/',
+    update:  'PUT /consumableItems/{id}',
+    destroy: 'DELETE /consumableItems/{id}'
 }, {});
