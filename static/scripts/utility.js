@@ -88,8 +88,14 @@ var loadAssignUserToAction = function() {
     });
 };
 
-var loadTodaysActions = function () {
-    var todayObj = new Date();
+var loadTodaysActions = function (tarDate) {
+    $('#todaysActionsTableBody').empty();
+    if (tarDate) {
+        var todayObj = tarDate;
+    } else {
+        var todayObj = new Date();
+    }
+
     var todayString = todayObj.getFullYear() + '-' + (todayObj.getMonth() + 1) + '-' + todayObj.getDate();
     // perhaps split the day into before now and after now
 
@@ -244,7 +250,7 @@ var loadTodaysActions = function () {
     };
 
     Action.findAll({
-        //date: todayString
+        date: todayString
     }, function (actions) {
         $.each(actions, function(index, action) {
             var rowAttributes = {};

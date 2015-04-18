@@ -42,4 +42,11 @@ steal(function() {
         });
     });
 
+    $("body").on("click", "#loadActionsForDateBtn", function (event) {
+        event.preventDefault();
+        var dateToLoad = $("#viewActionsByDate").data('date');
+        var fDateToLoad = new Date(dateToLoad);
+        loadTodaysActions(fDateToLoad);
+    });
+
 });
