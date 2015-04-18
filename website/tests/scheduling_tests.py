@@ -12,6 +12,8 @@ from website.views import reservationViews
 from website.models import *
 from datetime import datetime, timedelta
 from django.test.client import RequestFactory
+from django.utils import timezone
+import pytz
 
 class SchedulingTests(TestCase):
 
@@ -40,8 +42,9 @@ class SchedulingTests(TestCase):
                                                        ReservationNotes="",
                                                        EventTitle="")
 
-        start = datetime.now() + timedelta(days=1)
-        end = datetime.now() + timedelta(days=1, hours=1)
+        start = timezone.now() + timedelta(days=1)
+        end = timezone.now() + timedelta(days=1, hours=1)
+
 
         first_action = Action.objects.create(ActionID=1,
                                              AssignedOperatorID=generic_user,
@@ -54,8 +57,8 @@ class SchedulingTests(TestCase):
                                              ActionNotes="This is action 1")
         first_action.Reservation.add(first_reservation)
 
-        start = datetime.now() + timedelta(days=2)
-        end = datetime.now() + timedelta(days=2, hours = 1)
+        start = timezone.now() + timedelta(days=2)
+        end = timezone.now() + timedelta(days=2, hours = 1)
         second_action = Action.objects.create(ActionID=2,
                                               AssignedOperatorID=generic_user,
                                               ActionTypeID=pickup_action_type,
@@ -84,7 +87,7 @@ class SchedulingTests(TestCase):
         generic_status = Status.objects.create(StatusID=1,
                                                StatusDescription="Unit test")
 
-        InventoryItem.objects.create(ItemID=1,
+        i1 = InventoryItem.objects.create(ItemID=1,
                                      Description="Item 1",
                                      CategoryID=generic_category,
                                      StorageLocation=storage_location,
@@ -96,7 +99,7 @@ class SchedulingTests(TestCase):
                                      ParentItem=None,
                                      StatusID=generic_status)
 
-        InventoryItem.objects.create(ItemID=2,
+        i2 = InventoryItem.objects.create(ItemID=2,
                                      Description="Item 2",
                                      CategoryID=generic_category,
                                      StorageLocation=storage_location,
@@ -108,10 +111,10 @@ class SchedulingTests(TestCase):
                                      ParentItem=None,
                                      StatusID=generic_status)
 
+        i1.Action.add(first_action, second_action)
+        i2.Action.add(first_action, second_action)
 
     def test_simple_scheduling(self):
-        start = datetime.now() + timedelta(days=3)
-        end = datetime.now() + timedelta(days=3, hours=1)
         res = Reservation.objects.create(pk=2,
                                          CustomerID=User.objects.get(pk=1),
                                          OwnerID=User.objects.get(pk=1),
@@ -122,8 +125,8 @@ class SchedulingTests(TestCase):
                                          ReservationNotes="",
                                          EventTitle="Second Test Reservation")
 
-        start = datetime.now() + timedelta(days=3)
-        end = datetime.now() + timedelta(days=3, hours=1)
+        start = timezone.now() + timedelta(days=3)
+        end = timezone.now() + timedelta(days=3, hours=1)
         a1 = Action.objects.create(ActionID=3,
                                    AssignedOperatorID=User.objects.get(pk=1),
                                    ActionTypeID=ActionType.objects.get(pk=1),
@@ -135,8 +138,8 @@ class SchedulingTests(TestCase):
                                    ActionNotes="This is action 1")
         a1.Reservation.add(res)
 
-        start = datetime.now() + timedelta(days=4)
-        end = datetime.now() + timedelta(days=4, hours=1)
+        start = timezone.now() + timedelta(days=4)
+        end = timezone.now() + timedelta(days=4, hours=1)
         a2 = Action.objects.create(ActionID=4,
                                    AssignedOperatorID=User.objects.get(pk=1),
                                    ActionTypeID=ActionType.objects.get(pk=2),
@@ -150,7 +153,96 @@ class SchedulingTests(TestCase):
 
         request = self.factory.get('/findAvailableEquipment/?actions[]=3,4&categoryid=1')
         response = reservationViews.findAvailableEquipment(request)
-        self.assertEqual(1, 1)
+        self.assertEqual(response.status_code, 200)
+
+    def test_b_starts_during_a(self):
+        res = Reservation.objects.create(pk=2,
+                                         CustomerID=User.objects.get(pk=1),
+                                         OwnerID=User.objects.get(pk=1),
+                                         CustomerPhone="",
+                                         CustomerEmail="",
+                                         CustomerDept="",
+                                         CustomerStatus="",
+                                         ReservationNotes="",
+                                         EventTitle="Second Test Reservation")
+
+        start = timezone.now() + timedelta(days=1, hours=6)
+        end = timezone.now() + timedelta(days=1, hours=7)
+        a1 = Action.objects.create(ActionID=5,
+                                   AssignedOperatorID=User.objects.get(pk=1),
+                                   ActionTypeID=ActionType.objects.get(pk=1),
+                                   StartTime=start,
+                                   EndTime=end,
+                                   Origin=Location.objects.get(pk=1),
+                                   Destination=Location.objects.get(pk=2),
+                                   ActionStatus="Incomplete",
+                                   ActionNotes="This is action 1")
+        a1.Reservation.add(res)
+
+        start = timezone.now() + timedelta(days=4)
+        end = timezone.now() + timedelta(days=4, hours=1)
+        a2 = Action.objects.create(ActionID=6,
+                                   AssignedOperatorID=User.objects.get(pk=1),
+                                   ActionTypeID=ActionType.objects.get(pk=2),
+                                   StartTime=start,
+                                   EndTime=end,
+                                   Origin=Location.objects.get(pk=2),
+                                   Destination=Location.objects.get(pk=1),
+                                   ActionStatus="Incomplete",
+                                   ActionNotes="This is action 1")
+        a2.Reservation.add(res)
+
+        request = self.factory.get('/findAvailableEquipment/?actions[]=5,6&categoryid=1')
+        response = reservationViews.findAvailableEquipment(request)
+        self.assertEqual(response.status_code, 501)
+
+    def test_b_starts_after_a1_ends_before_a2(self):
+        res = Reservation.objects.create(pk=2,
+                                         CustomerID=User.objects.get(pk=1),
+                                         OwnerID=User.objects.get(pk=1),
+                                         CustomerPhone="",
+                                         CustomerEmail="",
+                                         CustomerDept="",
+                                         CustomerStatus="",
+                                         ReservationNotes="",
+                                         EventTitle="Second Test Reservation")
+
+        start = timezone.now() + timedelta(days=1, hours=2)
+        end = timezone.now() + timedelta(days=1, hours=3)
+        a1 = Action.objects.create(ActionID=3,
+                                   AssignedOperatorID=User.objects.get(pk=1),
+                                   ActionTypeID=ActionType.objects.get(pk=1),
+                                   StartTime=start,
+                                   EndTime=end,
+                                   Origin=Location.objects.get(pk=1),
+                                   Destination=Location.objects.get(pk=2),
+                                   ActionStatus="Incomplete",
+                                   ActionNotes="This is action 1")
+        a1.Reservation.add(res)
+
+        start = timezone.now() + timedelta(days=1, hours=6)
+        end = timezone.now() + timedelta(days=1, hours=7)
+        a2 = Action.objects.create(ActionID=4,
+                                   AssignedOperatorID=User.objects.get(pk=1),
+                                   ActionTypeID=ActionType.objects.get(pk=2),
+                                   StartTime=start,
+                                   EndTime=end,
+                                   Origin=Location.objects.get(pk=2),
+                                   Destination=Location.objects.get(pk=1),
+                                   ActionStatus="Incomplete",
+                                   ActionNotes="This is action 1")
+        a2.Reservation.add(res)
+
+        request = self.factory.get('/findAvailableEquipment/?actions[]=3,4&categoryid=1')
+        response = reservationViews.findAvailableEquipment(request)
+        self.assertEqual(response.status_code, 501)
+
+    def tearDown(self):
+        pass
+        #Action.objects.get(pk=3).delete()
+        #Action.objects.get(pk=4).delete()
+        #Reservation.objects.get(pk=2).delete()
+
 
 
 

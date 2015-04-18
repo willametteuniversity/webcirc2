@@ -40,19 +40,28 @@ def addNewReservationForm(request):
     return render(request, u'forms/add_new_reservation_form.html', {})
 
 def previousAction(action):
-    print 'Checking previousAction for: '+str(action.ActionID)
-    previousAction = Action.objects.filter(EndTime__lt=action.StartTime).order_by(u'-EndTime')[0]
-    print 'Previous action is: '+str(previousAction.ActionID)
+    #print 'Checking previousAction for: '+str(action.ActionID)+" startTime is: "+str(action.StartTime)
+    try:
+        previousAction = Action.objects.filter(EndTime__lt=action.StartTime).order_by(u'-EndTime')[0]
+    except IndexError:
+        return False
+    #print "previousAction EndTime: "+str(previousAction.EndTime)
+    #print 'Previous action is: '+str(previousAction.ActionID)
     return previousAction
 
 def isDelivery(action, equipment):
-    print 'Checking isDelivery for: '+str(action.ActionID)+' '+str(equipment.ItemID)
+    #print 'Checking isDelivery for action: '+str(action.ActionID)+' item:'+str(equipment.ItemID)
     if action.Origin != equipment.StorageLocation:
+    #    print "It is not a deliver!"
         return False
+    #print "It is a delivery!"
     return True
 
 def equipmentComesHomeFirst(action, equipment):
-    print 'Checking equipmentComesHomeFirst for: '+str(action.ActionID)+' '+str(equipment.ItemID)
+    #print 'Checking equipmentComesHomeFirst for action: '+str(action.ActionID)+' item: '+str(equipment.ItemID)
+    pAction = previousAction(action)
+    if pAction == False:
+        return False
     if previousAction(action).Destination != equipment.StorageLocation:
         return False
     return True
@@ -60,40 +69,45 @@ def equipmentComesHomeFirst(action, equipment):
 def addToSchedule(action, equipment):
     if isDelivery(action, equipment):
         if not equipmentComesHomeFirst(action, equipment):
-            print "Equipment does not come home first!"
+            #print "Equipment does not come home first!"
             return False
         else:
-            print "Equipment comes home first!"
+            #print "Equipment comes home first!"
             return True
     else:
-        print previousAction(action).Reservation.all()[0]
-        print action.Reservation.all()[0]
+        pAction = previousAction(action)
         if previousAction(action).Reservation.all()[0] != action.Reservation.all()[0]:
-            print "Previous action and action reservations are not the same!"
             return False
         else:
-            print "Previous action and action reservations are the same!"
-            return True
+            if equipment in pAction.inventoryitem_set.all():
+                return True
+            else:
+                return False
 
 def findAvailableEquipment(request):
     '''
     This function attempts to find an available piece of equipment to fulfill a reservation's needs
     '''
-
     actions = request.GET['actions[]'].split(",")
     equipmentCategory = request.GET['categoryid']
     candidateEquipment = InventoryItem.objects.filter(CategoryID=equipmentCategory)
-    print 'Candidate equipment is: '
-    for q in candidateEquipment:
-        print q.ItemID
-    print '----'
+
+    results = {}
     for eachAction in actions:
-        print "Retrieving action "+eachAction
+        results[eachAction] = False
         curAction = Action.objects.get(ActionID=eachAction)
+
         for eachEquipment in candidateEquipment:
             if addToSchedule(curAction, eachEquipment):
-                print "Found an acceptable piece of equipment!"
+                eachEquipment.Action.add(curAction)
+                results[eachAction] = True
+                break
             else:
-                print "This piece of equipment does not work, trying another one!"
+                pass
 
-    return HttpResponse(200)
+    responseCode = 200
+    for eachResult in results.values():
+        if eachResult == False:
+            responseCode = 501
+            break
+    return HttpResponse(json.dumps(results), status=responseCode)
