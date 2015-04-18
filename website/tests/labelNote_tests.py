@@ -7,7 +7,7 @@ from django.test import TestCase
 from django.test.client import Client
 from django.http import HttpRequest
 # Import all of our views for testing
-from website.views.views import *
+from website.views.labelNoteAPIViews import *
 # Same for models
 from website.models import *
 from django.contrib.auth.models import User

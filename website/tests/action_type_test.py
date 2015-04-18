@@ -11,6 +11,7 @@ from django.core.urlresolvers import resolve
 from django.test import TestCase
 from django.test.client import Client
 from website.views.views import *
+from website.views.actionTypeAPIViews import *
 from website.models import *
 
 

@@ -7,7 +7,7 @@ from django.test import TestCase
 from django.test.client import Client
 from django.http import HttpRequest
 # Import all of our views for testing
-from website.views.views import *
+from website.views.reservationAPIViews import *
 # Same for models
 from website.models import *
 from django.contrib.auth.models import User
@@ -18,8 +18,12 @@ class ReservationAPITests(TestCase):
 
         user1 = User.objects.create()
 
-        res1 = Reservation.objects.create(EventTitle='Reservation1', CustomerEmail='billybob@test.com', CustomerID=user1, CustomerPhone=5555555551, CustomerDept='Test1', ReservationNotes='This is a test')
-        res2 = Reservation.objects.create(EventTitle='Reservation2', CustomerEmail='jimmyjohn@test.com', CustomerID=user1, CustomerPhone=5555555552, CustomerDept='Test2', ReservationNotes='This is a test')
+        res1 = Reservation.objects.create(EventTitle='Reservation1', CustomerEmail='billybob@test.com', \
+                                          CustomerID=user1, CustomerPhone=5555555551, CustomerDept='Test1',\
+                                          ReservationNotes='This is a test', OwnerID=user1)
+        res2 = Reservation.objects.create(EventTitle='Reservation2', CustomerEmail='jimmyjohn@test.com', \
+                                          CustomerID=user1, CustomerPhone=5555555552, CustomerDept='Test2', \
+                                          ReservationNotes='This is a test', OwnerID=user1)
 
     def test_can_get_list_of_reservations(self):
         c = Client()
@@ -57,7 +61,8 @@ class ReservationAPITests(TestCase):
 
         response = c.post(u'/reservations/', {u'EventTitle' : u'Reservation3', u'CustomerEmail' : u'sallysal@test.com',
                                                 u'CustomerID' : user1.pk, u'CustomerPhone' : 5555555553, u'CustomerDept' : u'Test3',
-                                                u'ReservationNotes' : u'This is a test', u'CustomerStatus' : u'A Status'})
+                                                u'ReservationNotes' : u'This is a test', u'CustomerStatus' : u'A Status',
+                                                u'OwnerID' : user1.pk})
         # We expect the server to return a proper status code and the item it made. So lets check all of those:
         self.assertEqual(u'Reservation3', response.data[u'EventTitle'])
         self.assertEqual(u'sallysal@test.com', response.data[u'CustomerEmail'])

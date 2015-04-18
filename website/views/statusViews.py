@@ -85,7 +85,6 @@ def statusList(request, format=None):
         serializer = StatusSerializer(states, many=True)
         return Response(serializer.data)
     elif request.method == u'POST':
-        print request.DATA
         serializer = StatusSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()

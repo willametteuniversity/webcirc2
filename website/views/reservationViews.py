@@ -94,20 +94,20 @@ def findAvailableEquipment(request):
 
     results = {}
     for eachAction in actions:
-        results[eachAction] = False
+        results[eachAction] = [False]
         curAction = Action.objects.get(ActionID=eachAction)
 
         for eachEquipment in candidateEquipment:
             if addToSchedule(curAction, eachEquipment):
                 eachEquipment.Action.add(curAction)
-                results[eachAction] = True
+                results[eachAction] = [True, eachEquipment.ItemID]
                 break
             else:
                 pass
 
     responseCode = 200
     for eachResult in results.values():
-        if eachResult == False:
+        if eachResult[0] == False:
             responseCode = 501
             break
     return HttpResponse(json.dumps(results), status=responseCode)

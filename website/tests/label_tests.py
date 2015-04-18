@@ -10,6 +10,7 @@ from django.http import HttpRequest
 
 # Import all of our views for testing
 from website.views.views import *
+from website.views.labelAPIViews import *
 
 # Same for models
 from website.models import *
