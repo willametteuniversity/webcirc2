@@ -291,6 +291,11 @@ $(document).ready(function() {
          */
         $("#mainrow").load("/viewTodaysActions/", function() {
             loadTodaysActions();
+            $("#viewActionsByDate").datetimepicker({
+                format: 'MM/DD/YYYY',
+                locale: 'en'
+
+            });
         })
     });
 
