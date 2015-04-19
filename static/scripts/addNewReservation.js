@@ -355,9 +355,10 @@ steal(function () {
         // We also give it a unique ID so we can tell which checkbox is linked to which action div in the add equipment
         // form
 
+        var timezone = '-06:00'
         var newAction = new Action({
-            StartTime: startYear + "-" + startMonth + "-" + startDay + "T" + startHour + ":" + startMinute,
-            EndTime: endYear + "-" + endMonth + "-" + endDay + "T" + endHour + ":" + endMinute,
+            StartTime: startYear + "-" + startMonth + "-" + startDay + "T" + startHour + ":" + startMinute + timezone,
+            EndTime: endYear + "-" + endMonth + "-" + endDay + "T" + endHour + ":" + endMinute + timezone,
             Origin: actionOrigin,
             Destination: actionDestination,
             ActionTypeID: actionType,
@@ -427,11 +428,11 @@ steal(function () {
             var actionTypeText = $(this).data("actiontypetext");
             var actionOriginText = $(this).data("origintext");
             var actionDestinationText = $(this).data("destinationtext");
-            var actionDivId = $(this).attr("id");
+            var actionDivId = $(this).data("actionid");
             // We need to construct a meaningful string to identify the action this checkbox applies to
             var actionDescString = ' <span class="addEquipmentToActionCheckSpan">' + actionTypeText + ' from ' + actionOriginText + ' to ' + actionDestinationText + '</span>'
             // Now append the HTML for the checkbox
-            $("#applyToAllActionsChkDiv").append('<div><input data-actiondivid="' + actionDivId + '" class="addEquipmentActionCheck" type="checkbox" value="applyToTestAction" />' + actionDescString + "</div>");
+            $("#applyToAllActionsChkDiv").append('<div><input data-actionchkid="' + actionDivId + '" class="addEquipmentActionCheck" type="checkbox" value="applyToTestAction" />' + actionDescString + "</div>");
         });
     });
 
@@ -449,8 +450,17 @@ steal(function () {
         });
 
 
-        $.get('/findAvailableEquipment/', {'actions': actions}, function(result) {
-            console.log(result);
+        $.getJSON('/findAvailableEquipment/', {'actions[]': actions, 'categoryid': categoryID}, function(result) {
+            $.each(result, function(key, value) {
+                var actionChk = $('*[data-actionchkid="'+key+'"]').next();
+                var curText = actionChk.text();
+                if (value[0] == false) {
+                    curText += ' No equipment available'
+                } else {
+                    curText += ' Assigned equipment: '+value[1]
+                }
+                actionChk.text(curText)
+            })
         });
     });
 

@@ -15,6 +15,10 @@ var loadLabels = function () {
 };
 
 var findBuildingByID = function(all_buildings, id) {
+    /**
+     * This function searches for a building by ID in a list of buildings
+     */
+    // TODO: Do this even need to exist?
     for (var i=0 ; i < all_buildings.length ; i++) {
         if (all_buildings[i].BuildingID == id) {
             return all_buildings[i].BuildingName
@@ -43,6 +47,9 @@ var fillNewReservation = function () {
 };
 
 var loadActionTypes = function() {
+    /**
+     * This function loads all the ActionTypes from the server
+     */
     ActionType.findAll({}, function (actionTypes) {
         $("#actionType").empty();
         var numActionTypes = actionTypes.length;
@@ -54,6 +61,9 @@ var loadActionTypes = function() {
 }
 
 var loadOrigins = function() {
+    /**
+     * This function loads all the Origins from the server
+     */
     Location.findAll({}, function (locations) {
         $("#actionOrigin").empty();
         $("#actionOrigin").append("<option value=\"\" selected=\"\">Please select an Origin...</option>");
@@ -67,6 +77,9 @@ var loadOrigins = function() {
 };
 
 var loadDestinations = function() {
+    /**
+     * This function loads all the Destinations from the server
+     */
     Location.findAll({}, function (locations) {
         $("#actionDestination").empty();
         $("#actionDestination").append("<option value=\"\" selected=\"\">Please select a Destination...</option>");

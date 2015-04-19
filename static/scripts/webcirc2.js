@@ -305,8 +305,12 @@ $(document).ready(function() {
          */
         $("#mainrow").load("/addNewReservation/", function() {
             // This sets up the datepickers in the add action form
-            $("#startDateTime").datetimepicker();
-            $("#endDateTime").datetimepicker();
+            $("#startDateTime").datetimepicker({
+                locale: 'en'
+            });
+            $("#endDateTime").datetimepicker({
+                locale: 'en'
+            });
             $("#newReservationActions").sortable();
             loadActionTypes();
             loadOrigins();
