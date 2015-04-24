@@ -110,19 +110,6 @@ var loadTodaysActions = function (tarDate) {
     }
 
     var todayString = todayObj.getFullYear() + '-' + (todayObj.getMonth() + 1) + '-' + todayObj.getDate();
-    // perhaps split the day into before now and after now
-
-    var startRow = function(action){
-        var row = "";
-        row += '<tr><td class="middletext">';
-        row += '<button class="btn btn-default btn-xs">';
-        row += action.ActionID;
-        row += '</button></td><td class="middletext">';
-        row += '<button class="btn btn-default btn-xs">';
-        row += action.Reservation[0];
-        row += '</button></td><td class="middletext">';
-        return row;
-    };
 
     var getActionType = function(action) {
         return new Promise(function(resolve, reject) {
@@ -268,11 +255,13 @@ var loadTodaysActions = function (tarDate) {
         $.each(actions, function(index, action) {
             var rowAttributes = {};
             var attributeCount = 5;
-            var row = startRow(action);
+            var row = '<tr><td class="middletext">';
             var buildFinalRow = function() {
-                row += rowAttributes['actionType'] + '</td><td class="middletext">';
-                row += formatDate(action.StartTime) + '</td><td class="middletext">';
                 row += formatDate(action.EndTime) + '</td><td class="middletext">';
+                row += formatDate(action.StartTime) + '</td><td class="middletext">';
+                row += '<button id="actionDetailModalButton" class="btn btn-default btn-xs" data-toggle="modal">';
+                row += '<span id="' + action.ActionID + '" reservation="' + action.Reservation[0] + '">';
+                row += rowAttributes['actionType'] + '</span></button></td><td class="middletext">';
                 row += rowAttributes['originString'] + '</td><td class="middletext">';
                 row += rowAttributes['destinationString'] + '</td><td class="middletext">';
                 row += rowAttributes['equipmentList'] + '</td><td class="middletext">';
