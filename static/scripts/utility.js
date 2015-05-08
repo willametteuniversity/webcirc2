@@ -138,9 +138,45 @@ var loadTodaysActions = function (tarDate) {
         });
     };
 
+    var getActionCustomer = function(action) {
+        return new Promise(function(resolve, reject) {
+            Reservation.findOne({id: action.Reservation[0]}, function(reservation) {
+                User.findOne({id: reservation.CustomerID}, function (user) {
+                    resolve(user.username);
+                });
+            });
+        });
+    };
+
     var getItemCategoryName = function(item) {
         return Label.findOne({id: item.CategoryID}, function (category) {
             return category.LabelName;
+        });
+    };
+
+    var getActionStates = function(action) {
+        return new Promise(function(resolve, reject) {
+            ActionState.findOne({id: action.ActionState}, function(currentState){
+                //ActionState.findAll(function(possibleStates){                     // unexpected behavior in findAll
+                $.getJSON( "/actionstates/", function( possibleStates ) {
+                    var dropdown = '<div class="dropdown"><button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">';
+                    dropdown += currentState.ActionStateName
+                    dropdown += '<span class="caret"></span></button><ul class="dropdown-menu" role="menu">';
+                    $.each(possibleStates, function (index, state) {
+                        if (state.ActionStateID != action.ActionState) {
+                            dropdown += '<li role="presentation"><a class="actionstate" action="';
+                            dropdown += action.ActionID;
+                            dropdown += '" state="';
+                            dropdown += state.ActionStateID;
+                            dropdown += '" role="menuitem" href="#">';
+                            dropdown += state.ActionStateName;
+                            dropdown += '</a></li>';
+                        }
+                    });
+                    dropdown += '</ul></div>';
+                    resolve(dropdown);
+                });
+            });
         });
     };
 
@@ -254,7 +290,7 @@ var loadTodaysActions = function (tarDate) {
     }, function (actions) {
         $.each(actions, function(index, action) {
             var rowAttributes = {};
-            var attributeCount = 5;
+            var attributeCount = 7;
             var row = '<tr><td class="middletext">';
             var buildFinalRow = function() {
                 row += formatDate(action.EndTime) + '</td><td class="middletext">';
@@ -265,8 +301,14 @@ var loadTodaysActions = function (tarDate) {
                 row += rowAttributes['originString'] + '</td><td class="middletext">';
                 row += rowAttributes['destinationString'] + '</td><td class="middletext">';
                 row += rowAttributes['equipmentList'] + '</td><td class="middletext">';
-                row += action.ActionNotes + '</td><td class="middletext">';
-                row += rowAttributes['operator']  + '</td>';
+                row += '<button class="btn btn-default btn-xs">' + rowAttributes['customer']  + '</button></td><td class="middletext">';
+                row += '' + rowAttributes['operator']  + '</td><td class="middletext">';
+                if (action.ActionNotes == "") {
+                    row += '</td><td class="middletext">';
+                } else {
+                    row += '<button class="btn btn-default btn-xs">view</button></td><td class="middletext">'
+                }
+                row += rowAttributes['stateOptions'] + '</td></tr>';//'done button</td>';                  // need to create a drop down that is set to current state
                 $('#todaysActionsTableBody').append(row);
             };
             getActionType(action).then(function(actionType) {
@@ -304,6 +346,22 @@ var loadTodaysActions = function (tarDate) {
             getActionOperator(action).then(function(operator){
                 attributeCount -= 1;
                 rowAttributes['operator'] = operator;
+                if (attributeCount == 0) {
+                    buildFinalRow();
+                }
+            });
+
+            getActionCustomer(action).then(function(customer){
+                attributeCount -= 1;
+                rowAttributes['customer'] = customer;
+                if (attributeCount == 0) {
+                    buildFinalRow();
+                }
+            });
+
+            getActionStates(action).then(function(states){
+                attributeCount -= 1;
+                rowAttributes['stateOptions'] = states;
                 if (attributeCount == 0) {
                     buildFinalRow();
                 }

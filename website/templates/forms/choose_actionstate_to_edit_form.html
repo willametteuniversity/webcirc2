@@ -1,0 +1,41 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Edit Action State</h3>
+    </div>
+    <div class="panel-body" id="editActionStateFormBody">
+         <form role="form" class="form-horizontal" id="chooseActionStateToEditForm">
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="existingActionStateNameSelect">Choose the Action State to Edit:</label>
+                 <div class="col-sm-9">
+                     <select class="form-control" name="StatusID" id="existingActionStateNameSelect">
+                         <option value="None">Choose an Action State...</option>
+                    </select>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="existingActionStateName">Name:</label>
+                 <div class="col-sm-9">
+                    <input type="text" class="form-control" name="ActionStateName" id="existingActionStateName" />
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="existingActionStateFinished">Finished:</label>
+                 <div class="col-sm-2">
+                    <input type="checkbox" data-off-class="btn-warning" data-on-class="btn-primary" id="existingActionStateFinished">
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="existingActionStateDescription">Description:</label>
+                 <div class="col-sm-9">
+                    <textarea class="form-control" name="ActionStateDescription" id="existingActionStateDescription"></textarea>
+                 </div>
+             </div>
+             <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-10">
+                    <button type="submit" class="btn btn-default" id="submitChooseActionStateToEditBtn">Submit</button>
+                    <button type="button" class="btn btn-danger" id="deleteActionStateBtn">Delete</button>
+                </div>
+             </div>
+        </form>
+    </div>
+</div>

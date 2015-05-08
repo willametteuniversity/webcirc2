@@ -1,0 +1,32 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Add New Action State</h3>
+    </div>
+    <div class="panel-body" id="addNewActionStateFormBody">
+         <form role="form" class="form-horizontal" id="addNewActionStateForm">
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="newActionStateNameInput">Name:</label>
+                 <div class="col-sm-9">
+                    <input class="form-control" type="text" id="newActionStateNameInput" placeholder="Enter the name of the action state..."/>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="newActionStateComplete">Finished:</label>
+                 <div class="col-sm-2">
+                    <input type="checkbox" data-off-class="btn-warning" data-on-class="btn-primary" id="newActionStateComplete">
+                 </div>
+             </div>
+             <div class="form-group">
+                 <label class="control-label col-sm-3" for="newActionStateDescriptionInput">Description:</label>
+                 <div class="col-sm-9">
+                    <textarea class="form-control" id="newActionStateDescriptionInput"></textarea>
+                 </div>
+             </div>
+             <div class="form-group">
+                 <div class="col-sm-offset-3 col-sm-10">
+                    <button type="submit" class="btn btn-default" id="submitCreateNewActionStateBtn">Submit</button>
+                 </div>
+             </div>
+        </form>
+    </div>
+</div>

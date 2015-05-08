@@ -40,6 +40,13 @@ class Status(models.Model):
     StatusDescription = models.CharField(max_length=500)
 
 
+class ActionState(models.Model):
+    ActionStateID = models.AutoField(primary_key=True)
+    ActionStateName = models.CharField(max_length=500)
+    ActionStateDescription = models.CharField(max_length=500)
+    ActionComplete = models.BooleanField(default=False)
+
+
 class Reservation(models.Model):
     ReservationID = models.AutoField(primary_key=True)
     CustomerID = models.ForeignKey(User, related_name='owner_set')
@@ -60,7 +67,7 @@ class Action(models.Model):
     EndTime = models.DateTimeField()
     Origin = models.ForeignKey(u'Location', related_name=u'action_origin')
     Destination = models.ForeignKey(u'Location', related_name=u'action_destination')
-    ActionStatus = models.CharField(max_length=500, null=True, blank=True)
+    ActionState = models.ForeignKey(ActionState)
     ActionNotes = models.CharField(max_length=500, null=True, blank=True)
     Reservation = models.ManyToManyField(Reservation, blank=True)
 

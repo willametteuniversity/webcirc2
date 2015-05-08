@@ -49,4 +49,27 @@ steal(function() {
         loadTodaysActions(fDateToLoad);
     });
 
+    $("body").on("click", "#actionDetailModalButton", function (event) {
+        var span = event.currentTarget.getElementsByTagName('span')[0];
+        console.log("Populating modal with action", span.id, "and reservation", span.getAttribute('reservation'));
+        $("#actionDetailModal").modal('show');
+    });
+
+    $("#actionDetailModalClose").click(function (event) {
+        $("#actionDetailModal").modal('hide');
+    });
+
+    $("body").on("click", ".actionstate", function (event) {
+        var action_id = event.currentTarget.getAttribute('action');
+        var new_action_state = event.currentTarget.getAttribute('state');
+        Action.findOne({id: action_id}, function(action) {
+            action.attr('id', action.ActionID);
+            action.attr('Reservation', action.Reservation[0])
+            action.attr("ActionState", new_action_state);
+            action.save(function(saved) {
+                loadTodaysActions(new Date($("#viewActionsByDate").data('date')));
+            });
+        });
+    });
+
 });

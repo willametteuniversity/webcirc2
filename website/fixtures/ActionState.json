@@ -1,0 +1,33 @@
+
+[
+	{
+        "model": "website.ActionState",
+        "pk": 1,
+        "fields": {
+            "ActionStateID": 1,
+            "ActionStateName": "Pending",
+            "ActionComplete": "False",
+            "ActionStateDescription" : "Every action is pending when created"
+        }
+    },
+    {
+        "model": "website.ActionState",
+        "pk": 2,
+        "fields": {
+            "ActionStateID": 2,
+            "ActionStateName": "Complete",
+            "ActionComplete": "True",
+            "ActionStateDescription" : "The action was completed by the operator"
+        }
+    },
+    {
+        "model": "website.ActionState",
+        "pk": 3,
+        "fields": {
+            "ActionStateID": 3,
+            "ActionStateName": "Overdue",
+            "ActionComplete": "False",
+            "ActionStateDescription" : "This action is overdue"
+        }
+    }
+]

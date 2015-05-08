@@ -51,16 +51,6 @@ steal(function () {
         $("#newCustomerModal").hide();
     });
 
-    $("body").on("click", "#actionDetailModalButton", function (event) {
-        var span = event.currentTarget.getElementsByTagName('span')[0];
-        console.log("Populating modal with action", span.id, "and reservation", span.getAttribute('reservation'));
-        $("#actionDetailModal").modal('show');
-    });
-
-    $("#actionDetailModalClose").click(function (event) {
-        $("#actionDetailModal").modal('hide');
-    });
-
 
     var checkUsernameInUse = function (username) {
         /**

@@ -36,6 +36,7 @@ $(document).ready(function() {
     steal("scripts/models/nonInventoryItem.js", function() {});
     steal("scripts/models/user.js", function() {});
     steal("scripts/models/status.js", function() {});
+    steal("scripts/models/actionstate.js", function() {});
     steal("scripts/models/reservation.js", function() {});
     steal("jstree/dist/jstree.min.js", function() {});
     steal("scripts/labelAndCategoryMgmt.js", function() {
@@ -156,6 +157,27 @@ $(document).ready(function() {
             }
         });
     });
+
+    steal("scripts/administerActionStates.js", function() {
+        $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+            /**
+             * This function handles inserting out CSRF token into outgoing
+             * AJAX requests
+             */
+            if ( options.processData
+            && /^application\/json((\+|;).+)?$/i.test( options.contentType )
+            && /^(post|put|delete)$/i.test( options.type )
+            ) {
+                options.data = JSON.stringify( originalOptions.data );
+            }
+            if (!options.crossDomain) {
+                if (csrftoken) {
+                    return jqXHR.setRequestHeader('X-CSRFToken', csrftoken);
+                }
+            }
+        });
+    });
+
     $("#registerBtn").on("click", function(event) {
         /**
          * This function handles the register button being clicked on the main page.
@@ -227,6 +249,15 @@ $(document).ready(function() {
          */
         $("#mainrow").load("/administerStatuses/", function() {
             $("#createNewStatusFormLink").click();
+        });
+    });
+
+    $("#actionStateAdministrationLink").on("click", function(event) {
+        /**
+         * This function loads the page to administer action states
+         */
+        $("#mainrow").load("/administerActionStates/", function() {
+            $("#createNewActionStateFormLink").click();
         });
     });
 

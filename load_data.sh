@@ -1,5 +1,5 @@
 #!/bin/sh
-rm webcirc_venv/dbwebcirc2.db
+rm ./webcirc2/dbwebcirc2.db
 ~/webcirc_venv/bin/python manage.py syncdb
 ~/webcirc_venv/bin/python manage.py loaddata User
 ~/webcirc_venv/bin/python manage.py loaddata Status
@@ -18,4 +18,5 @@ rm webcirc_venv/dbwebcirc2.db
 ~/webcirc_venv/bin/python manage.py loaddata InventoryItem
 ~/webcirc_venv/bin/python manage.py loaddata ItemHistory
 ~/webcirc_venv/bin/python manage.py loaddata ItemLabel
+~/webcirc_venv/bin/python manage.py loaddata ActionState
 ~/webcirc_venv/bin/python manage.py loaddata Action

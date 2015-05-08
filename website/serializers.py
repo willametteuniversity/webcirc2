@@ -48,9 +48,9 @@ class ReservationSerializer(serializers.ModelSerializer):
         model = Reservation
 
 
-#class ReservationActionSerializer(serializers.ModelSerializer):
-#    class Meta:
-#        model = ReservationAction
+class ActionStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ActionState
 
 
 class ItemModelSerializer(serializers.ModelSerializer):

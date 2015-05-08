@@ -10,7 +10,7 @@
             "EndTime": "2015-06-01 08:10:00",
             "Origin": 1,
             "Destination": 2,
-            "ActionStatus": "testing",
+            "ActionState": 1,
             "ActionNotes": "Test fixture",
             "Reservation": [1]
         }
@@ -26,7 +26,7 @@
             "EndTime": "2015-06-02 08:10:00",
             "Origin": 2,
             "Destination": 1,
-            "ActionStatus": "testing",
+            "ActionState": 2,
             "ActionNotes": "Test fixture",
             "Reservation": [1]
         }
@@ -42,7 +42,7 @@
             "EndTime": "2015-06-03 08:10:00",
             "Origin": 1,
             "Destination": 2,
-            "ActionStatus": "testing",
+            "ActionState": 3,
             "ActionNotes": "Test fixture",
             "Reservation": [2]
         }
@@ -58,7 +58,7 @@
             "EndTime": "2015-06-04 08:10:00",
             "Origin": 2,
             "Destination": 1,
-            "ActionStatus": "testing",
+            "ActionState": 1,
             "ActionNotes": "Test fixture",
             "Reservation": [2]
         }
