@@ -12,10 +12,17 @@
                     <div class="form-group">
                         <label class="control-label col-sm-3" for="equipmentTerm">Equipment Search:</label>
 
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                             <input type="text" class="form-control" id="equipmentTerm"
                                    placeholder="Enter a label or category name..."/>
                         </div>
+                            <div class="col-sm-2">
+                                <select id="equipmentTypeDropdown" class="form-control required" name="equipmentTypeDropdown">
+                                    <option value="inventory">Inventory Item</option>
+                                    <option value="noninventory">Non-Inventory Item</option>
+                                    <option value="consumable">Consumable Item</option>
+                                </select>
+                            </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-5 col-sm-push-2" id="applyToAllActionsChkDiv" value="applyToAll">
