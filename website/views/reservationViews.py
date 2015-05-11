@@ -126,3 +126,66 @@ def findAvailableEquipment(request):
             responseCode = 501
             break
     return HttpResponse(json.dumps(results), status=responseCode)
+
+def findAvailableNonInventoryEquipment(request):
+    '''
+    This function attempts to find an available piece of non-inventory to fulfill a reservation's needs
+    '''
+    print request.GET
+    actions = request.GET.getlist('actions[]')
+    equipmentCategory = request.GET['categoryid']
+    candidateEquipment = NonInventoryItem.objects.filter(CategoryID=equipmentCategory)
+    results = {}
+    for eachAction in actions:
+        print "Processing action: "+eachAction+" for non-inventory item assignment"
+        results[eachAction] = [False]
+        curAction = Action.objects.get(ActionID=eachAction)
+
+        for eachEquipment in candidateEquipment:
+            if addToSchedule(curAction, eachEquipment):
+                eachEquipment.Action.add(curAction)
+                results[eachAction] = [True, eachEquipment.ItemID]
+                break
+            else:
+                pass
+
+    responseCode = 200
+    print results
+    for eachResult in results.values():
+        if eachResult[0] == False:
+            responseCode = 501
+            break
+    return HttpResponse(json.dumps(results), status=responseCode)
+
+def findAvailableConsumableEquipment(request):
+    '''
+    This function attempts to find an available consumable item to fulfill a reservation's needs
+    '''
+    actions = request.GET.getlist(u'actions[]')
+    quantity = int(request.GET[u'quantity'])
+    equipmentCategory = request.GET[u'categoryid']
+    candidateEquipment = ConsumableItem.objects.filter(CategoryID=equipmentCategory)
+    results = {}
+    for eachAction in actions:
+        print "Processing action: "+eachAction+" for consumable item assignment"
+        results[eachAction] = [False]
+        curAction = Action.objects.get(ActionID=eachAction)
+
+        for eachEquipment in candidateEquipment:
+            if eachEquipment.Quantity >= quantity:
+                eachEquipment.Action.add(curAction)
+                eachEquipment.Quantity -= quantity
+                eachEquipment.save()
+                results[eachAction] = [True, eachEquipment.ItemID]
+                break
+            else:
+                results[eachAction] = [False, u'Quantity too low']
+                pass
+
+    responseCode = 200
+    print results
+    for eachResult in results.values():
+        if eachResult[0] == False:
+            responseCode = 501
+            break
+    return HttpResponse(json.dumps(results), status=responseCode)

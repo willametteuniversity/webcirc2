@@ -309,7 +309,6 @@ def autocomplete(request):
         for eachResult in r:
             results.append({u'LabelID': eachResult.LabelID, u'LabelName': eachResult.LabelName})
 
-
     return HttpResponse(json.dumps(results), content_type=u'application/json')
 
 

@@ -95,7 +95,9 @@ class NonInventoryItem(models.Model):
     CollectionID = models.ForeignKey(u'Collection')
     Notes = models.CharField(max_length=500, null=True, blank=True)
     Action = models.ManyToManyField(Action, blank=True)
+    # TODO: These should not really have a quantity. Remove this field.
     Quantity = models.IntegerField(default=0)
+    StatusID = models.ForeignKey(u'Status', null=True)
 
 
 class ConsumableItem(models.Model):

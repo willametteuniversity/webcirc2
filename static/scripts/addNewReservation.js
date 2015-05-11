@@ -365,7 +365,8 @@ steal(function () {
             ActionTypeID: actionType,
             Reservation: newReservation.ReservationID,
             AssignedOperatorID: actionAssignedUser,
-            ActionNotes: actionNote
+            ActionNotes: actionNote,
+            ActionState: "1",
         });
         newAction.save(function (saved) {
             steal.dev.log("New action created...");
@@ -437,20 +438,27 @@ steal(function () {
         });
     });
 
-    $("#mainrow").on("click", "#addEquipmentBtn", function (event) {
-        /**
-         * This button handles searching the server for an inventory item and adding it to
-         * a reservation.
-         */
-        console.log('Attempting to add equipment...');
+    var addEquipment = function(categoryID) {
         var actions = [];
-        var categoryID = $('#equipmentDisplayByTree').jstree().get_selected()[0];
+        var equipmentType = $('#equipmentTypeDropdown').val();
+        steal.dev.log('Beginning addEquipment of '+categoryID);
         $.each($('.reservationActionDiv'), function(key, value) {
             console.log($(this).data('actionid'));
             actions.push($(this).data('actionid'));
         });
 
-        $.getJSON('/findAvailableEquipment/', {'actions[]': actions, 'categoryid': categoryID}, function(result) {
+        var equipmentUrl = '';
+
+        if (equipmentType == 'inventory') {
+            equipmentUrl = '/findAvailableEquipment/';
+        } else if (equipmentType == 'noninventory') {
+            equipmentUrl = '/findAvailableNonInventoryEquipment/';
+        } else if (equipmentType == 'consumable') {
+            equipmentUrl = '/findAvailableConsumableEquipment/';
+        } else {
+            // TODO: Should probably display an error to the user here and abort?
+        }
+        $.getJSON(equipmentUrl, {'actions[]': actions, 'categoryid': categoryID}, function(result) {
             $.each(result, function(key, value) {
                 var actionChk = $('*[data-actionchkid="'+key+'"]').next();
                 var curText = actionChk.text();
@@ -462,50 +470,106 @@ steal(function () {
                 actionChk.text(curText)
             })
         });
+    };
+
+    $("#mainrow").on("click", "#addEquipmentBtn", function (event) {
+        /**
+         * This button handles searching the server for an inventory item and adding it to
+         * a reservation.
+         */
+        console.log('Attempting to add equipment...');
+
+        var equipmentType = $('#equipmentTypeDropdown').val();
+        if (equipmentType == 'inventory') {
+            addEquipment($('#equipmentDisplayByTree').jstree().get_selected()[0]);
+        } else {
+            var equipmentTerm = $("#equipmentTerm").val();
+            Label.findOne({LabelName: equipmentTerm}, function(success) {
+                addEquipment(success.LabelID);
+            }, function(failure) {
+                // TODO: This should display a warning to the user about no items being found?
+                steal.dev.log("No label found");
+            });
+        }
+
     });
 
     $('#mainrow').on('keyup', '#equipmentTerm', function (event) {
         event.preventDefault();
         console.log(event);
         if (event.keyCode == 13) {
+            var equipmentType = $('#equipmentTypeDropdown').val();
+
             var equipmentTerm = $("#equipmentTerm").val();
             steal.dev.log('Equipment term is: ' + $('#equipmentTerm').val());
             if ($.isNumeric(equipmentTerm)) {
+                // TODO: We need to actually check that the piece of equipment is available here
                 InventoryItem.findOne({id: equipmentTerm}, function (item) {
                     addEquipmentToAction(item);
                 });
             } else {
                 // Let's try to find a Label that matches
                 steal.dev.log('Searching for a label...');
-                InventoryItem.findAll({eterm: equipmentTerm}, function (items) {
-                    $.each(items, function (index, value) {
-                        var descString = '#' + value.ItemID + ' ';
-                        ItemBrand.findOne({id: value.BrandID}, function (brand) {
-                            descString += brand.BrandName;
-                            ItemModel.findOne({id: value.ModelID}, function (model) {
-                                descString += ' ' + model.ModelDesignation;
-                                steal.dev.log('DescString is: ' + descString);
-                                $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item">' + descString + '</a>');
-                            })
+                if (equipmentType == 'inventory') {
+                    InventoryItem.findAll({eterm: equipmentTerm}, function (items) {
+                        $.each(items, function (index, value) {
+                            var descString = '#' + value.ItemID + ' ';
+                            ItemBrand.findOne({id: value.BrandID}, function (brand) {
+                                descString += brand.BrandName;
+                                ItemModel.findOne({id: value.ModelID}, function (model) {
+                                    descString += ' ' + model.ModelDesignation;
+                                    steal.dev.log('DescString is: ' + descString);
+                                    $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item">' + descString + '</a>');
+                                })
+                            });
                         });
                     });
-                });
+                    $('#equipmentDisplayByTree').empty().jstree('destroy');
+                    steal.dev.log('Populating jsTree');
+                    // OK, now let's populate the tree on the other side...
+                    $("#equipmentDisplayByTree").jstree({
+                        'core': {
+                            'data': {
+                                'url': '/categoryHierarchyWithEquipment/' + equipmentTerm
+                            },
+                            'check_callback': true
 
-                $('#equipmentDisplayByTree').empty().jstree('destroy');
-                steal.dev.log('Populating jsTree');
-                // OK, now let's populate the tree on the other side...
-                $("#equipmentDisplayByTree").jstree({
-                    'core': {
-                        'data': {
-                            'url': '/categoryHierarchyWithEquipment/' + equipmentTerm
                         },
-                        'check_callback': true
+                        'plugins': ['dnd']
+                    });
 
-                    },
-                    'plugins': ['dnd']
-                });
-            }
+                }
+                else if (equipmentType == 'noninventory') {
+                    NonInventoryItem.findAll({eterm: equipmentTerm}, function (items) {
+                        $.each(items, function (index, value) {
+                            var descString = '#' + value.ItemID + ' ';
+                            ItemBrand.findOne({id: value.BrandID}, function (brand) {
+                                descString += brand.BrandName;
+                                ItemModel.findOne({id: value.ModelID}, function (model) {
+                                    descString += ' ' + model.ModelDesignation;
+                                    steal.dev.log('DescString is: ' + descString);
+                                    $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item">' + descString + '</a>');
+                                })
+                            });
+                        });
+                    });
+                } else if (equipmentType == 'consumable') {
+                    NonInventoryItem.findAll({eterm: equipmentTerm}, function (items) {
+                        $.each(items, function (index, value) {
+                            var descString = '#' + value.ItemID + ' ';
+                            ItemBrand.findOne({id: value.BrandID}, function (brand) {
+                                descString += brand.BrandName;
+                                ItemModel.findOne({id: value.ModelID}, function (model) {
+                                    descString += ' ' + model.ModelDesignation;
+                                    steal.dev.log('DescString is: ' + descString);
+                                    $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item">' + descString + '</a>');
+                                })
+                            });
+                        });
+                    });
+                }
         }
+    }
     });
 
     $("#mainrow").on("click", ".removeEquipmentFromActionBtn", function (event) {
