@@ -177,6 +177,13 @@ steal(function () {
         $("#addEquipmentModal").modal('hide');
     };
 
+    var clearNewCustomerForm = function () {
+      steal.dev.log('Clearing New Customer Form');
+        $('#newCustomerFirstNameInput').val('');
+        $('#newCustomerLastNameInput').val('');
+        $('#newCustomerEmailInput').val('');
+    };
+
     $("body").on("click", "#newCustomerModalCreate", function (event) {
         /**
          * This function tries to create a new user. It contains code to try to find an unused username. It does this
@@ -187,7 +194,7 @@ steal(function () {
          */
         // TODO: Validation?
         var firstName = $("#newCustomerFirstNameInput").val();
-        var lastName = $("#newCustomerFirstNameInput").val();
+        var lastName = $("#newCustomerLastNameInput").val();
         var email = $("#newCustomerEmailInput").val();
         // First we are going to do need to generate a username that does not exist. Let's start with their e-mail.
         var username = email.split("@", 1)[0];
@@ -250,6 +257,8 @@ steal(function () {
                 showUserAddedAlert($("#newCustomerModal .modal-body"));
             });
         });
+        // TODO: How do we handle clearing the form?
+        clearNewCustomerForm();
     });
 
 
