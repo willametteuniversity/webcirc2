@@ -36,6 +36,7 @@ $(document).ready(function() {
     steal("scripts/models/nonInventoryItem.js", function() {});
     steal("scripts/models/user.js", function() {});
     steal("scripts/models/status.js", function() {});
+    steal("scripts/models/actionstate.js", function() {});
     steal("scripts/models/reservation.js", function() {});
     steal("jstree/dist/jstree.min.js", function() {});
     steal("scripts/labelAndCategoryMgmt.js", function() {
@@ -59,6 +60,7 @@ $(document).ready(function() {
     });
     steal("scripts/addNewEquipment.js", function() {});
     steal("scripts/addNewReservation.js", function() {});
+    steal("scripts/viewTodaysActions.js", function() {});
     steal("scripts/administerCollections.js", function() {
         $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
             /**
@@ -155,6 +157,27 @@ $(document).ready(function() {
             }
         });
     });
+
+    steal("scripts/administerActionStates.js", function() {
+        $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+            /**
+             * This function handles inserting out CSRF token into outgoing
+             * AJAX requests
+             */
+            if ( options.processData
+            && /^application\/json((\+|;).+)?$/i.test( options.contentType )
+            && /^(post|put|delete)$/i.test( options.type )
+            ) {
+                options.data = JSON.stringify( originalOptions.data );
+            }
+            if (!options.crossDomain) {
+                if (csrftoken) {
+                    return jqXHR.setRequestHeader('X-CSRFToken', csrftoken);
+                }
+            }
+        });
+    });
+
     $("#registerBtn").on("click", function(event) {
         /**
          * This function handles the register button being clicked on the main page.
@@ -202,8 +225,8 @@ $(document).ready(function() {
                     'data' : {
                         'url' : '/categoryHierarchy/'
                      },
+                     'multiple': false,
                      'check_callback' : true
-
                  },
                  'plugins' : ['dnd']
              });
@@ -226,6 +249,15 @@ $(document).ready(function() {
          */
         $("#mainrow").load("/administerStatuses/", function() {
             $("#createNewStatusFormLink").click();
+        });
+    });
+
+    $("#actionStateAdministrationLink").on("click", function(event) {
+        /**
+         * This function loads the page to administer action states
+         */
+        $("#mainrow").load("/administerActionStates/", function() {
+            $("#createNewActionStateFormLink").click();
         });
     });
 
@@ -290,6 +322,11 @@ $(document).ready(function() {
          */
         $("#mainrow").load("/viewTodaysActions/", function() {
             loadTodaysActions();
+            $("#viewActionsByDate").datetimepicker({
+                format: 'MM/DD/YYYY',
+                locale: 'en'
+
+            });
         })
     });
 
@@ -299,15 +336,33 @@ $(document).ready(function() {
          */
         $("#mainrow").load("/addNewReservation/", function() {
             // This sets up the datepickers in the add action form
-            $("#startDateTime").datetimepicker();
-            $("#endDateTime").datetimepicker();
+            $("#startDateTime").datetimepicker({
+                locale: 'en'
+            });
+            $("#endDateTime").datetimepicker({
+                locale: 'en'
+            });
             $("#newReservationActions").sortable();
             loadActionTypes();
             loadOrigins();
             loadDestinations();
             loadAssignUserToAction();
+                    var labels = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('LabelName'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: '/autocomplete/?model=items&term=%QUERY'
+        });
+
+        labels.initialize();
+        $("#equipmentTerm").typeahead(null, {
+            name: 'labels',
+            displayKey: 'LabelName',
+            source: labels.ttAdapter()
+        });
+
             //fillNewReservation();
         });
     });
 
 });
+

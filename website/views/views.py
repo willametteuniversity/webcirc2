@@ -234,6 +234,45 @@ def categoryHierarchy(request):
         tree = get_nodes(node=root)
         return HttpResponse(json.dumps(tree), content_type=u'application/json')
 
+@api_view([u'GET'])
+def categoryHierarchyWithEquipment(request, root=None):
+    if request.method == u'GET':
+        if root:
+            root = Label.objects.get(LabelName=root)
+        else:
+            root = Label.objects.get(pk=1)
+
+        def get_nodes(node):
+            d = {}
+            ci, cl, li = get_children(node=node)
+            print ci, cl, node
+
+            d[u'id'] = node.pk
+            d[u'text'] = node.LabelName
+            d[u'children'] = []
+            for eachCi in ci:
+                d[u'children'].append('#'+str(eachCi.ItemID)+' '+eachCi.BrandID.BrandName+' '+eachCi.ModelID.ModelDesignation)
+            for eachChildLabel in cl:
+                d[u'children'].append(get_nodes(eachChildLabel))
+            for eachChildLabeledItem in li:
+                d[u'children'].append('#'+str(eachChildLabeledItem.ItemID.ItemID)+' '+eachChildLabeledItem.ItemID.BrandID.BrandName+' '+
+                                        eachChildLabeledItem.ItemID.ModelID.ModelDesignation)
+            return d
+
+        def get_children(node):
+            c = []
+            inventoryItems = InventoryItem.objects.filter(CategoryID=node.pk)
+            labeledItems = ItemLabel.objects.filter(LabelID=node.pk)
+            for eachItem in inventoryItems:
+                c.append(eachItem)
+            labelItems = Label.objects.filter(ParentCategory=node.pk)
+            for eachItem in labelItems:
+                c.append(eachItem)
+            print c
+            return inventoryItems, labelItems, labeledItems
+
+        tree = get_nodes(node=root)
+        return HttpResponse(json.dumps(tree), content_type=u'application/json')
 
 def autocomplete(request):
     '''
@@ -264,6 +303,11 @@ def autocomplete(request):
         r = Label.objects.filter(CollectionName__icontains = request.GET[u'term'])
         for eachResult in r:
             results.append({u'CollectionID': eachResult.CollectionID, u'CollectionName': eachResult.CollectionName})
+
+    elif request.GET[u'model'].lower() == u'items':
+        r = Label.objects.filter(Q(LabelName__icontains = request.GET[u'term']))
+        for eachResult in r:
+            results.append({u'LabelID': eachResult.LabelID, u'LabelName': eachResult.LabelName})
 
     return HttpResponse(json.dumps(results), content_type=u'application/json')
 

@@ -62,7 +62,7 @@ def reservationList(request):
 def reservationDetail(request, pk):
     try:
         reservation = Reservation.objects.get(ReservationID=pk)
-    except Action.DoesNotExist:
+    except Reservation.DoesNotExist:
         return HttpResponse(status=404)
     if request.method == u'GET':
         return Response(ReservationSerializer(reservation).data)

@@ -53,8 +53,9 @@ class NonInventoryItemAPITest(TestCase):
                                              Origin=generic_location,
                                              Destination=generic_location,
                                              ActionStatus="",
-                                             ActionNotes="This is action 1",
-                                             Reservation=first_reservation)
+                                             ActionNotes="This is action 1")
+
+        first_action.Reservation.add(first_reservation)
 
         second_action = Action.objects.create(ActionID=2,
                                               AssignedOperatorID=generic_user,
@@ -64,8 +65,9 @@ class NonInventoryItemAPITest(TestCase):
                                               Origin=generic_location,
                                               Destination=generic_location,
                                               ActionStatus="",
-                                              ActionNotes="This is action 2",
-                                              Reservation=second_reservation)
+                                              ActionNotes="This is action 2")
+
+        second_action.Reservation.add(second_reservation)
 
         generic_category = Label.objects.create(LabelID=1,
                                                 LabelName="Label",

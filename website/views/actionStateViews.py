@@ -29,63 +29,63 @@ from datetime import datetime
 
 
 @csrf_exempt
-def administerStatuses(request):
+def administerActionStates(request):
     '''
-    This handles a request to display the form for administering action states.
+    This handles a request to display the form for administering statuses.
     '''
-    return render(request, u'administer_statuses.html', {})
+    return render(request, u'administer_actionstates.html', {})
 
 
 @csrf_exempt
-def addNewStatusForm(request):
+def addNewActionStateForm(request):
     '''
-    This handles a request to display the adding a new action state form.
+    This handles a request to display the adding a new status form.
     '''
-    return render(request, u'forms/add_new_status_form.html', {})
+    return render(request, u'forms/add_new_actionstate_form.html', {})
 
 
 @csrf_exempt
-def chooseStatusToEditForm(request):
+def chooseActionStateToEditForm(request):
     '''
-    This handles a request to display the edit form for action states.
+    This handles a request to display the edit form for statuses.
     '''
-    return render(request, u'forms/choose_status_to_edit_form.html', {})
+    return render(request, u'forms/choose_actionstate_to_edit_form.html', {})
 
 
 @api_view([u'GET', u'PUT', u'DELETE'])
-def statusDetail(request, pk):
+def actionStateDetail(request, pk):
     '''
-    Retrieve, update or delete a Status.
+    Retrieve, update or delete an ActionState.
     '''
     try:
-        current_status = Status.objects.get(StatusID=pk)
-    except Status.DoesNotExist:
+        current_actionstate = ActionState.objects.get(ActionStateID=pk)
+    except ActionState.DoesNotExist:
         return HttpResponse(status=status.HTTP_404_NOT_FOUND)
     if request.method == u'GET':
-        serializer = StatusSerializer(current_status)
+        serializer = ActionStateSerializer(current_actionstate)
         return Response(serializer.data)
     elif request.method == u'PUT':
-        serializer = StatusSerializer(current_status, data=request.DATA)
+        serializer = ActionStateSerializer(current_actionstate, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == u'DELETE':
-        current_status.delete()
+        current_actionstate.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view([u'GET', u'POST'])
-def statusList(request, format=None):
+def actionStateList(request, format=None):
     '''
     Retrieve a list of all Label Notes
     '''
     if request.method == u'GET':
-        states = Status.objects.all()
-        serializer = StatusSerializer(states, many=True)
+        states = ActionState.objects.all()
+        serializer = ActionStateSerializer(states, many=True)
         return Response(serializer.data)
     elif request.method == u'POST':
-        serializer = StatusSerializer(data=request.DATA)
+        serializer = ActionStateSerializer(data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

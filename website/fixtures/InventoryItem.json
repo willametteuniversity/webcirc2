@@ -6,14 +6,14 @@
             "AlternateID": 123,
             "BrandID": 1,
             "ModelID": 1,
-            "Description": "This is a nice item",
-            "Notes": "What a cool item",
-            "CategoryID": 1,
+            "Description": "This is a nice adapter",
+            "Notes": "What a cool adapter",
+            "CategoryID": 12,
             "ParentItem": null,
             "StatusID": 1,
             "StorageLocation": 1,
             "CollectionID": 1,
-            "Action": []
+            "Action": [1,2]
         }
     },
     {
@@ -25,12 +25,12 @@
             "ModelID": 1,
             "Description": "This is another item",
             "Notes": "It is also cool",
-            "CategoryID": 1,
+            "CategoryID": 121,
             "ParentItem": null,
             "StatusID": 1,
             "StorageLocation": 1,
             "CollectionID": 1,
-            "Action": [2]
+            "Action": [1,2]
         }
     }
 ]

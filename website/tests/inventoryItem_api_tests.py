@@ -53,8 +53,9 @@ class InventoryItemAPITest(TestCase):
                                              Origin=generic_location,
                                              Destination=generic_location,
                                              ActionStatus="",
-                                             ActionNotes="This is action 1",
-                                             Reservation=first_reservation)
+                                             ActionNotes="This is action 1")
+
+        first_action.Reservation.add(first_reservation)
 
         second_action = Action.objects.create(ActionID=2,
                                               AssignedOperatorID=generic_user,
@@ -64,8 +65,9 @@ class InventoryItemAPITest(TestCase):
                                               Origin=generic_location,
                                               Destination=generic_location,
                                               ActionStatus="",
-                                              ActionNotes="This is action 2",
-                                              Reservation=second_reservation)
+                                              ActionNotes="This is action 2")
+
+        second_action.Reservation.add(second_reservation)
 
         generic_category = Label.objects.create(LabelID=1,
                                                 LabelName="Label",
@@ -187,7 +189,7 @@ class InventoryItemAPITest(TestCase):
 
     def test_can_add_item_to_action(self):
         client = Client()
-        response = client.post(u'/addInventoryItemtoAction/2', {u'action': u'2'})
+        response = client.post(u'/addInventoryItemToAction/2', {u'action': u'2'})
         self.assertEqual(201, response.status_code)
         response = client.get(u'/actionInventoryItems/2')
         self.assertEqual(response.data[0][u'Description'], u'Item 1')

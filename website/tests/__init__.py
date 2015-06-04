@@ -12,3 +12,4 @@ from nonInventoryItem_api_tests import *
 from consumableItem_api_tests import *
 from action_type_test import *
 from new_inventory_item_tests import *
+from scheduling_tests import *

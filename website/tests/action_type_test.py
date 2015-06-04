@@ -11,6 +11,7 @@ from django.core.urlresolvers import resolve
 from django.test import TestCase
 from django.test.client import Client
 from website.views.views import *
+from website.views.actionTypeAPIViews import *
 from website.models import *
 
 
@@ -51,7 +52,7 @@ class ActionTypeAPITest(TestCase):
         client = Client()
         response = client.put(u'/actionTypes/1',
                               data=json.dumps({u'ActionTypeName': u'Action 1, edited'}),
-                              content_type='application/json')
+                              content_type=u'application/json')
         self.assertEqual(200, response.status_code)
         response = client.get(u'/actionTypes/1')
         self.assertEqual(u'Action 1, edited', response.data[u'ActionTypeName'])

@@ -9,7 +9,7 @@ from django.test.client import Client
 from django.http import HttpRequest
 
 # Import all of our views for testing
-from website.views import *
+from website.views.views import *
 
 # Same for models
 from website.models import *
@@ -30,10 +30,10 @@ class InventoryItemFormTests(TestCase):
 		self.assertIn(u'descriptionInput', response.content)
 		self.assertIn(u'notesInput', response.content)
 		self.assertIn(u'categoryInput', response.content)
-		self.assertIn(u'statsSelect', response.content)
+		self.assertIn(u'statusSelect', response.content)
 		self.assertIn(u'storageLocationSelect', response.content)
-		self.assertIn(u'collectionInput', response.content)
-		self.assertIn(u'submitInventoryItembtn', response.content)
+		self.assertIn(u'inventoryItemCollectionSelect', response.content)
+		self.assertIn(u'submitCreateNewInventoryItemBtn', response.content)
 
 	def test_add_inventory_item(self):
 		'''
@@ -61,14 +61,14 @@ class InventoryItemFormTests(TestCase):
 
 		location = Location.objects.create(BuildingID=building);
 
-		response = c.post(u'/addNewInventoryItemForm/', {u'model': model.pk,
+		response = c.post(u'/addNewInventoryItem/', {u'model': model.pk,
 												 u'brand': brand.pk,
 												 u'description': u'Test1',
 												 u'category': category.pk,
 												 u'status' : status.pk,
 												 u'location' : location.pk})
 
-		testItem = InventoryItem.objects.get(ModelID=model, BrandID=brand, Description=u'Test1', CategoryID=category, StatusID=status, StorageLocation=location)
+		testItem = InventoryItem.objects.get(Description=u'Test1')
 
 		self.assertEqual(testItem.ModelID, model.pk)
 

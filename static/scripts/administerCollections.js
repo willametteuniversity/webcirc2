@@ -28,7 +28,7 @@ steal(function() {
                     $("#existingCollectionNameSelect").append("<option value='"+value.CollectionID+"'>"+value.CollectionName+"</option>");
                 });
         });
-    }
+    };
 
     var updateEditCollectionForm = function(collection) {
         $("#existingCollectionName").val(collection.CollectionName);

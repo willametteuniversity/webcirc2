@@ -116,12 +116,18 @@ def removeNonInventoryItemfromAction(request, pk):
 
 
 @api_view([u'GET', u'POST'])
-def inventoryItemList(request, format=None):
+def inventoryItemList(request, label=None, format=None):
     '''
     Retrieve a list of all Label Notes
     '''
     if request.method == u'GET':
         inventoryItems = InventoryItem.objects.all()
+        if label != None:
+            itemsWithLabel = ItemLabel.objects.filter(LabelID__LabelName__iexact=label).values(u'ItemID')
+            i = []
+            for eachItem in itemsWithLabel:
+                i.append(InventoryItem.objects.get(pk=eachItem[u'ItemID']))
+            inventoryItems = i
         serializer = InventoryItemSerializer(inventoryItems, many=True)
         return Response(serializer.data)
     elif request.method == u'POST':
