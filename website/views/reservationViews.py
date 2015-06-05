@@ -104,16 +104,20 @@ def findAvailableEquipment(request):
 
     equipmentCategory = request.GET['categoryid']
     candidateEquipment = InventoryItem.objects.filter(CategoryID=equipmentCategory)
-
+    print candidateEquipment
     results = {}
+    e = None
     for eachAction in actions:
-        print "Processing action: "+eachAction+" of "
+        print "Processing action: "+eachAction
         results[eachAction] = [False]
         curAction = Action.objects.get(ActionID=eachAction)
-
         for eachEquipment in candidateEquipment:
             if addToSchedule(curAction, eachEquipment):
                 eachEquipment.Action.add(curAction)
+                # If we do assign something later, we need to keep a reference so that we can use it later if we need
+                # to remove it from the actions we've just assigned ito. For example, if the piece of equipment isn't
+                # available for 1 out of 6 actions or something
+                e = eachEquipment
                 results[eachAction] = [True, eachEquipment.ItemID]
                 break
             else:
@@ -123,7 +127,12 @@ def findAvailableEquipment(request):
     print results
     for eachResult in results.values():
         if eachResult[0] == False:
-            responseCode = 501
+            # If any of the attempts to assign the piece of equipment to an action fail, we need to remove
+            # that equipment from all the actions it was assigned too
+            if e != None:
+                for eachAction in actions:
+                    e.Action.remove(eachAction)
+            responseCode = 404
             break
     return HttpResponse(json.dumps(results), status=responseCode)
 
