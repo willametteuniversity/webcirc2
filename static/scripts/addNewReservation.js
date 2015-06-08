@@ -438,6 +438,15 @@ steal(function () {
         });
     });
 
+    var addSpecificEquipment = function(equipmentID) {
+        /**
+         * This function attempts to add a specific piece of equipment by ID. It is used when the operator attempts to
+         * add a specific piece of equipment to a reservation as opposed to letting the server select equipment from a
+         * category.
+         */
+
+
+    };
     var addEquipment = function(categoryID) {
         var actions = [];
         var equipmentType = $('#equipmentTypeDropdown').val();
@@ -462,13 +471,16 @@ steal(function () {
             $.each(result, function(key, value) {
                 var actionChk = $('*[data-actionchkid="'+key+'"]').next();
                 var curText = actionChk.text();
+                var allSucceeded = true;
                 if (value[0] == false) {
                     curText += ' No equipment available'
+                    allSucceeded = false;
                 } else {
                     curText += ' Assigned equipment: '+value[1]
                 }
                 actionChk.text(curText)
-            })
+            });
+
         });
     };
 
@@ -481,7 +493,16 @@ steal(function () {
 
         var equipmentType = $('#equipmentTypeDropdown').val();
         if (equipmentType == 'inventory') {
-            addEquipment($('#equipmentDisplayByTree').jstree().get_selected()[0]);
+            var currentTreeSelectText = $('#equipmentDisplayByTree').jstree().get_text($('#equipmentDisplayByTree').jstree().get_selected());
+            if (currentTreeSelectText[0] == "#") {
+                console.log('Specific item selected!');
+                var specificID = currentTreeSelectText.split(" ")
+                specificID = specificID[0];
+                specificID = specificID.replace("#","");
+                addSpecificEquipment(specificID);
+            } else {
+                addEquipment($('#equipmentDisplayByTree').jstree().get_selected()[0]);
+            }
         } else {
             var equipmentTerm = $("#equipmentTerm").val();
             Label.findOne({LabelName: equipmentTerm}, function(success) {
@@ -527,10 +548,14 @@ steal(function () {
                     $('#equipmentDisplayByTree').empty().jstree('destroy');
                     steal.dev.log('Populating jsTree');
                     // OK, now let's populate the tree on the other side...
+                    var actions = [];
+                    $.each($('.reservationActionDiv'), function(key, value) {
+                        actions.push($(this).data('actionid'));
+                    });
                     $("#equipmentDisplayByTree").jstree({
                         'core': {
                             'data': {
-                                'url': '/categoryHierarchyWithEquipment/' + equipmentTerm
+                                'url': '/categoryHierarchyWithEquipment/&term=' + equipmentTerm + '&actions[]='+JSON.stringify(actions)
                             },
                             'check_callback': true
 

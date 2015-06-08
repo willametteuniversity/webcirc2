@@ -1,10 +1,12 @@
 import json
 import re
+import pytz
 
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 
 # Auth imports
@@ -38,6 +40,27 @@ def addNewReservationForm(request):
     This handles a request to display the form for adding a new reservation
     '''
     return render(request, u'forms/add_new_reservation_form.html', {})
+
+def checkItemIsAvailableBetweenTimes(item, startTime, endTime):
+    '''
+    This function checks that a specific piece of equipment is available between a start date and an end date.
+    '''
+    actions = item.Action.all()
+    # First check is to get the action that starts just prior to our desired start time from the actions associated
+    # with the item
+
+    # If we can't find a previous action, this is the first action for that piece of equipment, so of course it is
+    # available for anything. Absolutely anything.
+    try:
+        p = actions.filter(StartTime__lte=startTime).order_by(u'-StartTime')[0]
+    except IndexError:
+        return True
+
+    # Once we have that, we need to make sure it does not end during or after desired time
+    if p.EndTime >= endTime:
+        return False
+    else:
+        return True
 
 def previousAction(action):
     try:
