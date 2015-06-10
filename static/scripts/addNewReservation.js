@@ -555,7 +555,7 @@ steal(function () {
                     $("#equipmentDisplayByTree").jstree({
                         'core': {
                             'data': {
-                                'url': '/categoryHierarchyWithEquipment/&term=' + equipmentTerm + '&actions[]='+JSON.stringify(actions)
+                                'url': '/categoryHierarchyWithEquipment/?term=' + equipmentTerm + '&actions[]='+JSON.stringify(actions)
                             },
                             'check_callback': true
 

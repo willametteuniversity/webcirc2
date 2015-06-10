@@ -24,6 +24,7 @@ from rest_framework.response import Response
 from website.models import *
 from website.serializers import *
 from django.core import serializers
+from website.views.reservationViews import checkItemIsAvailableBetweenTimes
 
 
 def index(request):
@@ -236,6 +237,7 @@ def categoryHierarchy(request):
 
 @api_view([u'GET'])
 def categoryHierarchyWithEquipment(request, root=None):
+    actions = request.GET.getlist(u'actions[]')
     if request.method == u'GET':
         if root:
             root = Label.objects.get(LabelName=root)
@@ -245,7 +247,6 @@ def categoryHierarchyWithEquipment(request, root=None):
         def get_nodes(node):
             d = {}
             ci, cl, li = get_children(node=node)
-            print ci, cl, node
 
             d[u'id'] = node.pk
             d[u'text'] = node.LabelName
@@ -262,14 +263,29 @@ def categoryHierarchyWithEquipment(request, root=None):
         def get_children(node):
             c = []
             inventoryItems = InventoryItem.objects.filter(CategoryID=node.pk)
+
+            ### Begin inventory item pruning section ###
+            # This section contains the code necessary to prune items that are not available from showing up in the
+            # results
+            inventoryItemsPruned = []
+            for eachItem in inventoryItems:
+                print "Checking item: "+str(eachItem.ItemID)
+                available = True
+                for eachAction in actions:
+                    eachAction = eachAction.strip(u'[').strip(u']')
+                    a = Action.objects.get(ActionID=eachAction)
+                    if checkItemIsAvailableBetweenTimes(eachItem, a.StartTime, a.EndTime) == False:
+                        available = False
+                if available != False:
+                    inventoryItemsPruned.append(eachItem)
+            ### End inventory item pruning section ###
             labeledItems = ItemLabel.objects.filter(LabelID=node.pk)
             for eachItem in inventoryItems:
                 c.append(eachItem)
             labelItems = Label.objects.filter(ParentCategory=node.pk)
             for eachItem in labelItems:
                 c.append(eachItem)
-            print c
-            return inventoryItems, labelItems, labeledItems
+            return inventoryItemsPruned, labelItems, labeledItems
 
         tree = get_nodes(node=root)
         return HttpResponse(json.dumps(tree), content_type=u'application/json')

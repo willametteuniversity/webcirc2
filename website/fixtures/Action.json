@@ -62,5 +62,37 @@
             "ActionNotes": "Test fixture",
             "Reservation": [2]
         }
+    },
+     {
+        "model": "website.Action",
+        "pk": 5,
+        "fields": {
+            "ActionID": 5,
+            "AssignedOperatorID": 1,
+            "ActionTypeID": 1,
+            "StartTime": "2015-06-04 08:00:00",
+            "EndTime": "2015-06-04 08:10:00",
+            "Origin": 1,
+            "Destination": 2,
+            "ActionState": 1,
+            "ActionNotes": "Test fixture",
+            "Reservation": [1]
+        }
+    },
+  {
+    "model": "website.Action",
+    "pk": 6,
+    "fields": {
+      "ActionID": 6,
+      "AssignedOperatorID": 1,
+      "ActionTypeID": 1,
+      "StartTime": "2015-06-05 08:00:00",
+      "EndTime": "2015-06-05 08:10:00",
+      "Origin": 2,
+      "Destination": 1,
+      "ActionState": 2,
+      "ActionNotes": "Test fixture",
+      "Reservation": [1]
     }
+  }
 ]

@@ -45,6 +45,7 @@ def checkItemIsAvailableBetweenTimes(item, startTime, endTime):
     '''
     This function checks that a specific piece of equipment is available between a start date and an end date.
     '''
+    print "Checking between time avail for item: "+str(item.ItemID)+" for st: "+str(startTime)+" and et: "+str(endTime)
     actions = item.Action.all()
     # First check is to get the action that starts just prior to our desired start time from the actions associated
     # with the item
@@ -52,19 +53,31 @@ def checkItemIsAvailableBetweenTimes(item, startTime, endTime):
     # If we can't find a previous action, this is the first action for that piece of equipment, so of course it is
     # available for anything. Absolutely anything.
     try:
-        p = actions.filter(StartTime__lte=startTime).order_by(u'-StartTime')[0]
+        p = actions.filter(EndTime__lt=startTime).order_by(u'-EndTime')[0]
+        print "p is: "+str(p.ActionID)
     except IndexError:
         return True
 
-    # Once we have that, we need to make sure it does not end during or after desired time
-    if p.EndTime >= endTime:
+    # To check if it is available, we have to check the following:
+    # 1) Is it at its home location?
+    #   a) To check this, we need to know if the previous action returned it, cause if it didn't, it can't be home
+    if p.Destination.LocationID != item.StorageLocation.LocationID:
         return False
-    else:
+
+    # Now we need to make sure the end time is before the next action
+    try:
+        n = actions.filter(StartTime__gt=p.StartTime).order_by(u'-StartTime')[0]
+        print "n is: "+n.StartTime+" "+n.EndTime
+    # If there is no next action, it is, of course, available.
+    except IndexError:
         return True
+    if endTime <= n.StartTime:
+        return True
+    else:
+        return False
 
 def previousAction(action):
     try:
-
         previousAction = Action.objects.filter(EndTime__lt=action.StartTime).order_by(u'-EndTime')[0]
         if previousAction == action:
             return False
