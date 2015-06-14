@@ -1,4 +1,4 @@
-var Action = can.Model({
+var Action = can.Model.extend({
     findAll: function(params) {
         if (params.date) {
             return $.ajax({
@@ -24,6 +24,5 @@ var Action = can.Model({
         }
     },
     create:  'POST /actions/',
-    update:  'PUT /actions/{id}',
     destroy: 'DELETE /actions/{id}'
 }, {})

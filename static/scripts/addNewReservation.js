@@ -405,7 +405,16 @@ steal(function () {
          * This function handles deleting an action from a reservation.
          */
         steal.dev.log("Deleting an action");
-        $(this).parent().remove();
+        var actionID = $(this).parent().data('actionid');
+        console.log(actionID);
+        Action.findOne({id: actionID}, function(Action) {
+            Action.attr("id", actionID);
+            Action.destroy();
+            $(this).parent().remove();
+        }, function(failure) {
+            // TODO: Do something intelligent on failure here
+        });
+
     });
 
     $("#mainrow").on("click", "#showAddEquipmentModalBtn", function (event) {
