@@ -251,16 +251,16 @@ def categoryHierarchyWithEquipment(request, root=None):
             d[u'id'] = node.pk
             d[u'text'] = node.LabelName
             d[u'children'] = []
-            d[u'li_attr'] = {'data-test':'argh'}
             for eachCi in ci:
-                d[u'children'].append('#'+str(eachCi.ItemID)+' '+eachCi.BrandID.BrandName+' '+eachCi.ModelID.ModelDesignation)
+                d[u'children'].append({u'text':u'#'+str(eachCi.ItemID)+' '+eachCi.BrandID.BrandName+' '+eachCi.ModelID.ModelDesignation,
+                                       u'li_attr':{u'data-itemtype':u'inventory'},
+                                       u'id':u'ii_'+str(eachCi.ItemID)})
             for eachChildLabel in cl:
                 d[u'children'].append(get_nodes(eachChildLabel))
             for eachChildLabeledItem in li:
                 d[u'children'].append('#'+str(eachChildLabeledItem.ItemID.ItemID)+' '+eachChildLabeledItem.ItemID.BrandID.BrandName+' '+
                                         eachChildLabeledItem.ItemID.ModelID.ModelDesignation)
             for eachConsumableItem in conItems:
-                print "Here..."
                 d[u'children'].append({u'text':'#'+str(eachConsumableItem.ItemID)+' '+eachConsumableItem.ItemName,
                                        u'li_attr':{u'data-itemtype':u'consumable'},
                                        u'id':u'ci_'+str(eachConsumableItem.ItemID)})
