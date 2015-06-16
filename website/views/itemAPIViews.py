@@ -162,9 +162,15 @@ def inventoryItemDetail(request, pk, format=None):
 
 
 @api_view([u'GET', u'POST'])
-def consumableItemList(request):
+def consumableItemList(request, label=None):
     if request.method == u'GET':
         consumableItems = ConsumableItem.objects.all()
+        if label != None:
+            itemsWithLabel = ItemLabel.objects.filter(LabelID__LabelName__iexact=label).values(u'ItemID')
+            i = []
+            for eachItem in itemsWithLabel:
+                i.append(ConsumableItem.objects.get(pk=eachItem[u'ItemID']))
+            consumableItems = i
         serializer = ConsumableItemSerializer(consumableItems, many=True)
         return Response(serializer.data)
     elif request.method == u'POST':

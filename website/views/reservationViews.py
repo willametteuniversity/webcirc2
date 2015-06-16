@@ -136,9 +136,10 @@ def findAvailableEquipment(request):
     '''
     This function attempts to find an available piece of equipment to fulfill a reservation's needs
     '''
-    actions = request.GET.getlist('actions[]')
+    # TODO: Write unit tests for this
+    actions = request.GET.getlist(u'actions[]')
 
-    equipmentCategory = request.GET['categoryid']
+    equipmentCategory = request.GET[u'categoryid']
     candidateEquipment = InventoryItem.objects.filter(CategoryID=equipmentCategory)
     print candidateEquipment
     results = {}
@@ -176,6 +177,7 @@ def findAvailableNonInventoryEquipment(request):
     '''
     This function attempts to find an available piece of non-inventory to fulfill a reservation's needs
     '''
+    # TODO: Write unit tests for this
     print request.GET
     actions = request.GET.getlist('actions[]')
     equipmentCategory = request.GET['categoryid']
@@ -206,6 +208,7 @@ def findAvailableConsumableEquipment(request):
     '''
     This function attempts to find an available consumable item to fulfill a reservation's needs
     '''
+    # TODO: Write unit tests for this
     actions = request.GET.getlist(u'actions[]')
     quantity = int(request.GET[u'quantity'])
     equipmentCategory = request.GET[u'categoryid']
