@@ -57,6 +57,7 @@ class Reservation(models.Model):
     CustomerStatus = models.CharField(max_length=500)
     ReservationNotes = models.CharField(max_length=500, null=True, blank=True)
     EventTitle = models.CharField(max_length=500)
+    Finalized = models.BooleanField(default=False)
 
 
 class Action(models.Model):
