@@ -405,7 +405,18 @@ steal(function () {
          * This function handles deleting an action from a reservation.
          */
         steal.dev.log("Deleting an action");
-        $(this).parent().remove();
+        var actionID = $(this).parent().data('actionid');
+        console.log(actionID);
+        Action.findOne({id: actionID}, function(Action) {
+            Action.attr("id", actionID);
+            // TODO: Something to handle failing to delete?
+            Action.destroy();
+            console.log("Removing...");
+            $(this).parent().remove();
+        }, function(failure) {
+            // TODO: Do something intelligent on failure here
+        });
+
     });
 
     $("#mainrow").on("click", "#showAddEquipmentModalBtn", function (event) {
@@ -438,6 +449,15 @@ steal(function () {
         });
     });
 
+    var addSpecificEquipment = function(equipmentID) {
+        /**
+         * This function attempts to add a specific piece of equipment by ID. It is used when the operator attempts to
+         * add a specific piece of equipment to a reservation as opposed to letting the server select equipment from a
+         * category.
+         */
+
+
+    };
     var addEquipment = function(categoryID) {
         var actions = [];
         var equipmentType = $('#equipmentTypeDropdown').val();
@@ -462,13 +482,16 @@ steal(function () {
             $.each(result, function(key, value) {
                 var actionChk = $('*[data-actionchkid="'+key+'"]').next();
                 var curText = actionChk.text();
+                var allSucceeded = true;
                 if (value[0] == false) {
                     curText += ' No equipment available'
+                    allSucceeded = false;
                 } else {
                     curText += ' Assigned equipment: '+value[1]
                 }
                 actionChk.text(curText)
-            })
+            });
+
         });
     };
 
@@ -481,7 +504,16 @@ steal(function () {
 
         var equipmentType = $('#equipmentTypeDropdown').val();
         if (equipmentType == 'inventory') {
-            addEquipment($('#equipmentDisplayByTree').jstree().get_selected()[0]);
+            var currentTreeSelectText = $('#equipmentDisplayByTree').jstree().get_text($('#equipmentDisplayByTree').jstree().get_selected());
+            if (currentTreeSelectText[0] == "#") {
+                console.log('Specific item selected!');
+                var specificID = currentTreeSelectText.split(" ")
+                specificID = specificID[0];
+                specificID = specificID.replace("#","");
+                addSpecificEquipment(specificID);
+            } else {
+                addEquipment($('#equipmentDisplayByTree').jstree().get_selected()[0]);
+            }
         } else {
             var equipmentTerm = $("#equipmentTerm").val();
             Label.findOne({LabelName: equipmentTerm}, function(success) {
@@ -510,6 +542,7 @@ steal(function () {
             } else {
                 // Let's try to find a Label that matches
                 steal.dev.log('Searching for a label...');
+                // TODO: We should probably remove the category selector drop down entirely
                 if (equipmentType == 'inventory') {
                     InventoryItem.findAll({eterm: equipmentTerm}, function (items) {
                         $.each(items, function (index, value) {
@@ -527,10 +560,14 @@ steal(function () {
                     $('#equipmentDisplayByTree').empty().jstree('destroy');
                     steal.dev.log('Populating jsTree');
                     // OK, now let's populate the tree on the other side...
+                    var actions = [];
+                    $.each($('.reservationActionDiv'), function(key, value) {
+                        actions.push($(this).data('actionid'));
+                    });
                     $("#equipmentDisplayByTree").jstree({
                         'core': {
                             'data': {
-                                'url': '/categoryHierarchyWithEquipment/' + equipmentTerm
+                                'url': '/categoryHierarchyWithEquipment/?term=' + equipmentTerm + '&actions[]='+JSON.stringify(actions)
                             },
                             'check_callback': true
 
@@ -554,19 +591,33 @@ steal(function () {
                         });
                     });
                 } else if (equipmentType == 'consumable') {
-                    NonInventoryItem.findAll({eterm: equipmentTerm}, function (items) {
+                    steal.dev.log("Starting to look for consumable items...");
+                    ConsumableItem.findAll({eterm: equipmentTerm}, function (items) {
+                        steal.dev.log("Found: ");
+                        steal.dev.log(items);
                         $.each(items, function (index, value) {
-                            var descString = '#' + value.ItemID + ' ';
-                            ItemBrand.findOne({id: value.BrandID}, function (brand) {
-                                descString += brand.BrandName;
-                                ItemModel.findOne({id: value.ModelID}, function (model) {
-                                    descString += ' ' + model.ModelDesignation;
-                                    steal.dev.log('DescString is: ' + descString);
-                                    $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item">' + descString + '</a>');
-                                })
-                            });
+                            var descString = '#' + value.Description + ' ';
+                                $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item">' + descString + '</a>');
                         });
                     });
+                    $('#equipmentDisplayByTree').empty().jstree('destroy');
+                    steal.dev.log('Populating jsTree');
+                    // OK, now let's populate the tree on the other side...
+                    var actions = [];
+                    $.each($('.reservationActionDiv'), function(key, value) {
+                        actions.push($(this).data('actionid'));
+                    });
+                    $("#equipmentDisplayByTree").jstree({
+                        'core': {
+                            'data': {
+                                'url': '/categoryHierarchyWithEquipment/?term=' + equipmentTerm + '&actions[]='+JSON.stringify(actions)
+                            },
+                            'check_callback': true
+
+                        },
+                        'plugins': ['dnd']
+                    });
+
                 }
         }
     }
