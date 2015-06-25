@@ -88,33 +88,6 @@ class InventoryItem(models.Model):
     StatusID = models.ForeignKey(u'Status', null=True)
 
 
-class NonInventoryItem(models.Model):
-    ItemID = models.AutoField(primary_key=True)
-    Description = models.CharField(max_length=500)
-    CategoryID = models.ForeignKey(u'Label')
-    StorageLocation = models.ForeignKey(u'Location')
-    CollectionID = models.ForeignKey(u'Collection')
-    Notes = models.CharField(max_length=500, null=True, blank=True)
-    Action = models.ManyToManyField(Action, blank=True)
-    # TODO: These should not really have a quantity. Remove this field.
-    Quantity = models.IntegerField(default=0)
-    StatusID = models.ForeignKey(u'Status', null=True)
-
-
-class ConsumableItem(models.Model):
-    ItemID = models.AutoField(primary_key=True)
-    Description = models.CharField(max_length=500)
-    CategoryID = models.ForeignKey(u'Label')
-    StorageLocation = models.ForeignKey(u'Location')
-    CollectionID = models.ForeignKey(u'Collection')
-    Notes = models.CharField(max_length=500, null=True, blank=True)
-    Action = models.ManyToManyField(Action, blank=True)
-    ItemName = models.CharField(max_length=100)
-    Quantity = models.IntegerField(default=0)
-    MinQuantity = models.IntegerField(default=0)
-    Cost = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
-
-
 class InventoryWidget(models.Model):
     InventoryID = models.AutoField(primary_key=True)
 
