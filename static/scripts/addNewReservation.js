@@ -519,6 +519,7 @@ steal(function () {
 
     $('#mainrow').on('keyup', '#equipmentTerm', function (event) {
         event.preventDefault();
+        $(".labeled-equipment").remove();
         console.log(event);
         if (event.keyCode == 13) {
             var equipmentTerm = $("#equipmentTerm").val();
@@ -540,7 +541,7 @@ steal(function () {
                                 ItemModel.findOne({id: value.ModelID}, function (model) {
                                     descString += ' ' + model.ModelDesignation;
                                     steal.dev.log('DescString is: ' + descString);
-                                    $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item">' + descString + '</a>');
+                                    $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item labeled-equipment">' + descString + '</a>');
                                 })
                             });
                         });
