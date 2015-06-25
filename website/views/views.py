@@ -233,7 +233,7 @@ def categoryHierarchyWithEquipment(request, root=None):
 
         def get_nodes(node):
             d = {}
-            ci, cl, li, conItems = get_children(node=node)
+            ci, cl, li = get_children(node=node)
 
             d[u'id'] = node.pk
             d[u'text'] = node.LabelName
@@ -247,16 +247,13 @@ def categoryHierarchyWithEquipment(request, root=None):
             for eachChildLabeledItem in li:
                 d[u'children'].append('#'+str(eachChildLabeledItem.ItemID.ItemID)+' '+eachChildLabeledItem.ItemID.BrandID.BrandName+' '+
                                         eachChildLabeledItem.ItemID.ModelID.ModelDesignation)
-            for eachConsumableItem in conItems:
-                d[u'children'].append({u'text':'#'+str(eachConsumableItem.ItemID)+' '+eachConsumableItem.ItemName,
-                                       u'li_attr':{u'data-itemtype':u'consumable'},
-                                       u'id':u'ci_'+str(eachConsumableItem.ItemID)})
+
             return d
 
         def get_children(node):
             c = []
             inventoryItems = InventoryItem.objects.filter(CategoryID=node.pk)
-            consumableItems = ConsumableItem.objects.filter(CategoryID=node.pk)
+
             ### Begin inventory item pruning section ###
             # This section contains the code necessary to prune items that are not available from showing up in the
             # results
@@ -278,7 +275,7 @@ def categoryHierarchyWithEquipment(request, root=None):
             labelItems = Label.objects.filter(ParentCategory=node.pk)
             for eachItem in labelItems:
                 c.append(eachItem)
-            return inventoryItemsPruned, labelItems, labeledItems, consumableItems
+            return inventoryItemsPruned, labelItems, labeledItems
 
         tree = get_nodes(node=root)
         return HttpResponse(json.dumps(tree), content_type=u'application/json')

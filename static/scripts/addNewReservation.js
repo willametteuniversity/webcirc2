@@ -467,17 +467,8 @@ steal(function () {
             actions.push($(this).data('actionid'));
         });
 
-        var equipmentUrl = '';
+        var equipmentUrl = '/findAvailableEquipment/';
 
-        if (equipmentType == 'inventory') {
-            equipmentUrl = '/findAvailableEquipment/';
-        } else if (equipmentType == 'noninventory') {
-            equipmentUrl = '/findAvailableNonInventoryEquipment/';
-        } else if (equipmentType == 'consumable') {
-            equipmentUrl = '/findAvailableConsumableEquipment/';
-        } else {
-            // TODO: Should probably display an error to the user here and abort?
-        }
         $.getJSON(equipmentUrl, {'actions[]': actions, 'categoryid': categoryID}, function(result) {
             $.each(result, function(key, value) {
                 var actionChk = $('*[data-actionchkid="'+key+'"]').next();
@@ -530,8 +521,6 @@ steal(function () {
         event.preventDefault();
         console.log(event);
         if (event.keyCode == 13) {
-            var equipmentType = $('#equipmentTypeDropdown').val();
-
             var equipmentTerm = $("#equipmentTerm").val();
             steal.dev.log('Equipment term is: ' + $('#equipmentTerm').val());
             if ($.isNumeric(equipmentTerm)) {
@@ -543,7 +532,6 @@ steal(function () {
                 // Let's try to find a Label that matches
                 steal.dev.log('Searching for a label...');
                 // TODO: We should probably remove the category selector drop down entirely
-                if (equipmentType == 'inventory') {
                     InventoryItem.findAll({eterm: equipmentTerm}, function (items) {
                         $.each(items, function (index, value) {
                             var descString = '#' + value.ItemID + ' ';
@@ -575,52 +563,8 @@ steal(function () {
                         'plugins': ['dnd']
                     });
 
-                }
-                else if (equipmentType == 'noninventory') {
-                    NonInventoryItem.findAll({eterm: equipmentTerm}, function (items) {
-                        $.each(items, function (index, value) {
-                            var descString = '#' + value.ItemID + ' ';
-                            ItemBrand.findOne({id: value.BrandID}, function (brand) {
-                                descString += brand.BrandName;
-                                ItemModel.findOne({id: value.ModelID}, function (model) {
-                                    descString += ' ' + model.ModelDesignation;
-                                    steal.dev.log('DescString is: ' + descString);
-                                    $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item">' + descString + '</a>');
-                                })
-                            });
-                        });
-                    });
-                } else if (equipmentType == 'consumable') {
-                    steal.dev.log("Starting to look for consumable items...");
-                    ConsumableItem.findAll({eterm: equipmentTerm}, function (items) {
-                        steal.dev.log("Found: ");
-                        steal.dev.log(items);
-                        $.each(items, function (index, value) {
-                            var descString = '#' + value.Description + ' ';
-                                $('#equipmentDisplayByLabelList').append('<a href="#" class="list-group-item">' + descString + '</a>');
-                        });
-                    });
-                    $('#equipmentDisplayByTree').empty().jstree('destroy');
-                    steal.dev.log('Populating jsTree');
-                    // OK, now let's populate the tree on the other side...
-                    var actions = [];
-                    $.each($('.reservationActionDiv'), function(key, value) {
-                        actions.push($(this).data('actionid'));
-                    });
-                    $("#equipmentDisplayByTree").jstree({
-                        'core': {
-                            'data': {
-                                'url': '/categoryHierarchyWithEquipment/?term=' + equipmentTerm + '&actions[]='+JSON.stringify(actions)
-                            },
-                            'check_callback': true
-
-                        },
-                        'plugins': ['dnd']
-                    });
-
-                }
+            }
         }
-    }
     });
 
     $("#mainrow").on("click", ".removeEquipmentFromActionBtn", function (event) {
