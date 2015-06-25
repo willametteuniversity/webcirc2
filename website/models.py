@@ -88,6 +88,7 @@ class InventoryItem(models.Model):
     StatusID = models.ForeignKey(u'Status', null=True)
 
 
+
 class NonInventoryItem(models.Model):
     ItemID = models.AutoField(primary_key=True)
     Description = models.CharField(max_length=500)

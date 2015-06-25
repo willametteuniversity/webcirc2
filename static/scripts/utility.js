@@ -367,6 +367,7 @@ var loadTodaysActions = function (tarDate) {
                 }
             });
         });
+
     }, function (errors) {
         console.log(errors);
     });
