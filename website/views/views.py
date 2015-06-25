@@ -225,6 +225,7 @@ def categoryHierarchy(request):
 @api_view([u'GET'])
 def categoryHierarchyWithEquipment(request, root=None):
     actions = request.GET.getlist(u'actions[]')
+    root = request.GET[u'term']
     if request.method == u'GET':
         if root:
             root = Label.objects.get(LabelName=root)
