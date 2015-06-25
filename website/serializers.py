@@ -32,17 +32,6 @@ class InventoryItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = InventoryItem
 
-
-class NonInventoryItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = NonInventoryItem
-
-
-class ConsumableItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ConsumableItem
-
-
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation

@@ -173,19 +173,6 @@ def addNewInventoryItemForm(request):
     '''
     return render(request, u'forms/add_new_inventory_item_form.html')
 
-def addNewNonInventoryItemForm(request):
-    '''
-    This function returns the form for adding a new inventory item
-    '''
-    return render(request, u'forms/add_new_non_inventory_item_form.html')
-
-def addNewConsumableItemForm(request):
-    '''
-    This function returns the form for adding a new consumable item
-    '''
-    return render(request, u'forms/add_new_consumable_item_form.html')
-
-
 @api_view([u'GET'])
 def labelsNotCategories(request):
     labels_without_parents = list(Label.objects.filter(ParentCategory=None))
